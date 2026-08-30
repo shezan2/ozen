@@ -2,23 +2,24 @@ import type { ComponentPropsWithoutRef } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-type Variant = "lime" | "ink" | "outline" | "onInk";
+type Variant = "lime" | "ink" | "outline" | "onInk" | "white";
 type Size = "md" | "lg";
 
+/* Flat-edged, heavy, high contrast — the same register as the label blocks. */
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-tight transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-60";
+ "group inline-flex items-center justify-center gap-2.5 font-bold tracking-tight transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-60";
 
 const variants: Record<Variant, string> = {
-  // Lime is the results colour — ink text on lime clears AA comfortably.
   lime: "bg-lime text-ink hover:bg-lime-bright",
   ink: "bg-ink text-white hover:bg-ink-raised",
   outline: "border-2 border-ink text-ink hover:bg-ink hover:text-white",
-  onInk: "border-2 border-white/35 text-white hover:border-lime hover:text-lime",
+  onInk: "border-2 border-white/30 text-white hover:border-lime hover:text-lime",
+  white: "bg-white text-ink hover:bg-surface-off",
 };
 
 const sizes: Record<Size, string> = {
   md: "h-12 px-6 text-[0.9375rem]",
-  lg: "h-14 px-8 text-base",
+  lg: "h-14 px-7 text-base sm:h-16 sm:px-9 sm:text-lg",
 };
 
 export function buttonStyles(variant: Variant = "lime", size: Size = "md", className?: string) {
@@ -29,7 +30,6 @@ type ButtonLinkProps = {
   href: string;
   variant?: Variant;
   size?: Size;
-  /** Set for links that leave the site. */
   external?: boolean;
 } & Omit<ComponentPropsWithoutRef<"a">, "href">;
 

@@ -28,7 +28,7 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Footer">
-            <h2 className="eyebrow text-white/50">Pages</h2>
+            <h2 className="label text-white/50">Pages</h2>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <Link href="/" className="text-white/80 hover:text-lime">
@@ -46,7 +46,7 @@ export default function Footer() {
           </nav>
 
           <div>
-            <h2 className="eyebrow text-white/50">Get in touch</h2>
+            <h2 className="label text-white/50">Get in touch</h2>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <a href={`mailto:${siteConfig.contact.email}`} className="text-white/80 hover:text-lime">

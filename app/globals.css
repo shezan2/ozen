@@ -3,9 +3,11 @@
 /* ---------------------------------------------------------------------------
    Myo Fitness Solutions — design tokens
 
-   Derived from the Instagram account's existing visual language: near-black
-   label blocks, white/off-white surfaces, a bright lime that only ever marks a
-   result, and amber as a secondary accent.
+   The language comes straight off the Instagram account: hard black label
+   blocks with white type slapped over photographs, a bright lime that only ever
+   marks a result, amber as the secondary highlight. Nothing here is rounded,
+   softened or gradient-filled — the source material is high-contrast and
+   flat-edged, and the site follows it.
 
    Contrast note: `--lime` is a light colour. It is used as a *background* under
    ink text, or as display-size type on ink. For small text on white, use
@@ -14,18 +16,18 @@
 
 :root {
   --ink: #0b0b0c;
-  --ink-soft: #17171a;
-  --ink-raised: #212126;
+  --ink-soft: #141416;
+  --ink-raised: #1d1d21;
   --ink-mute: #56565c;
   --ink-faint: #6a6a73;
 
   --surface: #ffffff;
   --surface-off: #f4f3ef;
-  --surface-sunken: #eae8e1;
+  --surface-sunken: #e7e5dd;
 
-  --line: rgba(11, 11, 12, 0.12);
-  --line-strong: rgba(11, 11, 12, 0.26);
-  --line-dark: rgba(255, 255, 255, 0.14);
+  --line: rgba(11, 11, 12, 0.14);
+  --line-strong: rgba(11, 11, 12, 0.28);
+  --line-dark: rgba(255, 255, 255, 0.16);
 
   --lime: #57e64b;
   --lime-bright: #7bf770;
@@ -60,13 +62,16 @@
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: var(--font-archivo), ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  --animate-fade-in: fade-in 0.5s ease both;
+  /* Flat-edged by default. Radius is the exception, not the rule. */
+  --radius-none: 0px;
+
+  --animate-marquee: marquee 44s linear infinite;
   --animate-disclose: disclose 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 @keyframes disclose {
@@ -96,93 +101,183 @@ body {
 :focus-visible {
   outline: 3px solid var(--lime-deep);
   outline-offset: 3px;
-  border-radius: 2px;
 }
 
-/* On ink panels the focus ring needs the bright lime to stay visible. */
 .on-ink :focus-visible {
   outline-color: var(--lime);
 }
 
-/* ---------------------------------------------------------------- display */
+/* ---------------------------------------------------------------- display
+
+   Scale contrast is the point: 10px labels sitting against 100px numerals, the
+   way a caption card sets a tiny word against a huge one.
+--------------------------------------------------------------------------- */
 
 .display {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 0.94;
-  text-wrap: balance;
+  font-weight: 900;
+  letter-spacing: -0.042em;
+  line-height: 0.86;
 }
 
 .display-tight {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.04;
-  text-wrap: balance;
+  font-weight: 800;
+  letter-spacing: -0.028em;
+  line-height: 1.02;
 }
 
-.eyebrow {
-  font-weight: 600;
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
+/* Enormous numerals — the transformation figures, the estimator result. */
+.numeral {
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 0.78;
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  font-weight: 700;
+  font-size: 0.625rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
+  line-height: 1.4;
 }
 
 .lede {
   font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.3125rem);
-  line-height: 1.55;
-  text-wrap: pretty;
+  line-height: 1.5;
 }
 
-/* Caption-card energy: a solid block behind a run of words, the way the
-   Instagram stories set numbers and labels. Used sparingly. */
-.sticker {
+/* The caption-card block: a hard slab of colour behind a run of words, exactly
+   how the story graphics set "85kg", "Haram", "-10kg". */
+.slab {
   display: inline-block;
   background: var(--ink);
   color: #fff;
-  padding: 0.06em 0.28em;
-  border-radius: 0.14em;
+  padding: 0.08em 0.3em 0.14em;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
 
-.sticker-lime {
+.slab-lime {
   display: inline-block;
   background: var(--lime);
   color: var(--ink);
-  padding: 0.06em 0.28em;
-  border-radius: 0.14em;
+  padding: 0.08em 0.3em 0.14em;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
 
-.rule {
-  height: 1px;
-  background: var(--line);
+.slab-white {
+  display: inline-block;
+  background: #fff;
+  color: var(--ink);
+  padding: 0.08em 0.3em 0.14em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
-/* -------------------------------------------------------- scroll reveals
+/* ------------------------------------------------------------ hero photo ---
 
-   Whole blocks only — never per-word or per-character spans, which strip copy
-   out of the accessible tree and hand crawlers an empty page. The initial
-   hidden state is applied only once JS has armed the element, so with
-   JavaScript off (or before hydration) everything is simply visible.
+   A very slow drift on the hero photograph. Compositor-only, and it stops dead
+   under `prefers-reduced-motion`. */
+
+@keyframes drift {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to { transform: scale(1.09) translate3d(-1.2%, -1.4%, 0); }
+}
+
+.drift {
+  animation: drift 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* ------------------------------------------------------------- marquee ---- */
+
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: var(--animate-marquee);
+  /* Promote both continuous animations to their own layer so they composite
+     instead of repainting the section on every frame. */
+  will-change: transform;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ------------------------------------------------------------- reveals ----
+
+   Whole blocks and whole lines only — never per-word or per-character spans,
+   which strip copy out of the accessible tree and hand crawlers a page of empty
+   elements. The hidden starting state is applied from JavaScript, and only to
+   elements still below the fold, so server HTML is always fully visible and the
+   copy survives with JavaScript off.
 --------------------------------------------------------------------------- */
 
 [data-reveal="armed"] {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(22px);
+}
+
+[data-reveal="armed"][data-from="left"] {
+  transform: translateX(-28px);
+}
+
+[data-reveal="armed"][data-from="right"] {
+  transform: translateX(28px);
 }
 
 [data-reveal="in"] {
   opacity: 1;
   transform: none;
   transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--reveal-delay, 0ms);
 }
+
+/* Line-level wipe for headlines. Each child is a complete line of the heading,
+   so the text reads as one phrase to a screen reader. */
+.lines > * {
+  display: block;
+  overflow: hidden;
+  /* Room for descenders and for the label blocks' own padding, so the wipe
+     clips the line cleanly instead of shaving it. */
+  padding-bottom: 0.08em;
+}
+
+.lines > * > * {
+  display: block;
+}
+
+[data-lines="armed"] > * > * {
+  transform: translateY(120%);
+}
+
+[data-lines="in"] > * > * {
+  transform: none;
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-lines="in"] > *:nth-child(2) > * { transition-delay: 90ms; }
+[data-lines="in"] > *:nth-child(3) > * { transition-delay: 180ms; }
+[data-lines="in"] > *:nth-child(4) > * { transition-delay: 270ms; }
+
+/* The hero headline is above the fold, so it is armed by a two-line inline
+   script in the document rather than by a React effect — it never waits for
+   hydration, and with JavaScript off the `js` class is never set and the
+   headline simply renders in place. */
+.js [data-lines="hero"] > * > * {
+  transform: translateY(120%);
+}
+
+.js.ready [data-lines="hero"] > * > * {
+  transform: none;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.js.ready [data-lines="hero"] > *:nth-child(2) > * { transition-delay: 80ms; }
+.js.ready [data-lines="hero"] > *:nth-child(3) > * { transition-delay: 160ms; }
 
 /* --------------------------------------------------------------- details */
 
@@ -196,15 +291,19 @@ body {
 .faq-item[open] .faq-body {
   animation: var(--animate-disclose);
 }
-.faq-item[open] .faq-chevron {
+.faq-item[open] .faq-plus {
   transform: rotate(45deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal] {
+  [data-reveal],
+  .lines > * > * {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+  .marquee {
+    animation: none;
   }
   *,
   *::before,

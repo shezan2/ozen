@@ -26,7 +26,7 @@ export default function WhatsAppFab() {
       href={whatsAppLink()}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed right-4 bottom-4 z-40 flex items-center gap-2.5 rounded-full bg-ink py-3.5 pr-5 pl-4 text-sm font-semibold text-white shadow-[0_8px_30px_rgba(11,11,12,0.28)] sm:right-6 sm:bottom-6"
+      className="fixed right-4 bottom-4 z-40 flex items-center gap-2.5 bg-ink py-3.5 pr-5 pl-4 text-sm font-semibold text-white shadow-[0_8px_30px_rgba(11,11,12,0.28)] sm:right-6 sm:bottom-6"
       initial={false}
       animate={
         reduced

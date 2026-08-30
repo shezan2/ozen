@@ -13,16 +13,16 @@ type FaqProps = {
  */
 export default function Faq({ items, className }: FaqProps) {
   return (
-    <div className={cn("divide-y divide-line border-y border-line", className)}>
+    <div className={cn("border-t border-line", className)}>
       {items.map((item) => (
-        <details key={item.q} className="faq-item group">
-          <summary className="flex items-start justify-between gap-6 py-6 text-left">
-            <h3 className="display-tight text-lg text-ink sm:text-xl">{item.q}</h3>
-            <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full border border-line-strong">
-              <Plus className="faq-chevron size-4 transition-transform duration-200" aria-hidden />
+        <details key={item.q} className="faq-item border-b border-line">
+          <summary className="flex items-start justify-between gap-8 py-7">
+            <h3 className="display-tight text-lg text-ink sm:text-2xl">{item.q}</h3>
+            <span className="mt-1 flex size-8 shrink-0 items-center justify-center border border-line-strong">
+              <Plus className="faq-plus size-4 transition-transform duration-200" aria-hidden />
             </span>
           </summary>
-          <div className="faq-body max-w-3xl pb-7 text-[0.9375rem] leading-relaxed text-ink-mute">
+          <div className="faq-body max-w-3xl pb-8 text-base leading-relaxed text-ink-mute">
             {item.a}
           </div>
         </details>

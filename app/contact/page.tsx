@@ -48,8 +48,8 @@ export default function ContactPage() {
   return (
     <>
       <PageHero
-        eyebrow="Contact"
-        title="One word gets it started."
+        label="Contact"
+        titleLines={["One word", "gets it started."]}
         lede={`Message ${siteConfig.contact.whatsappKeyword} on WhatsApp, book a time, or write it out below. Whichever is least effort right now.`}
       />
 
@@ -61,7 +61,7 @@ export default function ContactPage() {
               <Reveal
                 key={channel.title}
                 delay={index * 70}
-                className="flex flex-col rounded-3xl border border-line bg-surface-off p-7"
+                className="flex flex-col border border-line bg-surface-off p-7"
               >
                 <Icon className="size-6 text-lime-deep" aria-hidden />
                 <h2 className="display-tight mt-5 text-xl text-ink">{channel.title}</h2>
@@ -86,7 +86,7 @@ export default function ContactPage() {
         <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
           <div>
             <SectionHeading
-              eyebrow="Enquiry"
+              label="Enquiry"
               title="Tell me what has already failed"
               lede="The last field is the one that matters. Whatever you have already tried and dropped tells more about the right plan than your weight does."
             />
@@ -96,7 +96,7 @@ export default function ContactPage() {
           </div>
 
           <div className="lg:sticky lg:top-28 lg:self-start">
-            <div className="relative aspect-4/5 overflow-hidden rounded-3xl bg-surface-sunken">
+            <div className="relative aspect-4/5 overflow-hidden bg-surface-sunken">
               <Image
                 src="/images/contact-session.jpg"
                 alt="A first session getting under way in the gym [TODO: replace with a real photo]"
@@ -105,7 +105,7 @@ export default function ContactPage() {
                 className="object-cover"
               />
             </div>
-            <div className="mt-6 space-y-3 rounded-2xl border border-line bg-surface p-6 text-xs leading-relaxed text-ink-mute">
+            <div className="mt-6 space-y-3 border border-line bg-surface p-6 text-xs leading-relaxed text-ink-mute">
               <p>{disclaimers.preParticipation}</p>
               <p>
                 Coaching runs {siteConfig.location.trainingModel.toLowerCase()}.{" "}

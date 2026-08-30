@@ -12,7 +12,7 @@ import {
 import { disclaimers } from "@/lib/content";
 
 const fieldClass =
-  "mt-2 h-12 w-full rounded-xl border border-line-strong bg-surface px-4 text-base font-medium text-ink outline-none focus:border-ink";
+ "mt-2 h-12 w-full border border-line-strong bg-surface px-4 text-base font-medium text-ink outline-none focus:border-ink";
 
 export default function MacroCalculator() {
   const ids = useId();
@@ -37,10 +37,10 @@ export default function MacroCalculator() {
   );
 
   return (
-    <div className="rounded-3xl border border-line bg-surface-off p-7 sm:p-10">
+    <div className="border border-line bg-surface p-7 sm:p-10">
       <div className="grid gap-10 lg:grid-cols-[1fr_1fr]">
         <div>
-          <p className="eyebrow text-lime-deep">Calories and macros</p>
+          <p className="label text-lime-deep">Calories and macros</p>
           <h3 className="display mt-4 text-[clamp(1.75rem,1.3rem+1.8vw,2.5rem)]">
             A starting point, not a meal plan
           </h3>
@@ -158,8 +158,8 @@ export default function MacroCalculator() {
         <div className="flex flex-col justify-between" aria-live="polite">
           {result.kind === "estimate" ? (
             <div>
-              <div className="rounded-2xl bg-ink p-6 text-white sm:p-8">
-                <p className="eyebrow text-lime">Daily target</p>
+              <div className="bg-ink p-6 text-white sm:p-8">
+                <p className="label text-lime">Daily target</p>
                 <p className="display mt-3 text-[clamp(2.75rem,2rem+3vw,4rem)]">
                   {result.calories.toLocaleString()}
                   <span className="ml-2 text-[0.28em] font-semibold tracking-[0.16em] uppercase">
@@ -178,7 +178,7 @@ export default function MacroCalculator() {
                   { label: "Carbs", value: result.carbsG },
                   { label: "Fat", value: result.fatG },
                 ].map((macro) => (
-                  <div key={macro.label} className="rounded-2xl border border-line bg-surface p-4">
+                  <div key={macro.label} className="border border-line bg-surface p-4">
                     <dt className="text-xs font-semibold tracking-[0.12em] text-ink-mute uppercase">
                       {macro.label}
                     </dt>
@@ -191,14 +191,14 @@ export default function MacroCalculator() {
               </dl>
 
               {result.floored ? (
-                <p className="mt-4 rounded-xl border border-gold/50 bg-gold/10 p-4 text-sm leading-relaxed text-gold-deep">
+                <p className="mt-4 border border-gold/50 bg-gold/10 p-4 text-sm leading-relaxed text-gold-deep">
                   Those inputs push the estimate below a sensible floor, so it has been held there.
                   Eating under that is a conversation for a doctor or dietitian, not a calculator.
                 </p>
               ) : null}
             </div>
           ) : (
-            <p className="rounded-2xl border border-line bg-surface p-6 text-base text-ink-mute">
+            <p className="border border-line bg-surface p-6 text-base text-ink-mute">
               {result.message}
             </p>
           )}

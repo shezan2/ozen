@@ -29,7 +29,7 @@ const EMPTY: Values = {
 };
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-line-strong bg-surface px-4 py-3 text-base text-ink placeholder:text-ink-mute outline-none focus:border-ink";
+ "mt-2 w-full border border-line-strong bg-surface px-4 py-3 text-base text-ink placeholder:text-ink-mute outline-none focus:border-ink";
 
 export default function EnquiryForm() {
   const ids = useId();
@@ -92,7 +92,7 @@ export default function EnquiryForm() {
 
   if (status === "sent") {
     return (
-      <div className="rounded-3xl border border-line bg-surface-off p-8 sm:p-10">
+      <div className="border border-line bg-surface-off p-8 sm:p-10">
         <h3 className="display text-2xl">Got it.</h3>
         <p className="mt-3 text-base leading-relaxed text-ink-mute">
           Your enquiry is in. You will get a reply from {siteConfig.coach.name} — usually a couple of

@@ -2,33 +2,38 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type SectionHeadingProps = {
-  eyebrow?: string;
+  label?: string;
   title: ReactNode;
   lede?: ReactNode;
   tone?: "light" | "dark";
-  align?: "left" | "center";
   className?: string;
-  /** Rendered as an h2 by default; pass "h3" for nested sections. */
   as?: "h2" | "h3";
 };
 
 export default function SectionHeading({
-  eyebrow,
+  label,
   title,
   lede,
   tone = "light",
-  align = "left",
   className,
   as: Tag = "h2",
 }: SectionHeadingProps) {
   return (
-    <div className={cn(align === "center" && "mx-auto max-w-3xl text-center", className)}>
-      {eyebrow ? (
-        <p className={cn("eyebrow mb-4", tone === "dark" ? "text-lime" : "text-lime-deep")}>{eyebrow}</p>
+    <div className={className}>
+      {label ? (
+        <p
+          className={cn(
+           "label mb-5 flex items-center gap-3",
+            tone === "dark" ? "text-white/55" : "text-ink-mute",
+          )}
+        >
+          <span className={cn("h-px w-8", tone === "dark" ? "bg-lime" : "bg-lime-deep")} aria-hidden />
+          {label}
+        </p>
       ) : null}
       <Tag
         className={cn(
-          "display text-[clamp(2rem,1.3rem+3vw,3.25rem)]",
+         "display text-[clamp(2.125rem,1.2rem+3.6vw,4rem)]",
           tone === "dark" ? "text-white" : "text-ink",
         )}
       >
@@ -36,11 +41,7 @@ export default function SectionHeading({
       </Tag>
       {lede ? (
         <div
-          className={cn(
-            "lede mt-5 max-w-2xl",
-            align === "center" && "mx-auto",
-            tone === "dark" ? "text-white/72" : "text-ink-mute",
-          )}
+          className={cn("lede mt-6 max-w-2xl", tone === "dark" ? "text-white/70" : "text-ink-mute")}
         >
           {lede}
         </div>

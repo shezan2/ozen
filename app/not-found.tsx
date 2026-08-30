@@ -13,7 +13,7 @@ export default function NotFound() {
   return (
     <section className="on-ink flex min-h-[70vh] items-center bg-ink px-5 py-24 text-white sm:px-8">
       <div className="mx-auto max-w-2xl">
-        <p className="eyebrow text-lime">404</p>
+        <p className="label text-lime">404</p>
         <h1 className="display mt-5 text-[clamp(2.25rem,1.4rem+3.8vw,4rem)]">
           That page is not here.
         </h1>

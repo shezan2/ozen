@@ -21,16 +21,16 @@ export const metadata: Metadata = {
 /** Image labels are per client and stay next to the figures they belong to. */
 const labels: Record<string, { before: string; after: string; metric: string; metricLabel: string }> = {
   recomposition: { before: "83kg", after: "82kg", metric: "−1kg", metricLabel: "on the scale" },
-  "ten-kilos": { before: "85kg", after: "75kg", metric: "−10kg", metricLabel: "down" },
-  "five-percent": { before: "Month 1", after: "Month 5", metric: "−5%", metricLabel: "body fat" },
+ "ten-kilos": { before: "85kg", after: "75kg", metric: "−10kg", metricLabel: "down" },
+ "five-percent": { before: "Month 1", after: "Month 5", metric: "−5%", metricLabel: "body fat" },
 };
 
 export default function TransformationsPage() {
   return (
     <>
       <PageHero
-        eyebrow="Transformations"
-        title="Four real numbers. No averages, no client counts."
+        label="Transformations"
+        titleLines={["Four real numbers.", "No averages, no counts."]}
         lede="Everything below came from an actual client. There are no success rates on this page, because nobody has counted them honestly and a made-up one is worth nothing to you."
       />
 
@@ -42,7 +42,7 @@ export default function TransformationsPage() {
               <article
                 key={item.id}
                 className={cn(
-                  "grid items-center gap-10 lg:grid-cols-2 lg:gap-16",
+                 "grid items-center gap-10 lg:grid-cols-2 lg:gap-16",
                   index % 2 === 1 && "lg:[&>figure]:order-2",
                 )}
               >
@@ -56,11 +56,11 @@ export default function TransformationsPage() {
 
                 <Reveal>
                   {item.featured ? (
-                    <p className="sticker-lime eyebrow inline-block px-2.5 py-1.5">
+                    <p className="slab-lime label inline-block px-2.5 py-1.5">
                       The one to look at
                     </p>
                   ) : null}
-                  <p className="eyebrow mt-4 text-ink-mute">{item.period}</p>
+                  <p className="label mt-4 text-ink-mute">{item.period}</p>
                   <h2 className="display mt-3 text-[clamp(1.875rem,1.3rem+2.4vw,3rem)]">
                     {item.headline}
                   </h2>
@@ -76,7 +76,7 @@ export default function TransformationsPage() {
       <Section tone="ink">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
-            <p className="eyebrow text-lime">Also on record</p>
+            <p className="label text-lime">Also on record</p>
             <p className="display mt-4 text-[clamp(2.5rem,1.6rem+4vw,4.5rem)]">{testimonial.result}</p>
             <p className="mt-4 text-white/70">
               {testimonial.name}, {testimonial.role}. {testimonial.source}.
@@ -109,7 +109,7 @@ export default function TransformationsPage() {
       </Section>
 
       <FinalCta
-        heading="Your numbers next."
+        lines={["Your numbers", "next."]}
         body="Message RESET and you get a realistic read on where you are and what three hours a week could do — before anyone talks about packages."
       />
     </>

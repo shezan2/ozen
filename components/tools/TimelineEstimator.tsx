@@ -25,11 +25,11 @@ export default function TimelineEstimator() {
   );
 
   return (
-    <div className="on-ink overflow-hidden rounded-3xl bg-ink text-white">
+    <div className="on-ink border border-white/15 bg-ink-soft text-white">
       <div className="grid lg:grid-cols-2">
         {/* ---------------------------------------------------------- inputs */}
         <div className="border-b border-line-dark p-7 sm:p-10 lg:border-r lg:border-b-0">
-          <p className="eyebrow text-lime">Realistic timeline</p>
+          <p className="label text-lime">Realistic timeline</p>
           <h3 className="display mt-4 text-[clamp(1.75rem,1.3rem+1.8vw,2.5rem)]">
             How long does 5–10kg actually take?
           </h3>
@@ -43,7 +43,7 @@ export default function TimelineEstimator() {
               <label htmlFor={`${ids}-current`} className="block text-sm font-medium text-white/80">
                 Weight now
               </label>
-              <div className="mt-2 flex items-center rounded-xl border border-white/20 bg-white/6 focus-within:border-lime">
+              <div className="mt-2 flex items-center border border-white/20 bg-white/6 focus-within:border-lime">
                 <input
                   id={`${ids}-current`}
                   type="number"
@@ -63,7 +63,7 @@ export default function TimelineEstimator() {
               <label htmlFor={`${ids}-goal`} className="block text-sm font-medium text-white/80">
                 Weight you want
               </label>
-              <div className="mt-2 flex items-center rounded-xl border border-white/20 bg-white/6 focus-within:border-lime">
+              <div className="mt-2 flex items-center border border-white/20 bg-white/6 focus-within:border-lime">
                 <input
                   id={`${ids}-goal`}
                   type="number"
@@ -93,8 +93,8 @@ export default function TimelineEstimator() {
                   aria-pressed={sessions === n}
                   className={
                     sessions === n
-                      ? "h-11 min-w-11 rounded-full bg-lime px-4 text-sm font-bold text-ink"
-                      : "h-11 min-w-11 rounded-full border border-white/25 px-4 text-sm font-semibold text-white/75 hover:border-white/50"
+                      ? "h-11 min-w-11 bg-lime px-4 text-sm font-bold text-ink"
+                      : "h-11 min-w-11 border border-white/25 px-4 text-sm font-semibold text-white/75 hover:border-white/50"
                   }
                 >
                   {n}
@@ -109,7 +109,7 @@ export default function TimelineEstimator() {
           <div aria-live="polite">
             {result.kind === "estimate" ? (
               <>
-                <p className="eyebrow text-white/60">Estimated range</p>
+                <p className="label text-white/60">Estimated range</p>
                 <p className="display mt-4 text-[clamp(2.5rem,1.6rem+4vw,4.25rem)] text-lime">
                   {result.weeksFast}–{result.weeksSlow}
                   <span className="ml-3 align-baseline text-[0.28em] font-semibold tracking-[0.16em] text-white uppercase">
@@ -130,7 +130,7 @@ export default function TimelineEstimator() {
               </>
             ) : (
               <>
-                <p className="eyebrow text-white/60">
+                <p className="label text-white/60">
                   {result.kind === "invalid" ? "Check the numbers" : "Worth a conversation"}
                 </p>
                 <p className="mt-4 text-lg leading-relaxed text-white/80">{result.message}</p>

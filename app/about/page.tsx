@@ -21,9 +21,9 @@ export const metadata: Metadata = {
 };
 
 const personSchema = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": `${siteConfig.url}/about#coach`,
+ "@context": "https://schema.org",
+ "@type": "Person",
+ "@id": `${siteConfig.url}/about#coach`,
   name: siteConfig.coach.name,
   alternateName: siteConfig.coach.handle,
   jobTitle: siteConfig.coach.jobTitle,
@@ -32,13 +32,13 @@ const personSchema = {
   image: `${siteConfig.url}/images/about-myo.jpg`,
   worksFor: { "@id": `${siteConfig.url}/#business` },
   knowsAbout: [
-    "Personal training",
-    "Fat loss for working parents",
-    "Time-efficient resistance training",
-    "General nutrition guidance",
+   "Personal training",
+   "Fat loss for working parents",
+   "Time-efficient resistance training",
+   "General nutrition guidance",
   ],
   hasCredential: siteConfig.coach.certifications.map((credential) => ({
-    "@type": "EducationalOccupationalCredential",
+   "@type": "EducationalOccupationalCredential",
     name: credential,
   })),
   sameAs: [siteConfig.social.instagram, siteConfig.social.threads],
@@ -50,14 +50,14 @@ export default function AboutPage() {
       <JsonLd data={personSchema} />
 
       <PageHero
-        eyebrow="About"
-        title="A method built by someone who ran out of time first."
+        label="About"
+        titleLines={["A method built by someone", "who ran out of time first."]}
         lede="Coaching for working fathers is not a niche picked off a whiteboard. It is the problem that nearly ended this coach's own training."
       />
 
       <Section tone="surface">
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-          <Reveal className="relative aspect-4/5 overflow-hidden rounded-3xl bg-surface-sunken lg:sticky lg:top-28 lg:self-start">
+          <Reveal className="relative aspect-4/5 overflow-hidden bg-surface-sunken lg:sticky lg:top-28 lg:self-start">
             <Image
               src="/images/about-myo.jpg"
               alt={`${siteConfig.coach.name} photographed on the gym floor [TODO: replace with a real portrait]`}
@@ -70,7 +70,7 @@ export default function AboutPage() {
           </Reveal>
 
           <div>
-            <SectionHeading eyebrow="The short version" title="Fifty-hour weeks killed the old way of training" />
+            <SectionHeading label="The short version" title="Fifty-hour weeks killed the old way of training" />
             <div className="mt-7 space-y-5 text-base leading-relaxed text-ink-mute">
               <p>
                 A fifty-hour engineering work week is what broke the training methods{" "}
@@ -110,7 +110,7 @@ export default function AboutPage() {
       <Section tone="off">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <SectionHeading eyebrow="The name" title="Where “Myo” comes from" />
+            <SectionHeading label="The name" title="Where “Myo” comes from" />
             <div className="mt-7 space-y-5 text-base leading-relaxed text-ink-mute">
               <p>
                 <span className="font-semibold text-ink">myo-</span> is a combining form from Greek{" "}
@@ -143,7 +143,7 @@ export default function AboutPage() {
               here treats, diagnoses or rehabilitates a condition, and anything in that territory
               belongs with your doctor.
             </p>
-            <div className="relative mt-9 aspect-3/2 overflow-hidden rounded-2xl bg-surface-sunken">
+            <div className="relative mt-9 aspect-3/2 overflow-hidden bg-surface-sunken">
               <Image
                 src="/images/about-gym.jpg"
                 alt="The gym floor where in-person sessions run [TODO: replace with a real photo of the partner gym]"
@@ -157,7 +157,7 @@ export default function AboutPage() {
       </Section>
 
       <FinalCta
-        heading="Same constraint, different outcome."
+        lines={["Same constraint,", "different outcome."]}
         body="If the reason you stopped last time was time rather than willingness, this is the conversation worth having."
       />
     </>

@@ -46,8 +46,8 @@ export default function PricingPage() {
   return (
     <>
       <PageHero
-        eyebrow="Pricing"
-        title="Blocks of sessions, not a subscription you forget to cancel."
+        label="Pricing"
+        titleLines={["Blocks of sessions,", "not a subscription."]}
         lede="Two in-person blocks and an online option. What you are paying for is the coaching around the sessions as much as the sessions themselves."
       />
 
@@ -58,12 +58,12 @@ export default function PricingPage() {
               key={pkg.slug}
               delay={index * 70}
               className={cn(
-                "flex flex-col rounded-3xl border p-7 sm:p-8",
+               "flex flex-col border p-7 sm:p-8",
                 pkg.featured ? "on-ink border-ink bg-ink text-white" : "border-line bg-surface-off",
               )}
             >
               {pkg.featured ? (
-                <p className="sticker-lime eyebrow mb-5 inline-block self-start px-2.5 py-1.5">
+                <p className="slab-lime label mb-5 inline-block self-start px-2.5 py-1.5">
                   Most take this one
                 </p>
               ) : null}
@@ -83,7 +83,7 @@ export default function PricingPage() {
 
               <p
                 className={cn(
-                  "mt-5 flex-1 text-[0.9375rem] leading-relaxed",
+                 "mt-5 flex-1 text-[0.9375rem] leading-relaxed",
                   pkg.featured ? "text-white/70" : "text-ink-mute",
                 )}
               >
@@ -112,7 +112,7 @@ export default function PricingPage() {
         <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-16">
           <div>
             <SectionHeading
-              eyebrow="In every block"
+              label="In every block"
               title="What you are actually buying"
               lede="The sessions are the visible part. The rest of it is what makes the sessions survive a bad month."
             />
@@ -132,7 +132,7 @@ export default function PricingPage() {
             </p>
           </div>
 
-          <div className="relative aspect-3/2 overflow-hidden rounded-3xl bg-surface-sunken">
+          <div className="relative aspect-3/2 overflow-hidden bg-surface-sunken">
             <Image
               src="/images/pricing-session.jpg"
               alt="A coaching session in progress, coach spotting a set [TODO: replace with a real session photo]"
@@ -145,7 +145,7 @@ export default function PricingPage() {
       </Section>
 
       <FinalCta
-        heading="Not sure which block?"
+        lines={["Not sure", "which block?"]}
         body="Message RESET and describe the week you actually have. The right option falls out of that conversation rather than out of a price list."
       />
     </>

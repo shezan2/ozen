@@ -20,7 +20,7 @@ const LIME = "#57e64b";
 
 /** @type {{file: string, w: number, h: number, label: string, angle: number, warm?: boolean}[]} */
 const slots = [
-  { file: "hero-coaching.jpg", w: 1200, h: 1500, label: "Hero · Myo coaching a client", angle: 22 },
+  { file: "hero-coaching.jpg", w: 2400, h: 1500, label: "Hero · Myo coaching a client", angle: 22, corner: true },
   { file: "method-hero.jpg", w: 1600, h: 1067, label: "Method · the three hours", angle: 8 },
   { file: "method-session.jpg", w: 1400, h: 1050, label: "Method · a working set", angle: 34 },
   { file: "method-eating-out.jpg", w: 1200, h: 1500, label: "Method · eating out", angle: 15, warm: true },
@@ -44,7 +44,7 @@ function escapeXml(value) {
   );
 }
 
-function svg({ w, h, label, angle, warm = false, tint = 0 }) {
+function svg({ w, h, label, angle, warm = false, tint = 0, corner = false }) {
   const base = tint ? INK_DEEP : INK;
   const accent = warm ? "#f2a81d" : LIME;
   const glyph = Math.round(Math.min(w, h) * 0.14);
@@ -64,17 +64,27 @@ function svg({ w, h, label, angle, warm = false, tint = 0 }) {
   </defs>
   <rect width="${w}" height="${h}" fill="url(#g)"/>
   <rect width="${w}" height="${h}" fill="url(#p)"/>
-  <g transform="translate(${w / 2}, ${h / 2 - glyph * 0.35})">
+  ${
+    corner
+      ? `<text x="${w - 40}" y="${h - 40}" text-anchor="end" font-family="DejaVu Sans, sans-serif"
+        font-size="${noteSize}" fill="#ffffff" fill-opacity="0.3">${escapeXml(label)} — placeholder</text>`
+      : ""
+  }
+  <g transform="translate(${w / 2}, ${h / 2 - glyph * 0.35})" ${corner ? 'opacity="0"' : ""}>
     <rect x="${-glyph}" y="${-glyph * 0.72}" width="${glyph * 2}" height="${glyph * 1.44}" rx="${glyph * 0.12}"
           fill="none" stroke="${accent}" stroke-opacity="0.5" stroke-width="${Math.max(2, glyph * 0.045)}"/>
     <circle cx="${-glyph * 0.42}" cy="${-glyph * 0.26}" r="${glyph * 0.16}" fill="${accent}" fill-opacity="0.55"/>
     <path d="M ${-glyph} ${glyph * 0.44} L ${-glyph * 0.2} ${-glyph * 0.16} L ${glyph * 0.32} ${glyph * 0.3} L ${glyph * 0.62} ${glyph * 0.04} L ${glyph} ${glyph * 0.44} Z"
           fill="${accent}" fill-opacity="0.4"/>
   </g>
-  <text x="${w / 2}" y="${h / 2 + glyph * 1.3}" text-anchor="middle" font-family="DejaVu Sans, sans-serif"
+  ${
+    corner
+      ? ""
+      : `<text x="${w / 2}" y="${h / 2 + glyph * 1.3}" text-anchor="middle" font-family="DejaVu Sans, sans-serif"
         font-size="${labelSize}" font-weight="bold" fill="#ffffff" fill-opacity="0.85">${escapeXml(label)}</text>
   <text x="${w / 2}" y="${h / 2 + glyph * 1.3 + labelSize * 1.6}" text-anchor="middle" font-family="DejaVu Sans, sans-serif"
-        font-size="${noteSize}" fill="#ffffff" fill-opacity="0.42">Placeholder — replace with the real photograph</text>
+        font-size="${noteSize}" fill="#ffffff" fill-opacity="0.42">Placeholder — replace with the real photograph</text>`
+  }
 </svg>`);
 }
 

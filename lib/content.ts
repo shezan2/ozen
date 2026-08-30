@@ -33,7 +33,7 @@ export const disclaimers = {
 /* ------------------------------------------------------------------- hero */
 
 export const hero = {
-  eyebrow: "Singapore · personal coaching for dads",
+  label: "Singapore · personal coaching for dads",
   headline: ["Lose 5–10kg", "on three hours", "a week."],
   subhead:
     "You have a job, kids, and roughly no spare time. This is coaching built around that — not a programme that assumes your evenings are free.",
@@ -47,7 +47,7 @@ export const hero = {
 /* ---------------------------------------------------------------- problem */
 
 export const problem = {
-  eyebrow: "If this sounds familiar",
+  label: "If this sounds familiar",
   heading: "You have already tried. That is the whole point.",
   intro:
     "Most dads who message me are not starting from zero motivation. They are starting from a pile of things that did not stick.",
@@ -74,7 +74,7 @@ export const problem = {
 /* ----------------------------------------------------------------- method */
 
 export const method = {
-  eyebrow: "The 3-hour method",
+  label: "The 3-hour method",
   heading: "Three hours a week, and the rest of it built around your life",
   intro:
     "Three hours is the whole budget. Everything below is designed to fit inside it, or to happen in the gaps you already have — the commute, the food court queue, the hotel breakfast buffet.",
@@ -124,7 +124,7 @@ export const method = {
 /* --------------------------------------------------- travel and eating out */
 
 export const travel = {
-  eyebrow: "The part nobody else does",
+  label: "The part nobody else does",
   heading: "Send the itinerary. Get back what to order.",
   lede: "One client sent his travel itinerary before a work trip and got back guidance restaurant by restaurant — what to order at each one, so the trip did not cost him the month.",
   body: [

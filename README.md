@@ -191,35 +191,80 @@ components/
 
 ---
 
-## Design and performance notes
+## Design and motion
 
-- **Palette** (`app/globals.css`) is derived from the Instagram account:
-  near-black ink, white / off-white surfaces, bright lime for results only,
-  amber as a secondary accent. Lime is a light colour — it is used as a
-  *background* under ink text or at display sizes on ink, never as small text on
-  white. `--lime-deep` (5.5:1 on white) covers small lime text.
-- **One typeface.** Archivo variable, display weights for headlines and 400 for
-  body. A second family cost ~48KB with no design gain.
-- **Scroll reveals animate whole blocks**, never per-word spans, and the hidden
-  state is applied from JavaScript only to elements still below the fold — so
-  server HTML is always fully visible and copy survives with JS off.
-- **FAQ is native `<details>`**, so every answer is in the server HTML and works
-  without JavaScript. Only the disclosure is animated, in CSS.
-- **Framer Motion is loaded through `LazyMotion`** with an async feature bundle,
-  keeping ~30KB of animation runtime off the critical path.
+The visual language is taken from the Instagram account rather than from a
+generic marketing template: hard black label blocks with white type slapped over
+photographs, a bright lime that only ever marks a result, amber as the secondary
+highlight. Nothing is rounded — the source material is flat-edged and
+high-contrast, so the site is too.
 
-Verified on this build, Lighthouse mobile:
+- **Palette** (`app/globals.css`): near-black ink, white / off-white surfaces,
+  `--lime` for results only, `--gold` secondary. Lime is a light colour, so it is
+  used as a *background* under ink text or at display sizes on ink, never as
+  small text on white. `--lime-deep` (5.5:1 on white) covers small lime text.
+- **One typeface**, Archivo variable: 900 for display, 400 for body. The scale
+  contrast is the point — 10px tracked labels against 100px numerals, the way a
+  caption card sets a tiny word beside a huge one.
+- **`.slab` / `.slab-lime` / `.slab-white`** are the caption-card blocks. The
+  hero headline is built from them, and the before/after weight labels reuse them
+  so the site and his stories read as the same thing.
+- **Section rhythm varies on purpose** (`Section` has `tight` / `base` / `tall`).
+  Full-bleed rows — the transformation pair, the travel photograph, the lime
+  closing slab — break the container rather than sitting in it.
+
+### Motion
+
+All scroll animation runs through **one** client component,
+`components/site/ScrollAnimator.tsx`, mounted once in the layout. Sections stay
+pure server components that mark themselves with `data-animate`; there is no
+client boundary per animated block. That refactor alone took total blocking time
+from 290ms to 120ms.
+
+| Effect | How |
+|---|---|
+| Hero headline line wipe | CSS, armed by a two-line inline script so it never waits on hydration |
+| Scroll reveals (whole blocks, directional) | `ScrollAnimator` + CSS transitions |
+| Heading line wipes below the fold | `LineReveal` emits the markup, `ScrollAnimator` arms it |
+| Count-ups on the real figures | `CountUp` renders the true number server-side; the animation only rewrites the node's text |
+| Results ticker | CSS marquee, pauses on hover |
+| Hero photograph drift | CSS keyframes, layer-promoted |
+| FAQ disclosure | Native `<details>` + CSS |
+| Mobile menu, WhatsApp CTA | Framer Motion via `LazyMotion` with an async feature bundle |
+
+Everything above stops under `prefers-reduced-motion`.
+
+Three rules hold across all of it:
+
+- **Whole blocks and whole lines, never per-word or per-character spans.**
+  Splitting copy into hidden spans keeps it out of the accessible tree and hands
+  crawlers a page of empty elements.
+- **The hidden state is applied from JavaScript, and only below the fold.** The
+  server HTML is always fully visible, so copy survives with JS off and nothing
+  flashes.
+- **Real figures render server-side.** The count-up reads the true number off the
+  node before animating it.
+
+## Verified on this build
+
+Lighthouse, mobile:
 
 | Route | Perf | A11y | Best practices | SEO |
 |---|---|---|---|---|
-| `/` | 94 | 100 | 100 | 100 |
-| `/the-3-hour-method` | 94 | 100 | 100 | 100 |
-| `/transformations` | 94 | 100 | 100 | 100 |
-| `/about` | 96 | 100 | 100 | 100 |
-| `/pricing` | 96 | 100 | 100 | 100 |
+| `/` | 93 | 100 | 100 | 100 |
+| `/the-3-hour-method` | 98 | 100 | 100 | 100 |
+| `/transformations` | 93 | 100 | 100 | 100 |
+| `/about` | 94 | 100 | 100 | 100 |
+| `/pricing` | 98 | 100 | 100 | 100 |
 | `/contact` | 98 | 100 | 100 | 100 |
-| `/privacy-policy` | 97 | 100 | 100 | 100 |
+| `/privacy-policy` | 96 | 100 | 100 | 100 |
 
-Tested at 375px, 768px and 1440px. Every route is statically prerendered, and
-every route's core copy is present in the server HTML (`curl`-verified, not just
-in the browser).
+Also checked: `npm run build` and `eslint` clean; one `h1` per route; no empty
+`alt`; unique title, description and canonical per route; every route's core copy
+present in the server HTML (`curl`-verified); the page renders and reads fully
+with JavaScript disabled; tested at 375px, 768px and 1440px.
+
+> The largest-contentful-paint figure is currently held up by the flat
+> placeholder photography — Chrome discounts low-entropy images as LCP
+> candidates, so the metric lands on hero text plus the web-font swap. Re-measure
+> once real photographs are in.

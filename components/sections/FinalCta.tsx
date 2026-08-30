@@ -1,56 +1,63 @@
+import Link from "next/link";
 import { CalendarDays } from "lucide-react";
 import { disclaimers } from "@/lib/content";
 import { siteConfig, whatsAppLink } from "@/lib/site-config";
-import Link from "next/link";
 import { buttonStyles } from "@/components/ui/Button";
 import Section from "@/components/ui/Section";
+import LineReveal from "@/components/site/LineReveal";
 
 type FinalCtaProps = {
-  heading?: string;
+  lines?: string[];
   body?: string;
 };
 
 export default function FinalCta({
-  heading = "One word starts it.",
+  lines = ["One word", "starts it."],
   body = "Message RESET and you get a short conversation about where you are now and what three hours a week could realistically do. Not a sales call, and not a package pitch.",
 }: FinalCtaProps) {
   return (
-    <Section tone="ink" id="book">
-      <div className="mx-auto max-w-3xl text-center">
-        <h2 className="display text-[clamp(2.25rem,1.4rem+3.6vw,4rem)]">{heading}</h2>
-        <p className="lede mt-6 text-white/70">{body}</p>
+    <Section tone="lime" size="tall" id="book">
+      <LineReveal
+        className="display text-[clamp(2.75rem,1.4rem+6vw,6.5rem)] text-ink"
+        lines={lines}
+      />
 
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
+      <div className="mt-12 grid gap-10 border-t border-ink/25 pt-10 lg:grid-cols-[1fr_auto] lg:items-end">
+        <p className="lede max-w-xl text-ink/80">{body}</p>
+
+        <div className="flex flex-wrap gap-3">
           <a
             href={whatsAppLink()}
             target="_blank"
             rel="noopener noreferrer"
-            className={buttonStyles("lime", "lg")}
+            className={buttonStyles("ink", "lg")}
           >
-            Message {siteConfig.contact.whatsappKeyword} on WhatsApp
+            Message {siteConfig.contact.whatsappKeyword}
           </a>
           <a
             href={siteConfig.contact.bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className={buttonStyles("onInk", "lg")}
+            className={buttonStyles("outline", "lg")}
           >
             <CalendarDays className="size-4" aria-hidden />
             Book a time
           </a>
         </div>
+      </div>
 
-        <p className="mt-8 text-sm text-white/50">
+      <div className="mt-10 flex flex-col gap-4 text-sm text-ink/80 sm:flex-row sm:items-center sm:justify-between">
+        <p>
           Prefer to write it out?{" "}
-          <Link href="/contact" className="font-semibold text-lime underline underline-offset-4 hover:text-lime-bright">
+          <Link href="/contact" className="font-bold text-ink underline underline-offset-4">
             Send an enquiry instead
           </Link>
         </p>
-
-        <p className="mx-auto mt-10 max-w-xl text-xs leading-relaxed text-white/60">
-          {disclaimers.preParticipation}
-        </p>
       </div>
+
+      <p className="mt-8 max-w-2xl text-xs leading-relaxed text-ink/80">
+        {disclaimers.preParticipation}
+      </p>
     </Section>
   );
 }
