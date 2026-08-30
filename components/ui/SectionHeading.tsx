@@ -1,35 +1,50 @@
 import type { ReactNode } from "react";
-import Reveal from "./Reveal";
+import { cn } from "@/lib/utils";
 
-interface SectionHeadingProps {
-  eyebrow: string;
+type SectionHeadingProps = {
+  eyebrow?: string;
   title: ReactNode;
-  description?: string;
+  lede?: ReactNode;
+  tone?: "light" | "dark";
   align?: "left" | "center";
   className?: string;
-}
+  /** Rendered as an h2 by default; pass "h3" for nested sections. */
+  as?: "h2" | "h3";
+};
 
 export default function SectionHeading({
   eyebrow,
   title,
-  description,
+  lede,
+  tone = "light",
   align = "left",
-  className = "",
+  className,
+  as: Tag = "h2",
 }: SectionHeadingProps) {
-  const alignCls = align === "center" ? "items-center text-center" : "items-start text-left";
   return (
-    <Reveal className={`flex flex-col gap-5 ${alignCls} ${className}`}>
-      <div className="flex items-center gap-4">
-        <span className="hairline w-10" aria-hidden />
-        <p className="eyebrow">{eyebrow}</p>
-        {align === "center" && <span className="hairline w-10" aria-hidden />}
-      </div>
-      <h2 className="font-display text-4xl font-medium leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-6xl">
+    <div className={cn(align === "center" && "mx-auto max-w-3xl text-center", className)}>
+      {eyebrow ? (
+        <p className={cn("eyebrow mb-4", tone === "dark" ? "text-lime" : "text-lime-deep")}>{eyebrow}</p>
+      ) : null}
+      <Tag
+        className={cn(
+          "display text-[clamp(2rem,1.3rem+3vw,3.25rem)]",
+          tone === "dark" ? "text-white" : "text-ink",
+        )}
+      >
         {title}
-      </h2>
-      {description && (
-        <p className="max-w-2xl text-base leading-relaxed text-ink-dim sm:text-lg">{description}</p>
-      )}
-    </Reveal>
+      </Tag>
+      {lede ? (
+        <div
+          className={cn(
+            "lede mt-5 max-w-2xl",
+            align === "center" && "mx-auto",
+            tone === "dark" ? "text-white/72" : "text-ink-mute",
+          )}
+        >
+          {lede}
+        </div>
+      ) : null}
+    </div>
   );
 }

@@ -1,84 +1,104 @@
-import type { Metadata } from "next";
-import { Fraunces, Geist, Geist_Mono } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { site } from "@/lib/site";
+import type { Metadata, Viewport } from "next";
+import { Archivo } from "next/font/google";
+import Header from "@/components/site/Header";
+import Footer from "@/components/site/Footer";
+import WhatsAppFab from "@/components/site/WhatsAppFab";
+import JsonLd from "@/components/site/JsonLd";
+import { siteConfig } from "@/lib/site-config";
+import { pageMeta } from "@/lib/content";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+/**
+ * One variable family across the whole site. Archivo carries the heavy,
+ * high-contrast headline weights the brand's story graphics use, and reads
+ * cleanly at body sizes — so the site ships a single font file rather than two.
+ */
+const archivo = Archivo({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  variable: "--font-archivo",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: site.title,
-    template: "%s — ozen",
+    default: pageMeta.home.title,
+    template: `%s | ${siteConfig.brand}`,
   },
-  description: site.description,
+  description: pageMeta.home.description,
+  applicationName: siteConfig.brand,
+  alternates: { canonical: "/" },
   openGraph: {
-    title: site.title,
-    description: site.description,
-    url: site.url,
-    siteName: site.brand,
     type: "website",
+    locale: "en_SG",
+    siteName: siteConfig.brand,
+    url: siteConfig.url,
+    title: pageMeta.home.title,
+    description: pageMeta.home.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: pageMeta.home.title,
+    description: pageMeta.home.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+  category: "fitness",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0b0b0c",
+  colorScheme: "light",
+};
+
+/** Business-level structured data, present on every route. */
+const localBusiness = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": `${siteConfig.url}/#business`,
+  name: siteConfig.brand,
+  description: `${siteConfig.tagline}. ${siteConfig.positioning}.`,
+  url: siteConfig.url,
+  telephone: siteConfig.contact.whatsappDisplay,
+  email: siteConfig.contact.email,
+  image: `${siteConfig.url}/opengraph-image`,
+  priceRange: siteConfig.schema.priceRange,
+  currenciesAccepted: siteConfig.schema.currency,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: siteConfig.location.city,
+    addressCountry: siteConfig.location.country,
+  },
+  areaServed: { "@type": "City", name: siteConfig.schema.areaServed },
+  sameAs: [siteConfig.social.instagram, siteConfig.social.threads],
+  founder: {
+    "@type": "Person",
+    "@id": `${siteConfig.url}/about#coach`,
+    name: siteConfig.coach.name,
+    jobTitle: siteConfig.coach.jobTitle,
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: site.brand,
-  description: site.description,
-  url: site.url,
-  email: site.email,
-  priceRange: "$$",
-  makesOffer: [
-    {
-      "@type": "Offer",
-      name: "Website design & build",
-      price: "2000",
-      priceCurrency: "USD",
-    },
-    {
-      "@type": "Offer",
-      name: "Care plan",
-      price: "199",
-      priceCurrency: "USD",
-    },
-  ],
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`dark ${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
-    >
-      <body className="grain flex min-h-full flex-col bg-canvas text-ink">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <Navbar />
-        <main className="flex-1">{children}</main>
+    <html lang="en-SG" className={archivo.variable}>
+      <body className="flex min-h-screen flex-col bg-surface text-ink antialiased">
+        <JsonLd data={localBusiness} />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-100 focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-white"
+        >
+          Skip to content
+        </a>
+        <Header />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
         <Footer />
+        <WhatsAppFab />
       </body>
     </html>
   );
