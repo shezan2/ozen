@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/lib/site";
+import { club } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    { url: site.url, changeFrequency: "monthly", priority: 1 },
-    { url: `${site.url}/book`, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${site.url}/legal`, changeFrequency: "yearly", priority: 0.2 },
+    { url: club.url, changeFrequency: "weekly", priority: 1 },
+    { url: `${club.url}/squad`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${club.url}/matches`, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${club.url}/leaderboard`, changeFrequency: "weekly", priority: 0.7 },
   ];
 }

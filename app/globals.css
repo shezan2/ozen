@@ -4,61 +4,79 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ---------- Ozen design tokens — obsidian + iris ---------- */
+/* ---------- Chèvre Noir FC — design tokens ---------- */
+/* Apple-style light canvas, club navy for hero/nav/footer, muted gold accent lifted from the crest. */
 
 :root {
-  --canvas: #060608;
-  --canvas-raised: #0b0b0e;
-  --surface: #101014;
-  --surface-raised: #16161b;
-  --line: rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(255, 255, 255, 0.15);
-  --iris: #8f7dff;
-  --iris-bright: #b6a9ff;
-  --iris-deep: #5e4fd1;
-  --spectral-a: #6ee7f2;
-  --spectral-b: #8f7dff;
-  --ink: #ededf2;
-  --ink-dim: #a1a1ac;
-  --ink-faint: #66666f;
+  --paper: #f5f5f7;
+  --paper-raised: #ffffff;
+  --noir: #0a0d16;
+  --navy: #111830;
+  --navy-raised: #182142;
+  --line: rgba(0, 0, 0, 0.08);
+  --line-strong: rgba(0, 0, 0, 0.14);
+  --line-on-navy: rgba(255, 255, 255, 0.12);
+  --line-on-navy-strong: rgba(255, 255, 255, 0.22);
 
-  /* shadcn tokens remapped to the Ozen palette (dark-only site) */
-  --background: var(--canvas);
+  --gold: #a9812f;
+  --gold-bright: #e7c988;
+  --gold-deep: #8a6a26;
+
+  --ink: #1d1d1f;
+  --ink-dim: #6e6e73;
+  --ink-faint: #98989d;
+  --paper-ink: #f5f5f7;
+  --paper-ink-dim: rgba(245, 245, 247, 0.68);
+  --paper-ink-faint: rgba(245, 245, 247, 0.42);
+
+  --win: #1f8a4c;
+  --draw: #8a8a8e;
+  --loss: #c9432f;
+
+  /* shadcn tokens remapped to the club palette */
+  --background: var(--paper);
   --foreground: var(--ink);
-  --card: var(--surface);
+  --card: var(--paper-raised);
   --card-foreground: var(--ink);
-  --popover: var(--surface-raised);
+  --popover: var(--paper-raised);
   --popover-foreground: var(--ink);
-  --primary: var(--iris);
-  --primary-foreground: var(--canvas);
-  --secondary: var(--surface-raised);
+  --primary: var(--noir);
+  --primary-foreground: var(--paper);
+  --secondary: #ececee;
   --secondary-foreground: var(--ink);
-  --muted: var(--surface);
+  --muted: #ececee;
   --muted-foreground: var(--ink-dim);
-  --accent: var(--surface-raised);
-  --accent-foreground: var(--ink);
-  --destructive: oklch(0.704 0.191 22.216);
+  --accent: var(--gold);
+  --accent-foreground: var(--noir);
+  --destructive: var(--loss);
   --border: var(--line);
   --input: var(--line-strong);
-  --ring: var(--iris-deep);
-  --radius: 0.625rem;
+  --ring: var(--gold);
+  --radius: 1rem;
 }
 
 @theme inline {
-  --color-canvas: var(--canvas);
-  --color-canvas-raised: var(--canvas-raised);
-  --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-noir: var(--noir);
+  --color-navy: var(--navy);
+  --color-navy-raised: var(--navy-raised);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
-  --color-iris: var(--iris);
-  --color-iris-bright: var(--iris-bright);
-  --color-iris-deep: var(--iris-deep);
-  --color-spectral-a: var(--spectral-a);
-  --color-spectral-b: var(--spectral-b);
+  --color-line-on-navy: var(--line-on-navy);
+  --color-line-on-navy-strong: var(--line-on-navy-strong);
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-gold-deep: var(--gold-deep);
   --color-ink: var(--ink);
   --color-ink-dim: var(--ink-dim);
   --color-ink-faint: var(--ink-faint);
+  --color-paper-ink: var(--paper-ink);
+  --color-paper-ink-dim: var(--paper-ink-dim);
+  --color-paper-ink-faint: var(--paper-ink-faint);
+  --color-win: var(--win);
+  --color-draw: var(--draw);
+  --color-loss: var(--loss);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -78,72 +96,37 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.7);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-xl: calc(var(--radius) * 1.35);
   --radius-2xl: calc(var(--radius) * 1.8);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
-  --font-heading: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    ui-sans-serif, system-ui, sans-serif;
 
-  --animate-marquee: marquee 36s linear infinite;
-  --animate-shine: shine 5s linear infinite;
-  --animate-fade-up: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-spin-slow: spin-slow 40s linear infinite;
-  --animate-pulse-soft: pulse-soft 3s ease-in-out infinite;
-  --animate-aurora: aurora 18s ease-in-out infinite alternate;
-  --animate-kenburns: kenburns 24s ease-in-out infinite alternate;
-  --animate-star-movement-bottom: star-movement-bottom linear infinite alternate;
-  --animate-star-movement-top: star-movement-top linear infinite alternate;
-}
-
-@keyframes star-movement-bottom {
-  0% { transform: translate(0%, 0%); opacity: 1; }
-  100% { transform: translate(-100%, 0%); opacity: 0; }
-}
-
-@keyframes star-movement-top {
-  0% { transform: translate(0%, 0%); opacity: 1; }
-  100% { transform: translate(100%, 0%); opacity: 0; }
-}
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@keyframes shine {
-  from { background-position: 200% center; }
-  to { background-position: -200% center; }
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-shine: shine 6s linear infinite;
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(28px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
-}
-
-@keyframes aurora {
-  0% { transform: translate(-8%, -4%) scale(1); opacity: 0.5; }
-  50% { transform: translate(6%, 4%) scale(1.15); opacity: 0.8; }
-  100% { transform: translate(-4%, 6%) scale(1.05); opacity: 0.55; }
-}
-
-@keyframes kenburns {
-  from { transform: scale(1.01); }
-  to { transform: scale(1.07); }
+@keyframes shine {
+  from {
+    background-position: 200% center;
+  }
+  to {
+    background-position: -200% center;
+  }
 }
 
 html {
@@ -151,96 +134,78 @@ html {
 }
 
 body {
-  background: var(--canvas);
+  background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv11", "ss01";
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--iris) 35%, transparent);
-  color: #fff;
+  background: color-mix(in srgb, var(--gold) 35%, transparent);
+  color: var(--noir);
 }
 
 ::-webkit-scrollbar {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--canvas);
+  background: var(--paper);
 }
 ::-webkit-scrollbar-thumb {
-  background: #232329;
+  background: #d2d2d7;
   border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--iris-deep);
+  background: var(--gold);
 }
 
-/* ---------- Premium utilities ---------- */
-
-.font-display {
-  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
-}
+/* ---------- Shared utilities ---------- */
 
 .eyebrow {
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.3em;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--iris);
-  font-weight: 500;
+  color: var(--gold-deep);
+  font-weight: 600;
 }
 
-.glass {
-  background: rgba(8, 8, 11, 0.78);
-  backdrop-filter: blur(12px) saturate(1.2);
-  -webkit-backdrop-filter: blur(12px) saturate(1.2);
-  border: 1px solid var(--line);
+.eyebrow-on-navy {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  font-weight: 600;
 }
 
-.iris-text {
-  background: linear-gradient(100deg, var(--iris-deep) 0%, var(--iris) 40%, var(--iris-bright) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.glass-nav {
+  background: color-mix(in srgb, var(--paper) 72%, transparent);
 }
 
-.spectral-text {
-  background: linear-gradient(100deg, var(--spectral-a) 0%, var(--spectral-b) 70%, var(--iris-bright) 100%);
+.gold-text {
+  background: linear-gradient(100deg, var(--gold-deep) 0%, var(--gold) 45%, var(--gold-bright) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .shine-text {
-  background: linear-gradient(110deg, var(--iris) 30%, #dcd6ff 50%, var(--iris) 70%);
+  background: linear-gradient(110deg, var(--gold) 30%, var(--gold-bright) 50%, var(--gold) 70%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: shine 5s linear infinite;
+  animation: shine 6s linear infinite;
 }
 
 .hairline {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--iris) 60%, transparent),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--gold) 70%, transparent), transparent);
   height: 1px;
 }
 
-/* Film grain overlay — sits on top of everything, never intercepts input */
-.grain::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 60;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+.tabular {
+  font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {

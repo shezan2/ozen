@@ -1,64 +1,49 @@
 import type { Metadata } from "next";
-import { Fraunces, Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { site } from "@/lib/site";
+import { club } from "@/lib/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(club.url),
   title: {
-    default: site.title,
-    template: "%s — ozen",
+    default: club.title,
+    template: `%s — ${club.shortName}`,
   },
-  description: site.description,
+  description: club.description,
   openGraph: {
-    title: site.title,
-    description: site.description,
-    url: site.url,
-    siteName: site.brand,
+    title: club.title,
+    description: club.description,
+    url: club.url,
+    siteName: club.fullName,
     type: "website",
+    images: ["/crest.png"],
+  },
+  twitter: {
+    card: "summary",
+    title: club.title,
+    description: club.description,
+    images: ["/crest.png"],
   },
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: site.brand,
-  description: site.description,
-  url: site.url,
-  email: site.email,
-  priceRange: "$$",
-  makesOffer: [
-    {
-      "@type": "Offer",
-      name: "Website design & build",
-      price: "2000",
-      priceCurrency: "USD",
-    },
-    {
-      "@type": "Offer",
-      name: "Care plan",
-      price: "199",
-      priceCurrency: "USD",
-    },
-  ],
+  "@type": "SportsTeam",
+  name: club.fullName,
+  alternateName: club.shortName,
+  sport: "Football",
+  foundingDate: String(club.founded),
+  url: club.url,
+  logo: `${club.url}/crest.png`,
+  sameAs: [club.instagram],
 };
 
 export default function RootLayout({
@@ -67,11 +52,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`dark ${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
-    >
-      <body className="grain flex min-h-full flex-col bg-canvas text-ink">
+    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+      <body className="flex min-h-full flex-col bg-paper text-ink">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

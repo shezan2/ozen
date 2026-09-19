@@ -1,48 +1,56 @@
 import Link from "next/link";
-import OzenLogo from "@/components/brand/OzenLogo";
-import { site } from "@/lib/site";
+import Crest from "@/components/club/Crest";
+import { club } from "@/lib/site";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-line bg-canvas-raised">
+    <footer className="bg-noir">
       <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-14 sm:px-8 md:flex-row md:items-start md:justify-between">
         <div className="flex flex-col gap-4">
-          <Link href="/" className="flex items-center gap-2.5 text-ink" aria-label="ozen — home">
-            <OzenLogo size={30} />
-            <span className="font-display text-2xl font-medium lowercase tracking-tight">ozen</span>
+          <Link href="/" className="flex items-center gap-3" aria-label="Chèvre Noir FC — home">
+            <Crest size={40} />
+            <span className="text-lg font-semibold tracking-tight text-paper-ink">
+              Chèvre Noir <span className="font-normal text-paper-ink-dim">FC</span>
+            </span>
           </Link>
-          <p className="max-w-xs text-sm leading-relaxed text-ink-dim">
-            Premium websites for businesses that deserve better.
+          <p className="max-w-xs text-sm leading-relaxed text-paper-ink-dim">
+            Founded {club.founded}. {club.motto}.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-x-14 gap-y-8">
+        <div className="flex flex-wrap gap-x-16 gap-y-8">
           <div className="flex flex-col gap-3">
-            <p className="eyebrow">Explore</p>
-            <Link href="/#work" className="text-sm text-ink-dim transition-colors hover:text-ink">Work</Link>
-            <Link href="/#pricing" className="text-sm text-ink-dim transition-colors hover:text-ink">Pricing</Link>
-            <Link href="/#faq" className="text-sm text-ink-dim transition-colors hover:text-ink">FAQ</Link>
-            <Link href="/book" className="text-sm text-ink-dim transition-colors hover:text-ink">Book a call</Link>
+            <p className="eyebrow-on-navy">Club</p>
+            <Link href="/squad" className="text-sm text-paper-ink-dim transition-colors hover:text-paper-ink">
+              Squad
+            </Link>
+            <Link href="/matches" className="text-sm text-paper-ink-dim transition-colors hover:text-paper-ink">
+              Matches
+            </Link>
+            <Link href="/leaderboard" className="text-sm text-paper-ink-dim transition-colors hover:text-paper-ink">
+              Leaderboard
+            </Link>
           </div>
           <div className="flex flex-col gap-3">
-            <p className="eyebrow">Contact</p>
-            <a href={`mailto:${site.email}`} className="text-sm text-ink-dim transition-colors hover:text-ink">
-              {site.email}
+            <p className="eyebrow-on-navy">Follow</p>
+            <a
+              href={club.instagram}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm text-paper-ink-dim transition-colors hover:text-paper-ink"
+            >
+              Instagram
             </a>
-            <Link href="/legal" className="text-sm text-ink-dim transition-colors hover:text-ink">
-              Privacy &amp; Terms
-            </Link>
+            <span className="text-sm text-paper-ink-faint">{club.instagramHandle}</span>
           </div>
         </div>
       </div>
-      <div className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-ink-faint">
-            © 2026 ozen — all rights reserved
+      <div className="border-t border-line-on-navy">
+        <div className="mx-auto flex max-w-6xl flex-col-reverse items-center gap-3 px-5 py-5 text-center sm:flex-row sm:justify-between sm:px-8 sm:text-left">
+          <p className="text-xs text-paper-ink-faint">
+            © {club.season} {club.fullName}. All rights reserved.
           </p>
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-ink-faint">
-            design · build · care
-          </p>
+          <p className="text-xs uppercase tracking-[0.14em] text-gold-bright">{club.motto}</p>
         </div>
       </div>
     </footer>

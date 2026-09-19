@@ -1,17 +1,15 @@
-export const site = {
-  name: "ozen",
-  brand: "ozen",
-  tagline: "Websites that mean business",
-  title: "ozen — Premium websites for growing businesses",
+export const club = {
+  name: "Chèvre Noir",
+  shortName: "Chèvre Noir",
+  fullName: "Chèvre Noir Football Club",
+  abbr: "CN",
+  founded: 2026,
+  season: "2026",
+  motto: "Viva La Noir",
+  title: "Chèvre Noir FC — Squad, Fixtures & Results",
   description:
-    "ozen is a web design studio that builds premium, high-performance websites for businesses stuck with a bad website — or none at all. Custom design, modern development, one flat price.",
-  url: "https://ozen.agency",
-  // Placeholder contact details — replace with real ones before going live.
-  email: "hello@ozen.agency",
-  formEndpoint: process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? "",
-} as const;
-
-export const pricing = {
-  build: 2000,
-  care: 199,
+    "The official home of Chèvre Noir Football Club — squad, fixtures, results and season stats.",
+  url: "https://chevrenoir.ai.studio",
+  instagram: "https://www.instagram.com/chevrenoirfc",
+  instagramHandle: "@chevrenoirfc",
 } as const;
