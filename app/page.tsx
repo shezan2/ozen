@@ -6,13 +6,12 @@ import {
   getTeamRecord,
   getForm,
   getLeaders,
-  parseScore,
 } from "@/lib/data";
 import { club } from "@/lib/site";
 import HomeHero from "@/components/club/HomeHero";
+import MatchCentre from "@/components/club/MatchCentre";
 import PlayerAvatar from "@/components/club/PlayerAvatar";
 import StatCallout from "@/components/club/StatCallout";
-import { ResultBadge } from "@/components/club/ResultBadge";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
 
@@ -22,7 +21,6 @@ export default function Home() {
   const form = getForm(matches, 6);
 
   const lastMatch = matches[matches.length - 1];
-  const lastScore = parseScore(lastMatch);
 
   const topScorer = getLeaders(squad, "goals")[0];
   const topAssister = getLeaders(squad, "assists")[0];
@@ -32,44 +30,11 @@ export default function Home() {
     <div className="flex flex-col">
       <HomeHero form={form} />
 
-      {/* Latest result */}
-      <section className="border-b border-line bg-paper py-16 sm:py-24">
-        <div className="mx-auto max-w-4xl px-5 sm:px-8">
-          <Reveal>
-            <div className="flex flex-col gap-6 rounded-3xl border border-line bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.06)] sm:p-10">
-              <div className="flex items-center justify-between">
-                <span className="eyebrow">Latest Result</span>
-                <ResultBadge result={lastMatch.result} />
-              </div>
-              <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-                <div className="flex flex-col gap-1">
-                  <span className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-                    Chèvre Noir vs {lastMatch.opponent}
-                  </span>
-                  <span className="text-sm text-ink-dim">
-                    {lastMatch.date}
-                    {lastMatch.location ? ` · ${lastMatch.location}` : ""}
-                  </span>
-                </div>
-                {lastScore && (
-                  <span className="tabular text-5xl font-bold tracking-tight text-ink sm:text-6xl">
-                    {lastScore.for}&thinsp;–&thinsp;{lastScore.against}
-                  </span>
-                )}
-              </div>
-              {lastMatch.summary && (
-                <p className="text-base leading-relaxed text-ink-dim">{lastMatch.summary}</p>
-              )}
-              <Link
-                href="/matches"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-deep transition-colors hover:text-gold"
-              >
-                See all matches
-                <ArrowRight className="size-4" />
-              </Link>
-            </div>
-          </Reveal>
-        </div>
+      {/* Match centre — floats up over the hero's lower edge */}
+      <section className="relative z-10 -mt-14 px-5 pb-16 sm:-mt-20 sm:px-8 sm:pb-24">
+        <Reveal className="mx-auto max-w-2xl">
+          <MatchCentre match={lastMatch} />
+        </Reveal>
       </section>
 
       {/* Season at a glance */}

@@ -6,6 +6,7 @@ import { ChevronDown, MapPin, Star } from "lucide-react";
 import type { Match } from "@/lib/data";
 import { parseScore } from "@/lib/data";
 import { ResultBadge } from "./ResultBadge";
+import OpponentBadge from "./OpponentBadge";
 import { cn } from "@/lib/utils";
 
 export default function MatchCard({ match, matchday }: { match: Match; matchday: number }) {
@@ -34,16 +35,19 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
         </div>
 
         <div className="flex flex-1 items-center justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <span className="text-base font-semibold tracking-tight text-ink sm:text-lg">
-              vs {match.opponent}
-            </span>
-            {match.location && (
-              <span className="flex items-center gap-1 text-xs text-ink-faint">
-                <MapPin className="size-3" />
-                {match.location}
+          <div className="flex items-center gap-3">
+            <OpponentBadge name={match.opponent} size={36} className="text-xs" />
+            <div className="flex flex-col gap-1">
+              <span className="text-base font-semibold tracking-tight text-ink sm:text-lg">
+                vs {match.opponent}
               </span>
-            )}
+              {match.location && (
+                <span className="flex items-center gap-1 text-xs text-ink-faint">
+                  <MapPin className="size-3" />
+                  {match.location}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-4">
