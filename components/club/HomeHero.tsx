@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion } from "motion/react";
 import Crest from "./Crest";
 import FormGuide from "./FormGuide";
 import type { Match } from "@/lib/data";
@@ -29,22 +28,14 @@ const crestReveal = {
 };
 
 export default function HomeHero({ form }: { form: Match["result"][] }) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
-  const wedgeY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 90]);
-
   return (
-    <section
-      ref={sectionRef}
-      className="clip-diagonal-b relative overflow-hidden bg-noir pt-28 pb-36 sm:pt-32 sm:pb-48"
-    >
-      {/* Blue diagonal wedge, bleeding off the top-right corner */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute -right-1/4 -top-1/3 h-[160%] w-2/3 -skew-x-12 bg-blue sm:-right-1/3 sm:w-1/2"
-        style={{ y: wedgeY }}
-      />
+    <section className="clip-diagonal-b hero-gradient relative overflow-hidden pt-28 pb-36 sm:pt-32 sm:pb-48">
+      {/* Slowly drifting colour blobs — the "constantly moving" gradient */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="animate-drift-a absolute -left-1/4 -top-1/3 h-[70%] w-[70%] rounded-full bg-blue/40 blur-[100px]" />
+        <div className="animate-drift-b absolute -right-1/4 -top-1/4 h-[65%] w-[65%] rounded-full bg-blue-bright/25 blur-[110px]" />
+        <div className="animate-drift-c absolute -bottom-1/3 left-1/4 h-[70%] w-[70%] rounded-full bg-blue-deep/50 blur-[110px]" />
+      </div>
 
       {/* Intro light sweep */}
       <motion.div
