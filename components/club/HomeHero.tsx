@@ -1,7 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Crest from "./Crest";
 import FormGuide from "./FormGuide";
 import type { Match } from "@/lib/data";
@@ -28,22 +29,30 @@ const crestReveal = {
 };
 
 export default function HomeHero({ form }: { form: Match["result"][] }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const glowY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 70]);
+  const pitchY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 24]);
+
   return (
-    <section className="relative overflow-hidden bg-noir pt-32 pb-28 sm:pt-44 sm:pb-40">
-      {/* Floodlights */}
-      <div
+    <section ref={sectionRef} className="relative overflow-hidden bg-noir pt-32 pb-28 sm:pt-44 sm:pb-40">
+      {/* Floodlights — drifts slower than the page for a subtle sense of depth */}
+      <motion.div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
+          y: glowY,
           background:
             "radial-gradient(ellipse 55% 40% at 15% 0%, rgba(231,201,136,0.16), transparent 60%), radial-gradient(ellipse 55% 40% at 85% 0%, rgba(231,201,136,0.16), transparent 60%), radial-gradient(circle at 50% -10%, rgba(231,201,136,0.1), transparent 55%)",
         }}
       />
       {/* Pitch texture, fading up into the dark */}
-      <div
+      <motion.div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-40 opacity-[0.07] sm:h-56"
         style={{
+          y: pitchY,
           backgroundImage:
             "repeating-linear-gradient(115deg, #fff 0px, #fff 2px, transparent 2px, transparent 64px)",
           maskImage: "linear-gradient(to top, black, transparent)",

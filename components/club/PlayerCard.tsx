@@ -15,11 +15,19 @@ export default function PlayerCard({ player }: { player: Player }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 divide-x divide-line rounded-xl bg-paper">
-        <Stat label="APP" value={player.appearances} />
-        <Stat label="GLS" value={player.goals} />
-        <Stat label="AST" value={player.assists} />
-      </div>
+      {player.appearances === 0 ? (
+        <div className="flex items-center justify-center rounded-xl bg-paper py-3">
+          <span className="text-xs font-medium uppercase tracking-[0.08em] text-ink-faint">
+            Yet to feature this season
+          </span>
+        </div>
+      ) : (
+        <div className="grid grid-cols-3 divide-x divide-line rounded-xl bg-paper">
+          <Stat label="APP" value={player.appearances} />
+          <Stat label="GLS" value={player.goals} />
+          <Stat label="AST" value={player.assists} />
+        </div>
+      )}
     </div>
   );
 }

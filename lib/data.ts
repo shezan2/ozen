@@ -303,6 +303,36 @@ export function getTeamRecord(allMatches: Match[]): TeamRecord {
   return record;
 }
 
+export interface TrendPoint {
+  matchday: number;
+  opponent: string;
+  result: Match["result"];
+  score: string;
+  goalDifference: number;
+  cumulative: number;
+}
+
+/** Match-by-match cumulative goal difference, in chronological (matchday) order. */
+export function getGoalDifferenceTrend(allMatches: Match[]): TrendPoint[] {
+  let cumulative = 0;
+  const points: TrendPoint[] = [];
+  allMatches.forEach((m, i) => {
+    if (m.result === "Upcoming") return;
+    const score = parseScore(m);
+    const gd = score ? score.for - score.against : 0;
+    cumulative += gd;
+    points.push({
+      matchday: i + 1,
+      opponent: m.opponent,
+      result: m.result,
+      score: m.score ?? "",
+      goalDifference: gd,
+      cumulative,
+    });
+  });
+  return points;
+}
+
 /** Most recent completed results first, oldest last. */
 export function getForm(allMatches: Match[], count = 5): Match["result"][] {
   return allMatches

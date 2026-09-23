@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { matches, getTeamRecord } from "@/lib/data";
+import { matches, getTeamRecord, getGoalDifferenceTrend } from "@/lib/data";
 import SectionHeading from "@/components/ui/SectionHeading";
 import MatchesExplorer from "@/components/club/MatchesExplorer";
+import SeasonTrend from "@/components/club/SeasonTrend";
+import Reveal from "@/components/ui/Reveal";
 import { club } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -11,6 +13,7 @@ export const metadata: Metadata = {
 
 export default function MatchesPage() {
   const record = getTeamRecord(matches);
+  const trend = getGoalDifferenceTrend(matches);
 
   return (
     <div className="flex flex-col">
@@ -33,6 +36,18 @@ export default function MatchesPage() {
               value={record.goalDifference > 0 ? `+${record.goalDifference}` : record.goalDifference}
             />
           </div>
+        </div>
+      </section>
+
+      <section className="border-b border-line bg-paper py-14 sm:py-16">
+        <div className="mx-auto max-w-4xl px-5 sm:px-8">
+          <Reveal className="flex flex-col gap-6 rounded-3xl border border-line bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.05)] sm:p-8">
+            <div className="flex flex-col gap-1">
+              <span className="eyebrow">Season Trend</span>
+              <h2 className="text-xl font-semibold tracking-tight text-ink">Cumulative goal difference</h2>
+            </div>
+            <SeasonTrend points={trend} />
+          </Reveal>
         </div>
       </section>
 
