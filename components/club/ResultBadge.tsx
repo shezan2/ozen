@@ -12,7 +12,7 @@ const COLOR: Record<Match["result"], string> = {
   W: "bg-win text-white",
   D: "bg-draw text-white",
   L: "bg-loss text-white",
-  Upcoming: "bg-gold text-noir",
+  Upcoming: "bg-blue text-paper-ink",
 };
 
 interface ResultBadgeProps {
@@ -38,7 +38,7 @@ const DOT_COLOR: Record<Match["result"], string> = {
   W: "bg-win text-white",
   D: "bg-draw text-white",
   L: "bg-loss text-white",
-  Upcoming: "bg-gold text-noir",
+  Upcoming: "bg-blue text-paper-ink",
 };
 
 export function ResultDot({ result, className }: ResultBadgeProps) {

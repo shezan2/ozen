@@ -37,13 +37,13 @@ export default function SegmentedControl<T extends string>({
             className={cn(
               "relative px-4 py-2 text-sm font-bold uppercase tracking-wide transition-colors",
               i > 0 && "border-l-2 border-noir",
-              active ? "text-noir" : "text-ink-dim hover:text-ink"
+              active ? "text-paper-ink" : "text-ink-dim hover:text-ink"
             )}
           >
             {active && (
               <motion.span
                 layoutId={layoutId}
-                className="absolute inset-0 bg-gold"
+                className="absolute inset-0 bg-blue"
                 transition={{ type: "spring", stiffness: 500, damping: 38 }}
               />
             )}

@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ---------- Chèvre Noir FC — design tokens ---------- */
-/* Bold kit-graphic poster system: stark black/white duotone, one punch of gold,
+/* Bold kit-graphic poster system: stark black/white duotone, one punch of blue,
    sharp diagonal-cut edges, oversized condensed numerals. */
 
 :root {
@@ -19,9 +19,9 @@
   --line-on-navy: rgba(255, 255, 255, 0.16);
   --line-on-navy-strong: rgba(255, 255, 255, 0.3);
 
-  --gold: #ffc72c;
-  --gold-bright: #ffdc73;
-  --gold-deep: #8f6900;
+  --blue: #2246a0;
+  --blue-bright: #8aa0da;
+  --blue-deep: #1b3b8d;
 
   --ink: #000000;
   --ink-dim: #45454a;
@@ -47,12 +47,12 @@
   --secondary-foreground: var(--ink);
   --muted: #f0f0f0;
   --muted-foreground: var(--ink-dim);
-  --accent: var(--gold);
+  --accent: var(--blue);
   --accent-foreground: var(--noir);
   --destructive: var(--loss);
   --border: var(--line);
   --input: var(--line-strong);
-  --ring: var(--gold);
+  --ring: var(--blue);
   --radius: 0rem;
 }
 
@@ -66,9 +66,9 @@
   --color-line-strong: var(--line-strong);
   --color-line-on-navy: var(--line-on-navy);
   --color-line-on-navy-strong: var(--line-on-navy-strong);
-  --color-gold: var(--gold);
-  --color-gold-bright: var(--gold-bright);
-  --color-gold-deep: var(--gold-deep);
+  --color-blue: var(--blue);
+  --color-blue-bright: var(--blue-bright);
+  --color-blue-deep: var(--blue-deep);
   --color-ink: var(--ink);
   --color-ink-dim: var(--ink-dim);
   --color-ink-faint: var(--ink-faint);
@@ -158,7 +158,7 @@ body {
 }
 
 ::selection {
-  background: var(--gold);
+  background: var(--blue);
   color: var(--noir);
 }
 
@@ -172,7 +172,7 @@ body {
   background: #000000;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gold-deep);
+  background: var(--blue-deep);
 }
 
 /* ---------- Shared utilities ---------- */
@@ -203,12 +203,12 @@ body {
   background: color-mix(in srgb, var(--paper) 85%, transparent);
 }
 
-.gold-text {
-  color: var(--gold);
+.blue-text {
+  color: var(--blue-bright);
 }
 
 .shine-text {
-  background: linear-gradient(110deg, var(--gold-deep) 30%, var(--gold-bright) 50%, var(--gold-deep) 70%);
+  background: linear-gradient(110deg, var(--blue) 30%, var(--blue-bright) 50%, var(--blue) 70%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -217,7 +217,7 @@ body {
 }
 
 .hairline {
-  background: var(--gold);
+  background: var(--blue);
   height: 4px;
 }
 

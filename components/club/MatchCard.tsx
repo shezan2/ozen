@@ -17,7 +17,7 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
   );
 
   return (
-    <div className="border-2 border-noir bg-white transition-shadow duration-200 hover:shadow-[6px_6px_0_0_var(--gold)]">
+    <div className="border-2 border-noir bg-white transition-shadow duration-200 hover:shadow-[6px_6px_0_0_var(--blue)]">
       <button
         onClick={() => hasDetail && setOpen((v) => !v)}
         className={cn(
@@ -79,8 +79,8 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
               )}
 
               {match.motm && (
-                <div className="flex items-center gap-2 border border-gold/40 bg-gold/10 px-4 py-3">
-                  <Star className="size-4 fill-gold text-gold-deep" />
+                <div className="flex items-center gap-2 border border-blue/40 bg-blue/10 px-4 py-3">
+                  <Star className="size-4 fill-blue text-blue-deep" />
                   <span className="text-sm font-medium text-ink">
                     Man of the Match — <span className="font-semibold">{match.motm}</span>
                   </span>

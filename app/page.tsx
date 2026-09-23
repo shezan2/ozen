@@ -86,7 +86,7 @@ export default function Home() {
           <Reveal delay={0.2} className="mt-10 flex justify-center">
             <Link
               href="/leaderboard"
-              className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-gold-deep transition-colors hover:text-gold"
+              className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-blue-deep transition-colors hover:text-blue"
             >
               View full leaderboard
               <ArrowRight className="size-4" />
@@ -108,7 +108,7 @@ export default function Home() {
             href={club.instagram}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 bg-gold px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-noir transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--paper-ink)]"
+            className="inline-flex items-center gap-2 bg-blue px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-paper-ink transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--paper-ink)]"
           >
             <InstagramGlyph className="size-4" />
             Follow {club.instagramHandle}
@@ -141,8 +141,8 @@ function SpotlightCard({
   statLabel: string;
 }) {
   return (
-    <div className="flex flex-col items-center gap-4 border-2 border-noir bg-white p-7 text-center transition-all duration-200 hover:shadow-[8px_8px_0_0_var(--gold)]">
-      <span className="text-xs font-bold uppercase tracking-[0.1em] text-gold-deep">{label}</span>
+    <div className="flex flex-col items-center gap-4 border-2 border-noir bg-white p-7 text-center transition-all duration-200 hover:shadow-[8px_8px_0_0_var(--blue)]">
+      <span className="text-xs font-bold uppercase tracking-[0.1em] text-blue-deep">{label}</span>
       <PlayerAvatar name={player.name} size={72} />
       <div className="flex flex-col gap-0.5">
         <span className="text-lg font-bold uppercase tracking-tight text-ink">{player.name}</span>

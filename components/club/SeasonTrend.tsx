@@ -15,7 +15,7 @@ const RESULT_VAR: Record<TrendPoint["result"], string> = {
   W: "var(--win)",
   D: "var(--draw)",
   L: "var(--loss)",
-  Upcoming: "var(--gold)",
+  Upcoming: "var(--blue)",
 };
 
 const RESULT_LABEL: Record<TrendPoint["result"], string> = {
@@ -65,8 +65,8 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
         >
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--gold)" stopOpacity="0.16" />
-              <stop offset="100%" stopColor="var(--gold)" stopOpacity="0.02" />
+              <stop offset="0%" stopColor="var(--blue)" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="var(--blue)" stopOpacity="0.02" />
             </linearGradient>
           </defs>
 
@@ -90,7 +90,7 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
           )}
 
           <path d={areaPath} fill={`url(#${gradientId})`} />
-          <path d={linePath} fill="none" stroke="var(--gold-deep)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+          <path d={linePath} fill="none" stroke="var(--blue-deep)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
 
           {points.map((p, i) => (
             <g key={p.matchday}>
@@ -132,7 +132,7 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
 
         {active && (
           <div
-            className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full border-2 border-noir bg-white px-3 py-2 text-center shadow-[4px_4px_0_0_var(--gold)]"
+            className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full border-2 border-noir bg-white px-3 py-2 text-center shadow-[4px_4px_0_0_var(--blue)]"
             style={{
               left: `${(activeX / W) * 100}%`,
               top: `${(y(active.cumulative) / H) * 100}%`,

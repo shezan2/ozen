@@ -5,7 +5,7 @@ export default function NotFound() {
   return (
     <div className="flex min-h-[100svh] flex-col items-center justify-center px-5 text-center">
       <Crest size={72} />
-      <p className="mt-10 font-display text-sm uppercase tracking-[0.2em] text-gold-deep">404</p>
+      <p className="mt-10 font-display text-sm uppercase tracking-[0.2em] text-blue-deep">404</p>
       <h1 className="font-display mt-4 text-5xl uppercase tracking-tight text-ink sm:text-6xl">
         This page doesn&apos;t exist.
       </h1>
@@ -21,7 +21,7 @@ export default function NotFound() {
         </Link>
         <Link
           href="/matches"
-          className="bg-gold px-6 py-3 text-sm font-bold uppercase tracking-wide text-noir transition-transform hover:-translate-y-0.5"
+          className="bg-blue px-6 py-3 text-sm font-bold uppercase tracking-wide text-paper-ink transition-transform hover:-translate-y-0.5"
         >
           View matches
         </Link>

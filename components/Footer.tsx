@@ -4,13 +4,13 @@ import { club } from "@/lib/site";
 
 export default function Footer() {
   return (
-    <footer className="border-t-4 border-gold bg-noir">
+    <footer className="border-t-4 border-blue bg-noir">
       <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-14 sm:px-8 md:flex-row md:items-start md:justify-between">
         <div className="flex flex-col gap-4">
           <Link href="/" className="flex items-center gap-3" aria-label="Chèvre Noir FC — home">
             <Crest size={40} />
             <span className="font-display text-xl uppercase tracking-tight text-paper-ink">
-              Chevre Noir <span className="text-gold">FC</span>
+              Chevre Noir <span className="text-blue-bright">FC</span>
             </span>
           </Link>
           <p className="max-w-xs text-sm leading-relaxed text-paper-ink-dim">
@@ -50,7 +50,7 @@ export default function Footer() {
           <p className="text-xs text-paper-ink-faint">
             © {club.season} {club.fullName}. All rights reserved.
           </p>
-          <p className="font-display text-xs uppercase tracking-[0.14em] text-gold">{club.motto}</p>
+          <p className="font-display text-xs uppercase tracking-[0.14em] text-blue-bright">{club.motto}</p>
         </div>
       </div>
     </footer>

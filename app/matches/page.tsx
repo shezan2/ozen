@@ -41,7 +41,7 @@ export default function MatchesPage() {
 
       <section className="border-b-4 border-noir bg-paper py-14 sm:py-16">
         <div className="mx-auto max-w-4xl px-5 sm:px-8">
-          <Reveal className="flex flex-col gap-6 border-2 border-noir bg-white p-6 shadow-[8px_8px_0_0_var(--gold)] sm:p-8">
+          <Reveal className="flex flex-col gap-6 border-2 border-noir bg-white p-6 shadow-[8px_8px_0_0_var(--blue)] sm:p-8">
             <div className="flex flex-col gap-1">
               <span className="eyebrow">Season Trend</span>
               <h2 className="font-display text-2xl uppercase tracking-tight text-ink">Cumulative goal difference</h2>

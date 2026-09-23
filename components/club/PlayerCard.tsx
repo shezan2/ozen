@@ -4,12 +4,12 @@ import PlayerAvatar from "./PlayerAvatar";
 
 export default function PlayerCard({ player }: { player: Player }) {
   return (
-    <div className="group flex flex-col gap-5 border-2 border-noir bg-white p-5 transition-all duration-200 hover:shadow-[6px_6px_0_0_var(--gold)]">
+    <div className="group flex flex-col gap-5 border-2 border-noir bg-white p-5 transition-all duration-200 hover:shadow-[6px_6px_0_0_var(--blue)]">
       <div className="flex items-center gap-4">
         <PlayerAvatar name={player.name} size={52} />
         <div className="flex min-w-0 flex-col">
           <span className="truncate text-base font-bold uppercase tracking-tight text-ink">{player.name}</span>
-          <span className="text-xs font-bold uppercase tracking-[0.08em] text-gold-deep">
+          <span className="text-xs font-bold uppercase tracking-[0.08em] text-blue-deep">
             {POSITION_SHORT[player.position]} · {player.position}
           </span>
         </div>

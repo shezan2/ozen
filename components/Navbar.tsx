@@ -30,7 +30,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-2.5" aria-label="Chèvre Noir FC — home">
           <Crest size={34} priority />
           <span className="font-display text-lg uppercase tracking-tight text-ink">
-            Chevre Noir <span className="text-gold-deep">FC</span>
+            Chevre Noir <span className="text-blue-deep">FC</span>
           </span>
         </Link>
 
@@ -42,11 +42,11 @@ export default function Navbar() {
                 {active && (
                   <motion.span
                     layoutId="nav-active"
-                    className="absolute inset-0 bg-gold"
+                    className="absolute inset-0 bg-blue"
                     transition={{ type: "spring", stiffness: 500, damping: 40 }}
                   />
                 )}
-                <span className={cn("relative", active ? "text-noir" : "text-ink-dim hover:text-ink")}>
+                <span className={cn("relative", active ? "text-paper-ink" : "text-ink-dim hover:text-ink")}>
                   {l.label}
                 </span>
               </Link>
@@ -80,7 +80,7 @@ export default function Navbar() {
                   href={l.href}
                   className={cn(
                     "px-3 py-2.5 text-base font-bold uppercase tracking-wide transition-colors",
-                    pathname === l.href ? "bg-gold text-noir" : "text-ink-dim hover:text-ink"
+                    pathname === l.href ? "bg-blue text-paper-ink" : "text-ink-dim hover:text-ink"
                   )}
                 >
                   {l.label}

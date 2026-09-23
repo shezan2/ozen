@@ -17,9 +17,9 @@ export default function MatchCentre({ match }: { match: Match }) {
   const score = parseScore(match);
 
   return (
-    <div className="border-4 border-noir bg-noir shadow-[10px_10px_0_0_var(--gold)]">
+    <div className="border-4 border-noir bg-noir shadow-[10px_10px_0_0_var(--blue)]">
       <div className="flex items-center justify-between border-b-2 border-line-on-navy px-6 py-4 sm:px-8">
-        <span className="font-display text-sm uppercase tracking-[0.1em] text-gold">
+        <span className="font-display text-sm uppercase tracking-[0.1em] text-blue-bright">
           {STATUS_LABEL[match.result]} · Friendly
         </span>
         <ResultBadge result={match.result} />
@@ -35,7 +35,7 @@ export default function MatchCentre({ match }: { match: Match }) {
         <div className="flex flex-col items-center gap-1">
           {score ? (
             <span className="font-display text-5xl tracking-tight text-paper-ink sm:text-7xl">
-              {score.for}<span className="text-gold">–</span>{score.against}
+              {score.for}<span className="text-blue-bright">–</span>{score.against}
             </span>
           ) : (
             <span className="text-2xl font-semibold text-paper-ink-dim">vs</span>
@@ -68,8 +68,8 @@ export default function MatchCentre({ match }: { match: Match }) {
         </div>
 
         {match.motm && (
-          <div className="mx-auto flex items-center gap-2 border border-gold/40 bg-gold/10 px-4 py-2">
-            <Star className="size-3.5 fill-gold text-gold" />
+          <div className="mx-auto flex items-center gap-2 border border-blue-bright/40 bg-blue-bright/15 px-4 py-2">
+            <Star className="size-3.5 fill-blue-bright text-blue-bright" />
             <span className="text-xs font-medium text-paper-ink">
               Man of the Match — <span className="font-semibold">{match.motm}</span>
             </span>
@@ -78,7 +78,7 @@ export default function MatchCentre({ match }: { match: Match }) {
 
         <Link
           href="/matches"
-          className="mx-auto inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-gold transition-colors hover:text-gold-bright"
+          className="mx-auto inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-blue-bright transition-colors hover:text-paper-ink"
         >
           Full Match Centre
           <ArrowRight className="size-4" />

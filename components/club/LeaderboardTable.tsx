@@ -13,8 +13,8 @@ export default function LeaderboardTable({ players, statKey }: { players: Player
             <th className="py-3">Player</th>
             <th className="hidden py-3 sm:table-cell">Position</th>
             <th className="tabular py-3 text-center">App</th>
-            <th className={cn("tabular py-3 text-center", statKey === "goals" && "text-gold")}>Gls</th>
-            <th className={cn("tabular py-3 text-center", statKey === "assists" && "text-gold")}>Ast</th>
+            <th className={cn("tabular py-3 text-center", statKey === "goals" && "text-blue-bright")}>Gls</th>
+            <th className={cn("tabular py-3 text-center", statKey === "assists" && "text-blue-bright")}>Ast</th>
             <th className="tabular py-3 pr-5 text-center">G+A</th>
           </tr>
         </thead>
@@ -33,7 +33,7 @@ export default function LeaderboardTable({ players, statKey }: { players: Player
               <td
                 className={cn(
                   "tabular py-3 text-center font-bold",
-                  statKey === "goals" ? "text-gold-deep" : "text-ink"
+                  statKey === "goals" ? "text-blue-deep" : "text-ink"
                 )}
               >
                 {p.goals}
@@ -41,7 +41,7 @@ export default function LeaderboardTable({ players, statKey }: { players: Player
               <td
                 className={cn(
                   "tabular py-3 text-center font-bold",
-                  statKey === "assists" ? "text-gold-deep" : "text-ink"
+                  statKey === "assists" ? "text-blue-deep" : "text-ink"
                 )}
               >
                 {p.assists}

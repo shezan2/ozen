@@ -39,10 +39,10 @@ export default function HomeHero({ form }: { form: Match["result"][] }) {
       ref={sectionRef}
       className="clip-diagonal-b relative overflow-hidden bg-noir pt-28 pb-36 sm:pt-32 sm:pb-48"
     >
-      {/* Gold diagonal wedge, bleeding off the top-right corner */}
+      {/* Blue diagonal wedge, bleeding off the top-right corner */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -right-1/4 -top-1/3 h-[160%] w-2/3 -skew-x-12 bg-gold sm:-right-1/3 sm:w-1/2"
+        className="pointer-events-none absolute -right-1/4 -top-1/3 h-[160%] w-2/3 -skew-x-12 bg-blue sm:-right-1/3 sm:w-1/2"
         style={{ y: wedgeY }}
       />
 
@@ -66,7 +66,7 @@ export default function HomeHero({ form }: { form: Match["result"][] }) {
           className="relative flex shrink-0 items-center justify-center"
           style={{ width: 182, height: 182 }}
         >
-          <div aria-hidden className="absolute inset-0 -z-10 m-auto rotate-45 bg-gold" style={{ width: 128, height: 128 }} />
+          <div aria-hidden className="absolute inset-0 -z-10 m-auto rotate-45 bg-blue" style={{ width: 128, height: 128 }} />
           <Crest size={100} priority />
         </motion.div>
 
@@ -80,7 +80,7 @@ export default function HomeHero({ form }: { form: Match["result"][] }) {
         >
           {/* Anton's grave-accent glyph sits too high at this display size — spelled out for screen readers via aria-label instead. */}
           <span aria-label="Chèvre Noir">
-            Chevre <span className="gold-text">Noir</span>
+            Chevre <span className="blue-text">Noir</span>
           </span>
         </motion.h1>
 
@@ -91,7 +91,7 @@ export default function HomeHero({ form }: { form: Match["result"][] }) {
         <motion.div variants={item} className="mt-2 flex flex-wrap items-center justify-center gap-4">
           <Link
             href="/squad"
-            className="bg-gold px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-noir transition-transform duration-200 hover:-translate-y-0.5 hover:bg-gold-bright"
+            className="bg-blue px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-paper-ink transition-transform duration-200 hover:-translate-y-0.5 hover:bg-blue-deep"
           >
             View Squad
           </Link>
