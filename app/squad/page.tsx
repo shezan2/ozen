@@ -16,7 +16,7 @@ export default function SquadPage() {
 
   return (
     <div className="flex flex-col">
-      <section className="border-b border-line bg-paper pt-32 pb-14 sm:pt-40 sm:pb-16">
+      <section className="border-b-4 border-noir bg-paper pt-32 pb-14 sm:pt-40 sm:pb-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 sm:px-8">
           <SectionHeading
             eyebrow={`${club.season} Season`}
@@ -41,8 +41,8 @@ export default function SquadPage() {
 function MiniStat({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex items-baseline gap-2">
-      <span className="tabular text-2xl font-semibold text-ink">{value}</span>
-      <span className="text-sm text-ink-dim">{label}</span>
+      <span className="font-display text-2xl text-ink">{value}</span>
+      <span className="text-sm font-bold uppercase tracking-wide text-ink-dim">{label}</span>
     </div>
   );
 }

@@ -10,13 +10,10 @@ interface PlayerAvatarProps {
 export default function PlayerAvatar({ name, size = 56, className }: PlayerAvatarProps) {
   return (
     <div
-      className={cn(
-        "flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-navy-raised to-noir text-gold-bright ring-1 ring-inset ring-line-on-navy",
-        className
-      )}
+      className={cn("flex shrink-0 items-center justify-center bg-noir text-gold", className)}
       style={{ width: size, height: size, fontSize: size * 0.34 }}
     >
-      <span className="font-semibold tracking-tight">{initials(name)}</span>
+      <span className="font-display tracking-tight">{initials(name)}</span>
     </div>
   );
 }

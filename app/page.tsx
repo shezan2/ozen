@@ -86,7 +86,7 @@ export default function Home() {
           <Reveal delay={0.2} className="mt-10 flex justify-center">
             <Link
               href="/leaderboard"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-deep transition-colors hover:text-gold"
+              className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-gold-deep transition-colors hover:text-gold"
             >
               View full leaderboard
               <ArrowRight className="size-4" />
@@ -98,7 +98,7 @@ export default function Home() {
       {/* Follow CTA */}
       <section className="bg-noir py-20 sm:py-28">
         <Reveal className="mx-auto flex max-w-2xl flex-col items-center gap-6 px-5 text-center sm:px-8">
-          <span className="shine-text text-3xl font-semibold tracking-tight sm:text-4xl">
+          <span className="shine-text font-display text-4xl uppercase tracking-tight sm:text-5xl">
             {club.motto}
           </span>
           <p className="max-w-md text-base leading-relaxed text-paper-ink-dim">
@@ -108,7 +108,7 @@ export default function Home() {
             href={club.instagram}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3 text-sm font-semibold text-noir transition-transform duration-300 hover:scale-[1.03] hover:bg-gold-bright"
+            className="inline-flex items-center gap-2 bg-gold px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-noir transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--paper-ink)]"
           >
             <InstagramGlyph className="size-4" />
             Follow {club.instagramHandle}
@@ -141,16 +141,16 @@ function SpotlightCard({
   statLabel: string;
 }) {
   return (
-    <div className="flex flex-col items-center gap-4 rounded-2xl border border-line bg-white p-7 text-center transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)]">
-      <span className="text-xs font-semibold uppercase tracking-[0.1em] text-gold-deep">{label}</span>
+    <div className="flex flex-col items-center gap-4 border-2 border-noir bg-white p-7 text-center transition-all duration-200 hover:shadow-[8px_8px_0_0_var(--gold)]">
+      <span className="text-xs font-bold uppercase tracking-[0.1em] text-gold-deep">{label}</span>
       <PlayerAvatar name={player.name} size={72} />
       <div className="flex flex-col gap-0.5">
-        <span className="text-lg font-semibold tracking-tight text-ink">{player.name}</span>
+        <span className="text-lg font-bold uppercase tracking-tight text-ink">{player.name}</span>
         <span className="text-sm text-ink-dim">{player.position}</span>
       </div>
       <div className="flex flex-col">
-        <span className="tabular text-3xl font-bold text-ink">{stat}</span>
-        <span className="text-xs text-ink-faint">{statLabel}</span>
+        <span className="font-display text-4xl text-ink">{stat}</span>
+        <span className="text-xs font-bold uppercase text-ink-faint">{statLabel}</span>
       </div>
     </div>
   );

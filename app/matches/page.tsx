@@ -17,7 +17,7 @@ export default function MatchesPage() {
 
   return (
     <div className="flex flex-col">
-      <section className="border-b border-line bg-paper pt-32 pb-14 sm:pt-40 sm:pb-16">
+      <section className="border-b-4 border-noir bg-paper pt-32 pb-14 sm:pt-40 sm:pb-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 sm:px-8">
           <SectionHeading
             eyebrow={`${club.season} Season`}
@@ -39,12 +39,12 @@ export default function MatchesPage() {
         </div>
       </section>
 
-      <section className="border-b border-line bg-paper py-14 sm:py-16">
+      <section className="border-b-4 border-noir bg-paper py-14 sm:py-16">
         <div className="mx-auto max-w-4xl px-5 sm:px-8">
-          <Reveal className="flex flex-col gap-6 rounded-3xl border border-line bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.05)] sm:p-8">
+          <Reveal className="flex flex-col gap-6 border-2 border-noir bg-white p-6 shadow-[8px_8px_0_0_var(--gold)] sm:p-8">
             <div className="flex flex-col gap-1">
               <span className="eyebrow">Season Trend</span>
-              <h2 className="text-xl font-semibold tracking-tight text-ink">Cumulative goal difference</h2>
+              <h2 className="font-display text-2xl uppercase tracking-tight text-ink">Cumulative goal difference</h2>
             </div>
             <SeasonTrend points={trend} />
           </Reveal>
@@ -70,8 +70,8 @@ function RecordStat({
   const color = accent === "win" ? "text-win" : accent === "draw" ? "text-draw" : accent === "loss" ? "text-loss" : "text-ink";
   return (
     <div className="flex flex-col gap-1">
-      <span className={`tabular text-2xl font-semibold sm:text-3xl ${color}`}>{value}</span>
-      <span className="text-xs font-medium uppercase tracking-[0.06em] text-ink-faint sm:text-sm sm:normal-case sm:tracking-normal sm:text-ink-dim">
+      <span className={`font-display text-3xl sm:text-4xl ${color}`}>{value}</span>
+      <span className="text-xs font-bold uppercase tracking-[0.06em] text-ink-faint sm:text-sm sm:text-ink-dim">
         {label}
       </span>
     </div>

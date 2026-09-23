@@ -132,7 +132,7 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
 
         {active && (
           <div
-            className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-xl border border-line bg-white px-3 py-2 text-center shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
+            className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full border-2 border-noir bg-white px-3 py-2 text-center shadow-[4px_4px_0_0_var(--gold)]"
             style={{
               left: `${(activeX / W) * 100}%`,
               top: `${(y(active.cumulative) / H) * 100}%`,
@@ -152,7 +152,7 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
 
       <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
         {(["W", "D", "L"] as const).map((r) => (
-          <span key={r} className="flex items-center gap-1.5 text-xs text-ink-dim">
+          <span key={r} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-ink-dim">
             <span className="size-2.5 rounded-full" style={{ background: RESULT_VAR[r] }} aria-hidden />
             {RESULT_LABEL[r]}
           </span>

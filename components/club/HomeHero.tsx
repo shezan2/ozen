@@ -10,21 +10,21 @@ import { club } from "@/lib/site";
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
 };
 
 const item = {
   hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 const crestReveal = {
-  hidden: { opacity: 0, scale: 0.75, y: 8 },
+  hidden: { opacity: 0, scale: 0.7, rotate: -8 },
   show: {
     opacity: 1,
     scale: 1,
-    y: 0,
-    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
+    rotate: 0,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
   },
 };
 
@@ -32,56 +32,42 @@ export default function HomeHero({ form }: { form: Match["result"][] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
-  const glowY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 70]);
-  const pitchY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 24]);
+  const wedgeY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 90]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-noir pt-32 pb-28 sm:pt-44 sm:pb-40">
-      {/* Floodlights — drifts slower than the page for a subtle sense of depth */}
+    <section
+      ref={sectionRef}
+      className="clip-diagonal-b relative overflow-hidden bg-noir pt-28 pb-36 sm:pt-32 sm:pb-48"
+    >
+      {/* Gold diagonal wedge, bleeding off the top-right corner */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          y: glowY,
-          background:
-            "radial-gradient(ellipse 55% 40% at 15% 0%, rgba(231,201,136,0.16), transparent 60%), radial-gradient(ellipse 55% 40% at 85% 0%, rgba(231,201,136,0.16), transparent 60%), radial-gradient(circle at 50% -10%, rgba(231,201,136,0.1), transparent 55%)",
-        }}
+        className="pointer-events-none absolute -right-1/4 -top-1/3 h-[160%] w-2/3 -skew-x-12 bg-gold sm:-right-1/3 sm:w-1/2"
+        style={{ y: wedgeY }}
       />
-      {/* Pitch texture, fading up into the dark */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 opacity-[0.07] sm:h-56"
-        style={{
-          y: pitchY,
-          backgroundImage:
-            "repeating-linear-gradient(115deg, #fff 0px, #fff 2px, transparent 2px, transparent 64px)",
-          maskImage: "linear-gradient(to top, black, transparent)",
-          WebkitMaskImage: "linear-gradient(to top, black, transparent)",
-        }}
-      />
+
       {/* Intro light sweep */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 w-1/3 mix-blend-screen"
-        style={{
-          background: "linear-gradient(100deg, transparent, rgba(231,201,136,0.35), transparent)",
-        }}
-        initial={{ x: "-120%" }}
-        animate={{ x: "320%" }}
-        transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        className="pointer-events-none absolute inset-y-0 w-1/4 -skew-x-12 bg-white/25 mix-blend-overlay"
+        initial={{ x: "-140%" }}
+        animate={{ x: "500%" }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
       />
+
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
-        className="relative mx-auto flex max-w-4xl flex-col items-center gap-7 px-5 text-center sm:px-8"
+        className="relative mx-auto flex max-w-4xl flex-col items-center gap-6 px-5 text-center sm:px-8"
       >
-        <motion.div variants={crestReveal} className="relative">
-          <div
-            aria-hidden
-            className="absolute inset-0 -z-10 animate-pulse-glow rounded-full bg-gold/25 blur-2xl"
-          />
-          <Crest size={104} priority className="drop-shadow-[0_8px_30px_rgba(231,201,136,0.18)]" />
+        <motion.div
+          variants={crestReveal}
+          className="relative flex shrink-0 items-center justify-center"
+          style={{ width: 182, height: 182 }}
+        >
+          <div aria-hidden className="absolute inset-0 -z-10 m-auto rotate-45 bg-gold" style={{ width: 128, height: 128 }} />
+          <Crest size={100} priority />
         </motion.div>
 
         <motion.p variants={item} className="eyebrow-on-navy">
@@ -90,9 +76,12 @@ export default function HomeHero({ form }: { form: Match["result"][] }) {
 
         <motion.h1
           variants={item}
-          className="text-5xl font-semibold tracking-tight text-paper-ink sm:text-6xl md:text-7xl"
+          className="font-display text-6xl leading-[0.92] uppercase tracking-tight text-paper-ink sm:text-8xl md:text-9xl"
         >
-          Chèvre Noir <span className="gold-text">Football Club</span>
+          {/* Anton's grave-accent glyph sits too high at this display size — spelled out for screen readers via aria-label instead. */}
+          <span aria-label="Chèvre Noir">
+            Chevre <span className="gold-text">Noir</span>
+          </span>
         </motion.h1>
 
         <motion.p variants={item} className="max-w-xl text-lg leading-relaxed text-paper-ink-dim">
@@ -102,13 +91,13 @@ export default function HomeHero({ form }: { form: Match["result"][] }) {
         <motion.div variants={item} className="mt-2 flex flex-wrap items-center justify-center gap-4">
           <Link
             href="/squad"
-            className="rounded-full bg-gold px-7 py-3 text-sm font-semibold text-noir transition-transform duration-300 hover:scale-[1.03] hover:bg-gold-bright"
+            className="bg-gold px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-noir transition-transform duration-200 hover:-translate-y-0.5 hover:bg-gold-bright"
           >
             View Squad
           </Link>
           <Link
             href="/matches"
-            className="rounded-full border border-line-on-navy-strong px-7 py-3 text-sm font-semibold text-paper-ink transition-colors duration-300 hover:bg-white/5"
+            className="border-2 border-paper-ink px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-paper-ink transition-colors duration-200 hover:bg-white/10"
           >
             Fixtures &amp; Results
           </Link>
@@ -116,9 +105,7 @@ export default function HomeHero({ form }: { form: Match["result"][] }) {
 
         {form.length > 0 && (
           <motion.div variants={item} className="mt-6 flex flex-col items-center gap-3">
-            <span className="text-xs font-medium uppercase tracking-[0.14em] text-paper-ink-faint">
-              Recent Form
-            </span>
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-paper-ink-faint">Recent Form</span>
             <FormGuide results={form} />
           </motion.div>
         )}

@@ -9,10 +9,10 @@ const LABEL: Record<Match["result"], string> = {
 };
 
 const COLOR: Record<Match["result"], string> = {
-  W: "bg-win/10 text-win ring-1 ring-inset ring-win/25",
-  D: "bg-draw/10 text-draw ring-1 ring-inset ring-draw/25",
-  L: "bg-loss/10 text-loss ring-1 ring-inset ring-loss/25",
-  Upcoming: "bg-gold/10 text-gold-deep ring-1 ring-inset ring-gold/30",
+  W: "bg-win text-white",
+  D: "bg-draw text-white",
+  L: "bg-loss text-white",
+  Upcoming: "bg-gold text-noir",
 };
 
 interface ResultBadgeProps {
@@ -24,7 +24,7 @@ export function ResultBadge({ result, className }: ResultBadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
+        "inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase tracking-wide",
         COLOR[result],
         className
       )}

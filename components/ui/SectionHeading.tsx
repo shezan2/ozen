@@ -21,11 +21,14 @@ export default function SectionHeading({
 }: SectionHeadingProps) {
   const alignCls = align === "center" ? "items-center text-center" : "items-start text-left";
   return (
-    <Reveal className={cn("flex flex-col gap-4", alignCls, className)}>
-      <p className={onNavy ? "eyebrow-on-navy" : "eyebrow"}>{eyebrow}</p>
+    <Reveal className={cn("flex flex-col gap-3", alignCls, className)}>
+      <div className={cn("flex items-center gap-3", align === "center" && "justify-center")}>
+        <span className="hairline w-8" aria-hidden />
+        <p className={onNavy ? "eyebrow-on-navy" : "eyebrow"}>{eyebrow}</p>
+      </div>
       <h2
         className={cn(
-          "text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl",
+          "font-display text-4xl uppercase leading-[0.95] tracking-tight sm:text-6xl",
           onNavy ? "text-paper-ink" : "text-ink"
         )}
       >

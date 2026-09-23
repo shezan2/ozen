@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function LeaderboardPage() {
   return (
     <div className="flex flex-col">
-      <section className="border-b border-line bg-paper pt-32 pb-14 sm:pt-40 sm:pb-16">
+      <section className="border-b-4 border-noir bg-paper pt-32 pb-14 sm:pt-40 sm:pb-16">
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           <SectionHeading
             eyebrow={`${club.season} Season`}
