@@ -30,32 +30,34 @@ export default function Podium({ players, statKey }: { players: Player[]; statKe
           <div
             key={player.id}
             className={cn(
-              "flex flex-col items-center gap-4 border-2 p-5 text-center sm:p-7",
-              isFirst ? "border-noir bg-blue shadow-[8px_8px_0_0_var(--noir)] sm:-translate-y-5" : "border-noir bg-white"
+              "flex flex-col items-center gap-4 rounded-2xl p-5 text-center sm:p-7",
+              isFirst
+                ? "bg-blue shadow-[0_20px_45px_-15px_rgba(34,70,160,0.55)] sm:-translate-y-5"
+                : "bg-white shadow-sm ring-1 ring-black/5"
             )}
           >
             <span
               className={cn(
-                "font-display flex size-9 items-center justify-center text-base",
-                isFirst ? "bg-noir text-blue-bright" : "bg-paper text-ink-dim ring-2 ring-inset ring-noir/10"
+                "flex size-9 items-center justify-center rounded-full text-base font-semibold",
+                isFirst ? "bg-white/15 text-white" : "bg-surface text-ink-dim"
               )}
             >
               {rank}
             </span>
             <PlayerAvatar name={player.name} size={isFirst ? 76 : 60} />
             <div className="flex flex-col gap-0.5">
-              <span className={cn("text-sm font-bold uppercase tracking-tight sm:text-base", isFirst ? "text-paper-ink" : "text-ink")}>
+              <span className={cn("text-sm font-semibold tracking-tight sm:text-base", isFirst ? "text-white" : "text-ink")}>
                 {player.name}
               </span>
-              <span className={cn("text-xs font-bold uppercase tracking-[0.08em]", isFirst ? "text-blue-bright" : "text-blue-deep")}>
+              <span className={cn("text-xs font-medium", isFirst ? "text-white/75" : "text-blue-deep")}>
                 {POSITION_SHORT[player.position]}
               </span>
             </div>
             <div className="flex flex-col">
-              <span className={cn("font-display", isFirst ? "text-5xl text-paper-ink" : "text-3xl text-ink")}>
+              <span className={cn("font-semibold tracking-tight", isFirst ? "text-5xl text-white" : "text-3xl text-ink")}>
                 {valueOf(player, statKey)}
               </span>
-              <span className={cn("text-xs font-bold uppercase", isFirst ? "text-paper-ink/70" : "text-ink-faint")}>
+              <span className={cn("text-xs font-medium", isFirst ? "text-white/70" : "text-ink-faint")}>
                 {VALUE_LABEL[statKey]}
               </span>
             </div>

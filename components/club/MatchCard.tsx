@@ -17,7 +17,7 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
   );
 
   return (
-    <div className="border-2 border-noir bg-white transition-shadow duration-200 hover:shadow-[6px_6px_0_0_var(--blue)]">
+    <div className="rounded-2xl bg-white shadow-sm ring-1 ring-black/5 transition-shadow duration-200 hover:shadow-md">
       <button
         onClick={() => hasDetail && setOpen((v) => !v)}
         className={cn(
@@ -28,7 +28,7 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
         disabled={!hasDetail}
       >
         <div className="flex items-center gap-4 sm:w-40 sm:shrink-0">
-          <span className="font-display text-sm text-ink-faint">MD{matchday}</span>
+          <span className="text-sm font-medium text-ink-faint">MD{matchday}</span>
           <span className="text-sm text-ink-dim">{match.date}</span>
         </div>
 
@@ -36,9 +36,7 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
           <div className="flex items-center gap-3">
             <OpponentBadge name={match.opponent} size={36} className="text-xs" />
             <div className="flex flex-col gap-1">
-              <span className="text-base font-bold uppercase tracking-tight text-ink sm:text-lg">
-                vs {match.opponent}
-              </span>
+              <span className="text-base font-semibold tracking-tight text-ink sm:text-lg">vs {match.opponent}</span>
               {match.location && (
                 <span className="flex items-center gap-1 text-xs text-ink-faint">
                   <MapPin className="size-3" />
@@ -50,7 +48,7 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
 
           <div className="flex items-center gap-4">
             {score && (
-              <span className="font-display text-2xl text-ink sm:text-3xl">
+              <span className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
                 {score.for}–{score.against}
               </span>
             )}
@@ -71,16 +69,14 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t-2 border-noir"
+            className="overflow-hidden border-t border-line"
           >
             <div className="flex flex-col gap-5 p-5 sm:p-6">
-              {match.summary && (
-                <p className="text-sm leading-relaxed text-ink-dim">{match.summary}</p>
-              )}
+              {match.summary && <p className="text-sm leading-relaxed text-ink-dim">{match.summary}</p>}
 
               {match.motm && (
-                <div className="flex items-center gap-2 border border-blue/40 bg-blue/10 px-4 py-3">
-                  <Star className="size-4 fill-blue text-blue-deep" />
+                <div className="flex items-center gap-2 rounded-full bg-blue/10 px-4 py-3">
+                  <Star className="size-4 fill-blue-deep text-blue-deep" />
                   <span className="text-sm font-medium text-ink">
                     Man of the Match — <span className="font-semibold">{match.motm}</span>
                   </span>
@@ -88,22 +84,16 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
               )}
 
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                {match.goals && match.goals.length > 0 && (
-                  <EventList title="Goals" events={match.goals} />
-                )}
-                {match.assists && match.assists.length > 0 && (
-                  <EventList title="Assists" events={match.assists} />
-                )}
+                {match.goals && match.goals.length > 0 && <EventList title="Goals" events={match.goals} />}
+                {match.assists && match.assists.length > 0 && <EventList title="Assists" events={match.assists} />}
               </div>
 
               {match.lineup && match.lineup.length > 0 && (
                 <div className="flex flex-col gap-2">
-                  <span className="text-xs font-bold uppercase tracking-[0.1em] text-ink-faint">
-                    Starting XI
-                  </span>
+                  <span className="text-xs font-semibold tracking-wide text-ink-faint uppercase">Starting XI</span>
                   <div className="flex flex-wrap gap-2">
                     {match.lineup.map((name) => (
-                      <span key={name} className="border border-line bg-paper px-3 py-1 text-sm text-ink-dim">
+                      <span key={name} className="rounded-full bg-surface px-3 py-1 text-sm text-ink-dim">
                         {name}
                       </span>
                     ))}
@@ -113,12 +103,10 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
 
               {match.subs && match.subs.length > 0 && (
                 <div className="flex flex-col gap-2">
-                  <span className="text-xs font-bold uppercase tracking-[0.1em] text-ink-faint">
-                    Substitutes
-                  </span>
+                  <span className="text-xs font-semibold tracking-wide text-ink-faint uppercase">Substitutes</span>
                   <div className="flex flex-wrap gap-2">
                     {match.subs.map((name) => (
-                      <span key={name} className="border border-line bg-paper px-3 py-1 text-sm text-ink-faint">
+                      <span key={name} className="rounded-full bg-surface px-3 py-1 text-sm text-ink-faint">
                         {name}
                       </span>
                     ))}
@@ -136,7 +124,7 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
 function EventList({ title, events }: { title: string; events: { player: string; count: number }[] }) {
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs font-bold uppercase tracking-[0.1em] text-ink-faint">{title}</span>
+      <span className="text-xs font-semibold tracking-wide text-ink-faint uppercase">{title}</span>
       <ul className="flex flex-col gap-1.5">
         {events.map((e) => (
           <li key={e.player} className="flex items-center justify-between text-sm">

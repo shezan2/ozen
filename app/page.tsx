@@ -38,7 +38,7 @@ export default function Home() {
       </section>
 
       {/* Season at a glance */}
-      <section className="border-b border-line bg-paper py-16 sm:py-24">
+      <section className="border-b border-line bg-surface py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           <SectionHeading
             eyebrow="By the numbers"
@@ -86,7 +86,7 @@ export default function Home() {
           <Reveal delay={0.2} className="mt-10 flex justify-center">
             <Link
               href="/leaderboard"
-              className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-blue-deep transition-colors hover:text-blue"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-deep transition-colors hover:text-blue"
             >
               View full leaderboard
               <ArrowRight className="size-4" />
@@ -98,9 +98,7 @@ export default function Home() {
       {/* Follow CTA */}
       <section className="bg-noir py-20 sm:py-28">
         <Reveal className="mx-auto flex max-w-2xl flex-col items-center gap-6 px-5 text-center sm:px-8">
-          <span className="shine-text font-display text-4xl uppercase tracking-tight sm:text-5xl">
-            {club.motto}
-          </span>
+          <span className="text-4xl font-semibold tracking-tight text-paper-ink sm:text-5xl">{club.motto}</span>
           <p className="max-w-md text-base leading-relaxed text-paper-ink-dim">
             Follow the club for match updates, squad news and behind-the-scenes moments.
           </p>
@@ -108,7 +106,7 @@ export default function Home() {
             href={club.instagram}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 bg-blue px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-paper-ink transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--paper-ink)]"
+            className="inline-flex items-center gap-2 rounded-full bg-blue px-7 py-3.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-blue-deep"
           >
             <InstagramGlyph className="size-4" />
             Follow {club.instagramHandle}
@@ -141,16 +139,16 @@ function SpotlightCard({
   statLabel: string;
 }) {
   return (
-    <div className="flex flex-col items-center gap-4 border-2 border-noir bg-white p-7 text-center transition-all duration-200 hover:shadow-[8px_8px_0_0_var(--blue)]">
-      <span className="text-xs font-bold uppercase tracking-[0.1em] text-blue-deep">{label}</span>
+    <div className="flex flex-col items-center gap-4 rounded-2xl bg-white p-7 text-center shadow-sm ring-1 ring-black/5 transition-shadow duration-200 hover:shadow-md">
+      <span className="text-xs font-semibold text-blue-deep">{label}</span>
       <PlayerAvatar name={player.name} size={72} />
       <div className="flex flex-col gap-0.5">
-        <span className="text-lg font-bold uppercase tracking-tight text-ink">{player.name}</span>
+        <span className="text-lg font-semibold tracking-tight text-ink">{player.name}</span>
         <span className="text-sm text-ink-dim">{player.position}</span>
       </div>
       <div className="flex flex-col">
-        <span className="font-display text-4xl text-ink">{stat}</span>
-        <span className="text-xs font-bold uppercase text-ink-faint">{statLabel}</span>
+        <span className="text-4xl font-semibold tracking-tight text-ink">{stat}</span>
+        <span className="text-xs font-medium text-ink-faint">{statLabel}</span>
       </div>
     </div>
   );

@@ -17,11 +17,9 @@ export default function MatchCentre({ match }: { match: Match }) {
   const score = parseScore(match);
 
   return (
-    <div className="border-4 border-noir bg-noir shadow-[10px_10px_0_0_var(--blue)]">
-      <div className="flex items-center justify-between border-b-2 border-line-on-navy px-6 py-4 sm:px-8">
-        <span className="font-display text-sm uppercase tracking-[0.1em] text-blue-bright">
-          {STATUS_LABEL[match.result]} · Friendly
-        </span>
+    <div className="rounded-3xl bg-white shadow-[0_30px_60px_-20px_rgba(0,0,0,0.25)] ring-1 ring-black/5">
+      <div className="flex items-center justify-between border-b border-line px-6 py-4 sm:px-8">
+        <span className="text-sm font-medium text-ink-dim">{STATUS_LABEL[match.result]} · Friendly</span>
         <ResultBadge result={match.result} />
       </div>
 
@@ -29,37 +27,35 @@ export default function MatchCentre({ match }: { match: Match }) {
         <div className="flex flex-col items-center gap-3 text-center">
           <Crest size={64} className="sm:hidden" />
           <Crest size={88} className="hidden sm:block" />
-          <span className="text-sm font-bold uppercase text-paper-ink sm:text-base">Chèvre Noir</span>
+          <span className="text-sm font-semibold text-ink sm:text-base">Chèvre Noir</span>
         </div>
 
         <div className="flex flex-col items-center gap-1">
           {score ? (
-            <span className="font-display text-5xl tracking-tight text-paper-ink sm:text-7xl">
-              {score.for}<span className="text-blue-bright">–</span>{score.against}
+            <span className="text-5xl font-semibold tracking-tight text-ink sm:text-7xl">
+              {score.for}
+              <span className="text-ink-faint">–</span>
+              {score.against}
             </span>
           ) : (
-            <span className="text-2xl font-semibold text-paper-ink-dim">vs</span>
+            <span className="text-2xl font-medium text-ink-dim">vs</span>
           )}
-          {match.summary && (
-            <span className="hidden text-center text-xs text-paper-ink-faint sm:block">
-              {match.summary}
-            </span>
-          )}
+          {match.summary && <span className="hidden text-center text-xs text-ink-faint sm:block">{match.summary}</span>}
         </div>
 
         <div className="flex flex-col items-center gap-3 text-center">
           <OpponentBadge name={match.opponent} size={64} className="text-lg sm:hidden" />
           <OpponentBadge name={match.opponent} size={88} className="text-2xl hidden sm:flex" />
-          <span className="text-sm font-bold uppercase text-paper-ink sm:text-base">{match.opponent}</span>
+          <span className="text-sm font-semibold text-ink sm:text-base">{match.opponent}</span>
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 border-t-2 border-line-on-navy px-6 py-5 sm:px-8">
-        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-sm text-paper-ink-dim">
+      <div className="flex flex-col gap-4 border-t border-line px-6 py-5 sm:px-8">
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-sm text-ink-dim">
           <span>{match.date}</span>
           {match.location && (
             <>
-              <span aria-hidden className="text-paper-ink-faint">
+              <span aria-hidden className="text-ink-faint">
                 ·
               </span>
               <span>{match.location}</span>
@@ -68,9 +64,9 @@ export default function MatchCentre({ match }: { match: Match }) {
         </div>
 
         {match.motm && (
-          <div className="mx-auto flex items-center gap-2 border border-blue-bright/40 bg-blue-bright/15 px-4 py-2">
-            <Star className="size-3.5 fill-blue-bright text-blue-bright" />
-            <span className="text-xs font-medium text-paper-ink">
+          <div className="mx-auto flex items-center gap-2 rounded-full bg-blue/10 px-4 py-2">
+            <Star className="size-3.5 fill-blue-deep text-blue-deep" />
+            <span className="text-xs font-medium text-ink">
               Man of the Match — <span className="font-semibold">{match.motm}</span>
             </span>
           </div>
@@ -78,7 +74,7 @@ export default function MatchCentre({ match }: { match: Match }) {
 
         <Link
           href="/matches"
-          className="mx-auto inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-blue-bright transition-colors hover:text-paper-ink"
+          className="mx-auto inline-flex items-center gap-1.5 text-sm font-semibold text-blue-deep transition-colors hover:text-blue"
         >
           Full Match Centre
           <ArrowRight className="size-4" />

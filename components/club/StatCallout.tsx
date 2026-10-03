@@ -12,20 +12,13 @@ export default function StatCallout({ value, label, onNavy = false, className }:
     <div className={cn("flex flex-col gap-1", className)}>
       <span
         className={cn(
-          "font-display text-5xl leading-none sm:text-6xl",
+          "text-4xl leading-none font-semibold tracking-tight sm:text-5xl",
           onNavy ? "text-paper-ink" : "text-ink"
         )}
       >
         {value}
       </span>
-      <span
-        className={cn(
-          "text-sm font-bold uppercase tracking-wide",
-          onNavy ? "text-paper-ink-dim" : "text-ink-dim"
-        )}
-      >
-        {label}
-      </span>
+      <span className={cn("text-sm font-medium", onNavy ? "text-paper-ink-dim" : "text-ink-dim")}>{label}</span>
     </div>
   );
 }

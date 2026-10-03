@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-const PALETTE = ["#3f3f46", "#1e293b", "#334155", "#27272a", "#0f172a", "#18181b"];
+const PALETTE = ["#48484e", "#3a3a40", "#55555c", "#424248", "#5c5c63", "#3f3f46"];
 
 function hashName(name: string) {
   let h = 0;
@@ -25,25 +25,21 @@ interface OpponentBadgeProps {
   className?: string;
 }
 
-/** Generated placeholder crest for opposition clubs — a shield silhouette in a
- * deterministic neutral tone, standing in until real badge artwork exists. */
+/** Generated placeholder crest for opposition clubs — a soft tonal circle,
+ * standing in until real badge artwork exists. */
 export default function OpponentBadge({ name, size = 40, className }: OpponentBadgeProps) {
   const color = PALETTE[hashName(name) % PALETTE.length];
   return (
     <div
-      className={cn(
-        "flex shrink-0 items-center justify-center text-white/90 ring-1 ring-inset ring-white/15",
-        className
-      )}
+      className={cn("flex shrink-0 items-center justify-center rounded-full text-white/95 ring-1 ring-inset ring-black/5", className)}
       style={{
         width: size,
         height: size,
-        background: `linear-gradient(155deg, ${color}, color-mix(in srgb, ${color} 55%, black))`,
-        clipPath: "polygon(50% 0%, 100% 18%, 100% 62%, 50% 100%, 0% 62%, 0% 18%)",
+        background: `linear-gradient(155deg, ${color}, color-mix(in srgb, ${color} 60%, black))`,
         fontSize: size * 0.34,
       }}
     >
-      <span className="font-bold tracking-tight">{opponentInitials(name)}</span>
+      <span className="font-semibold tracking-tight">{opponentInitials(name)}</span>
     </div>
   );
 }

@@ -5,27 +5,27 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ---------- Chèvre Noir FC — design tokens ---------- */
-/* Bold kit-graphic poster system: stark black/white duotone, one punch of blue,
-   sharp diagonal-cut edges, oversized condensed numerals. */
+/* Apple-style system: light, airy surfaces, soft depth, pill controls,
+   restrained typography, one calm accent blue carried over from the crest. */
 
 :root {
   --paper: #ffffff;
   --paper-raised: #ffffff;
+  --surface: #f5f5f7;
+  --surface-raised: #fbfbfd;
   --noir: #000000;
-  --navy: #000000;
-  --navy-raised: #141414;
-  --line: rgba(0, 0, 0, 0.14);
-  --line-strong: rgba(0, 0, 0, 0.24);
-  --line-on-navy: rgba(255, 255, 255, 0.16);
-  --line-on-navy-strong: rgba(255, 255, 255, 0.3);
+  --line: rgba(0, 0, 0, 0.08);
+  --line-strong: rgba(0, 0, 0, 0.14);
+  --line-on-navy: rgba(255, 255, 255, 0.14);
+  --line-on-navy-strong: rgba(255, 255, 255, 0.24);
 
   --blue: #2246a0;
   --blue-bright: #8aa0da;
   --blue-deep: #1b3b8d;
 
-  --ink: #000000;
-  --ink-dim: #45454a;
-  --ink-faint: #767679;
+  --ink: #1d1d1f;
+  --ink-dim: #6e6e73;
+  --ink-faint: #727276;
   --paper-ink: #ffffff;
   --paper-ink-dim: rgba(255, 255, 255, 0.72);
   --paper-ink-faint: rgba(255, 255, 255, 0.46);
@@ -43,9 +43,9 @@
   --popover-foreground: var(--ink);
   --primary: var(--noir);
   --primary-foreground: var(--paper);
-  --secondary: #f0f0f0;
+  --secondary: var(--surface);
   --secondary-foreground: var(--ink);
-  --muted: #f0f0f0;
+  --muted: var(--surface);
   --muted-foreground: var(--ink-dim);
   --accent: var(--blue);
   --accent-foreground: var(--noir);
@@ -53,15 +53,15 @@
   --border: var(--line);
   --input: var(--line-strong);
   --ring: var(--blue);
-  --radius: 0rem;
+  --radius: 1rem;
 }
 
 @theme inline {
   --color-paper: var(--paper);
   --color-paper-raised: var(--paper-raised);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
   --color-noir: var(--noir);
-  --color-navy: var(--navy);
-  --color-navy-raised: var(--navy-raised);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
   --color-line-on-navy: var(--line-on-navy);
@@ -105,14 +105,12 @@
 
   --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
     ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-anton), Impact, "Arial Narrow Bold", sans-serif;
 
   --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-shine: shine 6s linear infinite;
   --animate-pulse-glow: pulse-glow 3.5s ease-in-out infinite;
-  --animate-drift-a: drift-a 22s ease-in-out infinite;
-  --animate-drift-b: drift-b 27s ease-in-out infinite;
-  --animate-drift-c: drift-c 33s ease-in-out infinite;
+  --animate-drift-a: drift-a 26s ease-in-out infinite;
+  --animate-drift-b: drift-b 31s ease-in-out infinite;
+  --animate-drift-c: drift-c 36s ease-in-out infinite;
 }
 
 @keyframes fade-up {
@@ -123,15 +121,6 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes shine {
-  from {
-    background-position: 200% center;
-  }
-  to {
-    background-position: -200% center;
   }
 }
 
@@ -150,38 +139,38 @@
 @keyframes drift-a {
   0%,
   100% {
-    transform: translate(-6%, -8%) scale(1);
+    transform: translate(-4%, -5%) scale(1);
   }
   50% {
-    transform: translate(9%, 6%) scale(1.25);
+    transform: translate(6%, 4%) scale(1.12);
   }
 }
 
 @keyframes drift-b {
   0%,
   100% {
-    transform: translate(8%, 5%) scale(1.1);
+    transform: translate(5%, 3%) scale(1.06);
   }
   50% {
-    transform: translate(-10%, -9%) scale(0.9);
+    transform: translate(-6%, -5%) scale(0.95);
   }
 }
 
 @keyframes drift-c {
   0%,
   100% {
-    transform: translate(-4%, 9%) scale(1);
+    transform: translate(-3%, 5%) scale(1);
   }
   50% {
-    transform: translate(7%, -7%) scale(1.2);
+    transform: translate(4%, -4%) scale(1.1);
   }
 }
 
 .hero-gradient {
   background:
-    radial-gradient(ellipse 70% 55% at 22% 28%, color-mix(in srgb, var(--blue) 55%, transparent), transparent 70%),
-    radial-gradient(ellipse 65% 55% at 82% 15%, color-mix(in srgb, var(--blue-bright) 35%, transparent), transparent 70%),
-    radial-gradient(ellipse 75% 60% at 45% 95%, color-mix(in srgb, var(--blue-deep) 65%, transparent), transparent 70%),
+    radial-gradient(ellipse 70% 55% at 22% 28%, color-mix(in srgb, var(--blue) 45%, transparent), transparent 70%),
+    radial-gradient(ellipse 65% 55% at 82% 15%, color-mix(in srgb, var(--blue-bright) 28%, transparent), transparent 70%),
+    radial-gradient(ellipse 75% 60% at 45% 95%, color-mix(in srgb, var(--blue-deep) 50%, transparent), transparent 70%),
     var(--noir);
   background-size: 140% 140%, 130% 130%, 150% 150%, auto;
 }
@@ -201,7 +190,7 @@ body {
 
 ::selection {
   background: var(--blue);
-  color: var(--noir);
+  color: #ffffff;
 }
 
 ::-webkit-scrollbar {
@@ -211,82 +200,31 @@ body {
   background: var(--paper);
 }
 ::-webkit-scrollbar-thumb {
-  background: #000000;
+  background: var(--line-strong);
+  border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--blue-deep);
+  background: var(--ink-faint);
 }
 
 /* ---------- Shared utilities ---------- */
 
-.font-display {
-  font-family: var(--font-display);
-}
-
 .eyebrow {
-  font-family: var(--font-display);
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink);
-  font-weight: 400;
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
+  color: var(--blue-deep);
+  font-weight: 590;
 }
 
 .eyebrow-on-navy {
-  font-family: var(--font-display);
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--paper-ink);
-  font-weight: 400;
-}
-
-.glass-nav {
-  background: color-mix(in srgb, var(--paper) 85%, transparent);
-}
-
-.blue-text {
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
   color: var(--blue-bright);
-}
-
-.shine-text {
-  background: linear-gradient(110deg, var(--blue) 30%, var(--blue-bright) 50%, var(--blue) 70%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shine 6s linear infinite;
-}
-
-.hairline {
-  background: var(--blue);
-  height: 4px;
+  font-weight: 590;
 }
 
 .tabular {
   font-variant-numeric: tabular-nums;
-}
-
-/* Diagonal cuts — the poster's signature edge */
-.clip-notch {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 3rem 100%, 0 calc(100% - 3rem));
-}
-
-.clip-diagonal-b {
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4vw), 0 100%);
-}
-
-.clip-diagonal-t {
-  clip-path: polygon(0 4vw, 100% 0, 100% 100%, 0 100%);
-}
-
-.skew-tag {
-  transform: skewX(-12deg);
-}
-
-.skew-tag > * {
-  display: inline-block;
-  transform: skewX(12deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
