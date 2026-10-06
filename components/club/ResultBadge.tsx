@@ -8,35 +8,32 @@ const LABEL: Record<Match["result"], string> = {
   Upcoming: "Upcoming",
 };
 
-const INK: Record<Match["result"], string> = {
-  W: "var(--win)",
-  D: "var(--draw)",
-  L: "var(--loss)",
-  Upcoming: "var(--navy)",
+const BG: Record<Match["result"], string> = {
+  W: "bg-win",
+  D: "bg-draw",
+  L: "bg-loss",
+  Upcoming: "bg-field-3",
 };
 
-interface ResultStampProps {
+interface ResultProps {
   result: Match["result"];
   className?: string;
 }
 
-/** The site's one signature device — a rotated ink stamp, used only for match results. */
-export function ResultStamp({ result, className }: ResultStampProps) {
-  return (
-    <span className={cn("stamp", className)} style={{ color: INK[result] }}>
-      {LABEL[result]}
-    </span>
-  );
-}
-
-export function ResultDot({ result, className }: ResultStampProps) {
+/** Square result tile with the W / D / L letter — the standard pro fixtures marker. */
+export function ResultChip({ result, className }: ResultProps) {
   return (
     <span
       title={LABEL[result]}
-      className={cn("inline-flex size-6 items-center justify-center rounded-full text-[0.68rem] font-semibold text-paper-ink", className)}
-      style={{ background: INK[result] }}
+      aria-label={LABEL[result]}
+      className={cn(
+        "type-name inline-flex size-7 shrink-0 items-center justify-center text-sm text-field",
+        BG[result],
+        result === "Upcoming" && "text-chalk",
+        className
+      )}
     >
-      {result === "Upcoming" ? "•" : result}
+      {result === "Upcoming" ? "–" : result}
     </span>
   );
 }

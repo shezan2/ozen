@@ -2,49 +2,70 @@ import type { Player, LeaderboardKey } from "@/lib/data";
 import { POSITION_SHORT } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
+const COLUMNS: { key: LeaderboardKey; label: string; title: string }[] = [
+  { key: "appearances", label: "App", title: "Appearances" },
+  { key: "goals", label: "Gls", title: "Goals" },
+  { key: "assists", label: "Ast", title: "Assists" },
+  { key: "involvements", label: "G+A", title: "Goal involvements" },
+];
+
+function valueOf(p: Player, key: LeaderboardKey) {
+  return key === "involvements" ? p.goals + p.assists : p[key];
+}
+
 export default function LeaderboardTable({ players, statKey }: { players: Player[]; statKey: LeaderboardKey }) {
   return (
-    <div className="border-t border-line">
-      <div className="flex gap-4 border-b border-line py-2 text-xs font-medium text-ink-faint">
-        <span className="w-7 shrink-0">#</span>
-        <span className="flex-1">Player</span>
-        <span className="hidden w-14 shrink-0 text-right sm:block">Position</span>
-        <span className="tabular w-10 shrink-0 text-right">App</span>
-        <span className={cn("tabular w-10 shrink-0 text-right", statKey === "goals" && "text-navy")}>Gls</span>
-        <span className={cn("tabular w-10 shrink-0 text-right", statKey === "assists" && "text-navy")}>Ast</span>
-        <span className="tabular w-10 shrink-0 text-right">G+A</span>
-      </div>
-      {players.map((p, i) => {
-        const first = i === 0;
-        return (
-          <div
-            key={p.id}
-            className={cn(
-              "flex items-center gap-4 border-b border-line py-3 last:border-0",
-              first && "border-l-2 border-l-brass pl-3"
-            )}
-          >
-            <span className={cn("tabular w-7 shrink-0 text-sm", first ? "font-semibold text-brass-deep" : "text-ink-faint")}>
-              {i + 1}
-            </span>
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-2.5">
-              <span className={cn("truncate font-serif text-base", first ? "font-semibold text-ink" : "font-medium text-ink")}>
+    <div className="overflow-x-auto bg-field-2">
+      <table className="w-full min-w-[22rem] border-collapse text-left">
+        <thead>
+          <tr className="border-b border-line text-xs text-silver-dim">
+            <th scope="col" className="w-12 py-3 pl-4 font-normal sm:pl-6">
+              #
+            </th>
+            <th scope="col" className="py-3 font-normal">
+              Player
+            </th>
+            <th scope="col" className="hidden py-3 font-normal sm:table-cell">
+              Position
+            </th>
+            {COLUMNS.map((c) => (
+              <th
+                key={c.key}
+                scope="col"
+                className={cn("w-14 py-3 text-center font-normal last:pr-4 sm:last:pr-6", c.key === statKey && "text-chalk")}
+              >
+                <abbr title={c.title} className="no-underline">
+                  {c.label}
+                </abbr>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {players.map((p, i) => (
+            <tr key={p.id} className="border-b border-line last:border-0">
+              <td className={cn("type-name tabular py-3.5 pl-4 text-base sm:pl-6", i === 0 ? "text-gold" : "text-silver-dim")}>
+                {i + 1}
+              </td>
+              <th scope="row" className="type-name py-3.5 text-lg font-bold">
                 {p.name}
-              </span>
-              <span className="text-xs text-ink-faint sm:hidden">{POSITION_SHORT[p.position]}</span>
-            </div>
-            <span className="hidden w-14 shrink-0 text-right text-sm text-ink-dim sm:block">{POSITION_SHORT[p.position]}</span>
-            <span className="tabular w-10 shrink-0 text-right text-sm text-ink-dim">{p.appearances}</span>
-            <span className={cn("tabular w-10 shrink-0 text-right text-sm", statKey === "goals" ? "font-semibold text-navy" : "text-ink-dim")}>
-              {p.goals}
-            </span>
-            <span className={cn("tabular w-10 shrink-0 text-right text-sm", statKey === "assists" ? "font-semibold text-navy" : "text-ink-dim")}>
-              {p.assists}
-            </span>
-            <span className="tabular w-10 shrink-0 text-right text-sm font-medium text-ink">{p.goals + p.assists}</span>
-          </div>
-        );
-      })}
+              </th>
+              <td className="hidden py-3.5 text-sm text-silver sm:table-cell">{POSITION_SHORT[p.position]}</td>
+              {COLUMNS.map((c) => (
+                <td
+                  key={c.key}
+                  className={cn(
+                    "tabular py-3.5 text-center last:pr-4 sm:last:pr-6",
+                    c.key === statKey ? "type-name text-xl" : "text-sm text-silver"
+                  )}
+                >
+                  {valueOf(p, c.key)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

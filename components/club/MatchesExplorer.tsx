@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import type { Match } from "@/lib/data";
 import SegmentedControl, { type SegmentedOption } from "./SegmentedControl";
 import MatchCard from "./MatchCard";
@@ -15,48 +14,55 @@ const FILTER_LABEL: Record<Match["result"], string> = {
   Upcoming: "Upcoming",
 };
 
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+function monthOf(date: string) {
+  return MONTHS.find((m) => date.includes(m)) ?? "Date not recorded";
+}
+
 export default function MatchesExplorer({ matches }: { matches: Match[] }) {
   const [filter, setFilter] = useState<Filter>("All");
 
-  const withMatchday = useMemo(
-    () => matches.map((m, i) => ({ match: m, matchday: i + 1 })).reverse(),
-    [matches]
-  );
-
   const options: SegmentedOption<Filter>[] = useMemo(() => {
-    const present = Array.from(new Set(matches.map((m) => m.result)));
+    const present = (["W", "D", "L", "Upcoming"] as const).filter((r) => matches.some((m) => m.result === r));
     return [
       { value: "All", label: "All", count: matches.length },
-      ...present.map((result) => ({
-        value: result,
-        label: FILTER_LABEL[result],
-        count: matches.filter((m) => m.result === result).length,
-      })),
+      ...present.map((r) => ({ value: r, label: FILTER_LABEL[r], count: matches.filter((m) => m.result === r).length })),
     ];
   }, [matches]);
 
-  const visible = filter === "All" ? withMatchday : withMatchday.filter((m) => m.match.result === filter);
+  const months = useMemo(() => {
+    const groups: { month: string; items: { match: Match; matchday: number }[] }[] = [];
+    matches
+      .map((match, i) => ({ match, matchday: i + 1 }))
+      .reverse()
+      .filter(({ match }) => filter === "All" || match.result === filter)
+      .forEach((item) => {
+        const month = monthOf(item.match.date);
+        const last = groups[groups.length - 1];
+        if (last?.month === month) last.items.push(item);
+        else groups.push({ month, items: [item] });
+      });
+    return groups;
+  }, [matches, filter]);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-12">
       <SegmentedControl options={options} value={filter} onChange={setFilter} layoutId="matches-filter" />
 
-      <div className="flex flex-col gap-4">
-        <AnimatePresence mode="popLayout" initial={false}>
-          {visible.map(({ match, matchday }) => (
-            <motion.div
-              key={match.id}
-              layout
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <MatchCard match={match} matchday={matchday} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+      {months.map(({ month, items }) => (
+        <section key={month} className="flex flex-col gap-4">
+          <h3 className="type-title text-2xl sm:text-3xl">{month}</h3>
+          <div className="flex flex-col gap-px bg-line">
+            {items.map(({ match, matchday }) => (
+              <MatchCard key={match.id} match={match} matchday={matchday} />
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }

@@ -4,75 +4,60 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ---------- Chèvre Noir FC — design tokens ---------- */
-/* The Club Ledger: the site as an official teamsheet / results book —
-   cool stone paper, carved serif masthead, navy ink, one brass seal accent.
-   Structure (rules, numbering) carries real information; nothing is
-   decorative card-kit or gradient wash. */
+/* ---------- Chèvre Noir FC — the page is the badge ----------
+   Black ring frames the page (header, footer). The navy field is every
+   surface. White lettering for headlines, silver monogram for text.
+   Gold appears only the way the badge uses it: thin rings and the crown. */
 
 :root {
-  --paper: #edeeea;
-  --paper-raised: #f6f7f4;
-  --ink: #15181f;
-  --ink-dim: #454b59;
-  --ink-faint: #5e6472;
-  --paper-ink: #f6f7f4;
-  --paper-ink-dim: rgba(246, 247, 244, 0.72);
-  --paper-ink-faint: rgba(246, 247, 244, 0.5);
+  --ring-black: #000000;
+  --field: #0d152d;
+  --field-2: #131d3b;
+  --field-3: #1a2649;
+  --chalk: #ffffff;
+  --silver: #b4b9c5;
+  --silver-dim: #8990a0;
+  --gold: #c9ae6b;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.2);
 
-  --navy: #1d2b4f;
-  --navy-deep: #121b33;
-  --brass: #8a6b32;
-  --brass-deep: #7c5e2a;
-
-  --line: rgba(21, 24, 31, 0.14);
-  --line-strong: rgba(21, 24, 31, 0.26);
-  --line-on-navy: rgba(246, 247, 244, 0.18);
-  --line-on-navy-strong: rgba(246, 247, 244, 0.32);
-
-  --win: #2f6d45;
-  --draw: #5b5f6b;
-  --loss: #8c3a2e;
+  --win: #3fae74;
+  --draw: #9097a6;
+  --loss: #e8685c;
 
   /* shadcn tokens remapped to the club palette */
-  --background: var(--paper);
-  --foreground: var(--ink);
-  --card: var(--paper-raised);
-  --card-foreground: var(--ink);
-  --popover: var(--paper-raised);
-  --popover-foreground: var(--ink);
-  --primary: var(--navy);
-  --primary-foreground: var(--paper-ink);
-  --secondary: var(--paper-raised);
-  --secondary-foreground: var(--ink);
-  --muted: var(--paper-raised);
-  --muted-foreground: var(--ink-dim);
-  --accent: var(--brass);
-  --accent-foreground: var(--ink);
+  --background: var(--field);
+  --foreground: var(--chalk);
+  --card: var(--field-2);
+  --card-foreground: var(--chalk);
+  --popover: var(--field-2);
+  --popover-foreground: var(--chalk);
+  --primary: var(--chalk);
+  --primary-foreground: var(--field);
+  --secondary: var(--field-2);
+  --secondary-foreground: var(--chalk);
+  --muted: var(--field-2);
+  --muted-foreground: var(--silver);
+  --accent: var(--gold);
+  --accent-foreground: var(--field);
   --destructive: var(--loss);
   --border: var(--line);
   --input: var(--line-strong);
-  --ring: var(--navy);
-  --radius: 0.25rem;
+  --ring: var(--chalk);
+  --radius: 0.125rem;
 }
 
 @theme inline {
-  --color-paper: var(--paper);
-  --color-paper-raised: var(--paper-raised);
-  --color-ink: var(--ink);
-  --color-ink-dim: var(--ink-dim);
-  --color-ink-faint: var(--ink-faint);
-  --color-paper-ink: var(--paper-ink);
-  --color-paper-ink-dim: var(--paper-ink-dim);
-  --color-paper-ink-faint: var(--paper-ink-faint);
-  --color-navy: var(--navy);
-  --color-navy-deep: var(--navy-deep);
-  --color-brass: var(--brass);
-  --color-brass-deep: var(--brass-deep);
+  --color-ring-black: var(--ring-black);
+  --color-field: var(--field);
+  --color-field-2: var(--field-2);
+  --color-field-3: var(--field-3);
+  --color-chalk: var(--chalk);
+  --color-silver: var(--silver);
+  --color-silver-dim: var(--silver-dim);
+  --color-gold: var(--gold);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
-  --color-line-on-navy: var(--line-on-navy);
-  --color-line-on-navy-strong: var(--line-on-navy-strong);
   --color-win: var(--win);
   --color-draw: var(--draw);
   --color-loss: var(--loss);
@@ -95,27 +80,13 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) * 1.6);
-  --radius-xl: calc(var(--radius) * 2.4);
-  --radius-2xl: calc(var(--radius) * 3.2);
+  --radius-sm: var(--radius);
+  --radius-md: calc(var(--radius) * 2);
+  --radius-lg: calc(var(--radius) * 3);
+  --radius-xl: calc(var(--radius) * 4);
+  --radius-2xl: calc(var(--radius) * 6);
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-besley), "Iowan Old Style", "Georgia", serif;
-
-  --animate-settle: settle 0.9s cubic-bezier(0.19, 1, 0.22, 1) both;
-}
-
-@keyframes settle {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
@@ -123,67 +94,73 @@ html {
 }
 
 body {
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--field);
+  color: var(--silver);
   font-family: var(--font-sans);
-  text-rendering: optimizeLegibility;
+  font-stretch: 100%;
   -webkit-font-smoothing: antialiased;
-  font-feature-settings: "cv11", "ss01";
+  text-rendering: optimizeLegibility;
 }
 
 :focus-visible {
-  outline: 2px solid var(--navy);
+  outline: 2px solid var(--chalk);
   outline-offset: 2px;
 }
 
 ::selection {
-  background: var(--navy);
-  color: var(--paper-ink);
+  background: var(--gold);
+  color: var(--field);
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--paper);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--line-strong);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--ink-faint);
-}
+/* Type roles live in the components layer so Tailwind utilities
+   (sizes, colours) on the same element always win. */
+@layer components {
+  .type-display {
+    font-stretch: 62%;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.86;
+    letter-spacing: -0.01em;
+    color: var(--chalk);
+  }
+  .type-title {
+    font-stretch: 68%;
+    font-weight: 750;
+    text-transform: uppercase;
+    line-height: 0.95;
+    color: var(--chalk);
+  }
+  .type-name {
+    font-stretch: 75%;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--chalk);
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
 
-/* ---------- Shared utilities ---------- */
+  /* One light from above, the way a floodlit pitch reads at night. */
+  .floodlight {
+    background:
+      radial-gradient(ellipse 60% 70% at 50% -15%, rgba(140, 165, 235, 0.2), transparent 70%),
+      var(--field);
+  }
 
-.tabular {
-  font-variant-numeric: tabular-nums;
-}
-
-/* The one signature device: a rotated, double-ruled ink stamp for a
-   match result. Used nowhere else on the site. */
-.stamp {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid currentColor;
-  border-radius: var(--radius-sm);
-  padding: 0.25rem 0.6rem;
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  transform: rotate(-3deg);
-  position: relative;
-}
-.stamp::before {
-  content: "";
-  position: absolute;
-  inset: 2.5px;
-  border: 1px solid currentColor;
-  border-radius: calc(var(--radius-sm) - 1px);
-  opacity: 0.55;
+  .rail {
+    display: grid;
+    grid-auto-flow: column;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+  .rail > * {
+    scroll-snap-align: start;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

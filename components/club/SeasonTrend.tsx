@@ -15,7 +15,7 @@ const RESULT_VAR: Record<TrendPoint["result"], string> = {
   W: "var(--win)",
   D: "var(--draw)",
   L: "var(--loss)",
-  Upcoming: "var(--navy)",
+  Upcoming: "var(--silver)",
 };
 
 const RESULT_LABEL: Record<TrendPoint["result"], string> = {
@@ -65,14 +65,14 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
         >
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--navy)" stopOpacity="0.14" />
-              <stop offset="100%" stopColor="var(--navy)" stopOpacity="0.02" />
+              <stop offset="0%" stopColor="var(--silver)" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="var(--silver)" stopOpacity="0" />
             </linearGradient>
           </defs>
 
           {/* Zero baseline */}
           <line x1={PAD_L} y1={yZero} x2={W - PAD_R} y2={yZero} stroke="var(--line-strong)" strokeWidth={1} />
-          <text x={PAD_L - 8} y={yZero} textAnchor="end" dominantBaseline="middle" className="fill-ink-faint text-[11px]">
+          <text x={PAD_L - 8} y={yZero} textAnchor="end" dominantBaseline="middle" className="fill-silver-dim text-[11px]">
             0
           </text>
 
@@ -83,14 +83,14 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
               y1={PAD_T}
               x2={activeX}
               y2={H - PAD_B}
-              stroke="var(--ink)"
-              strokeOpacity={0.12}
+              stroke="var(--chalk)"
+              strokeOpacity={0.25}
               strokeWidth={1}
             />
           )}
 
           <path d={areaPath} fill={`url(#${gradientId})`} />
-          <path d={linePath} fill="none" stroke="var(--navy)" strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
+          <path d={linePath} fill="none" stroke="var(--chalk)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
 
           {points.map((p, i) => (
             <g key={p.matchday}>
@@ -98,7 +98,7 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
                 x={x(i)}
                 y={H - PAD_B + 18}
                 textAnchor="middle"
-                className={cn("text-[10px] transition-colors", hover === i ? "fill-ink" : "fill-ink-faint")}
+                className={cn("text-[10px] transition-colors", hover === i ? "fill-chalk" : "fill-silver-dim")}
               >
                 {p.matchday}
               </text>
@@ -107,7 +107,7 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
                 cy={y(p.cumulative)}
                 r={5}
                 fill={RESULT_VAR[p.result]}
-                stroke="var(--paper-raised)"
+                stroke="var(--field-2)"
                 strokeWidth={2}
               />
               {/* Generous, invisible hit target */}
@@ -132,19 +132,19 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
 
         {active && (
           <div
-            className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full border border-line bg-paper-raised px-3.5 py-2.5 text-center"
+            className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full border border-line-strong bg-field-3 px-3.5 py-2.5 text-center"
             style={{
               left: `${(activeX / W) * 100}%`,
               top: `${(y(active.cumulative) / H) * 100}%`,
               marginTop: "-10px",
             }}
           >
-            <p className="whitespace-nowrap text-xs font-semibold text-ink">
+            <p className="whitespace-nowrap text-xs font-semibold text-chalk">
               MD{active.matchday} vs {active.opponent}
             </p>
-            <p className="whitespace-nowrap text-[11px] text-ink-dim">
+            <p className="whitespace-nowrap text-[11px] text-silver">
               {RESULT_LABEL[active.result]} {active.score} · GD{" "}
-              <span className="tabular font-semibold text-ink">{active.cumulative}</span>
+              <span className="tabular font-semibold text-chalk">{active.cumulative}</span>
             </p>
           </div>
         )}
@@ -152,14 +152,15 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
 
       <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
         {(["W", "D", "L"] as const).map((r) => (
-          <span key={r} className="flex items-center gap-1.5 text-xs font-medium text-ink-dim">
+          <span key={r} className="flex items-center gap-1.5 text-xs font-medium text-silver">
             <span className="size-2.5 rounded-full" style={{ background: RESULT_VAR[r] }} aria-hidden />
             {RESULT_LABEL[r]}
           </span>
         ))}
       </div>
 
-      <table className="sr-only">
+      <div className="sr-only">
+      <table>
         <caption>Match-by-match cumulative goal difference</caption>
         <thead>
           <tr>
@@ -182,6 +183,7 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

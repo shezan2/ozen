@@ -25,7 +25,7 @@ export default function SegmentedControl<T extends string>({
   className,
 }: SegmentedControlProps<T>) {
   return (
-    <div role="tablist" className={cn("flex flex-wrap items-stretch gap-x-6 gap-y-1 border-b border-line", className)}>
+    <div role="tablist" className={cn("flex flex-wrap gap-x-8 gap-y-1 border-b border-line", className)}>
       {options.map((opt) => {
         const active = opt.value === value;
         return (
@@ -34,16 +34,17 @@ export default function SegmentedControl<T extends string>({
             role="tab"
             aria-selected={active}
             onClick={() => onChange(opt.value)}
-            className="relative py-2.5 text-sm"
+            className={cn(
+              "type-name relative py-3 text-base tracking-[0.03em] transition-colors",
+              active ? "text-chalk" : "text-silver-dim hover:text-silver"
+            )}
           >
-            <span className={active ? "font-medium text-ink" : "text-ink-faint hover:text-ink-dim"}>
-              {opt.label}
-              {typeof opt.count === "number" && <span className="tabular"> {opt.count}</span>}
-            </span>
+            {opt.label}
+            {typeof opt.count === "number" && <span className="tabular ml-1.5 text-silver-dim">{opt.count}</span>}
             {active && (
               <motion.span
                 layoutId={layoutId}
-                className="absolute inset-x-0 -bottom-px h-[1.5px] bg-navy"
+                className="absolute inset-x-0 -bottom-px h-0.5 bg-gold"
                 transition={{ type: "spring", stiffness: 500, damping: 38 }}
               />
             )}

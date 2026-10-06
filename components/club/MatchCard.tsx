@@ -5,46 +5,59 @@ import { motion, AnimatePresence } from "motion/react";
 import { ChevronDown } from "lucide-react";
 import type { Match } from "@/lib/data";
 import { parseScore } from "@/lib/data";
-import { ResultStamp } from "./ResultBadge";
+import Crest from "./Crest";
+import OpponentCrest from "./OpponentCrest";
+import { ResultChip } from "./ResultBadge";
 import { cn } from "@/lib/utils";
 
 export default function MatchCard({ match, matchday }: { match: Match; matchday: number }) {
   const [open, setOpen] = useState(false);
-  const score = parseScore(match);
+  const s = parseScore(match);
   const hasDetail = Boolean(
     match.summary || match.motm || match.lineup?.length || match.goals?.length || match.assists?.length
   );
 
   return (
-    <div className="border-b border-line">
+    <div className="bg-field-2">
       <button
         onClick={() => hasDetail && setOpen((v) => !v)}
-        className={cn("flex w-full flex-col gap-2 py-4 text-left sm:flex-row sm:items-center sm:gap-5", hasDetail ? "cursor-pointer" : "cursor-default")}
-        aria-expanded={open}
+        aria-expanded={hasDetail ? open : undefined}
         disabled={!hasDetail}
+        className={cn(
+          "grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-3 gap-y-3 px-4 py-5 text-left md:grid-cols-[9rem_minmax(0,1fr)_auto_minmax(0,1fr)_9rem_auto] md:gap-x-5 sm:px-6",
+          hasDetail && "cursor-pointer transition-colors hover:bg-field-3"
+        )}
       >
-        <span className="tabular w-14 shrink-0 text-xs text-ink-faint">MD{matchday}</span>
-        <span className="w-28 shrink-0 text-xs text-ink-faint">{match.date}</span>
+        <span className="col-span-3 flex items-center justify-between text-xs text-silver md:col-span-1 md:block">
+          <span className="block">Matchday {matchday}</span>
+          <span className="block text-silver-dim">{match.date}</span>
+        </span>
 
-        <span className="flex-1 font-serif text-base text-ink">vs {match.opponent}</span>
+        <span className="flex min-w-0 items-center justify-end gap-3">
+          <span className="type-name text-right text-base leading-tight break-words sm:text-xl">Chèvre Noir</span>
+          <Crest size={30} className="shrink-0" />
+        </span>
 
-        {match.location && <span className="hidden w-36 shrink-0 truncate text-xs text-ink-faint md:block">{match.location}</span>}
+        <span className="type-name tabular bg-ring-black px-3 py-1.5 text-center text-2xl whitespace-nowrap text-chalk">
+          {s ? `${s.for}–${s.against}` : "vs"}
+        </span>
 
-        <div className="flex items-center gap-4">
-          {score && (
-            <span className="tabular w-14 text-right text-lg font-medium text-ink">
-              {score.for}–{score.against}
-            </span>
-          )}
-          <ResultStamp result={match.result} className="scale-90" />
+        <span className="flex min-w-0 items-center gap-3">
+          <OpponentCrest name={match.opponent} size={26} />
+          <span className="type-name text-base leading-tight break-words sm:text-xl">{match.opponent}</span>
+        </span>
+
+        <span className="col-span-2 truncate text-xs text-silver-dim md:col-span-1">
+          {match.location || "Venue not recorded"}
+        </span>
+
+        <span className="flex items-center justify-end gap-3">
+          <ResultChip result={match.result} />
           <ChevronDown
-            className={cn(
-              "size-4 text-ink-faint transition-transform duration-300",
-              open && "rotate-180",
-              !hasDetail && "opacity-0"
-            )}
+            aria-hidden
+            className={cn("size-4 text-silver transition-transform duration-300", open && "rotate-180", !hasDetail && "invisible")}
           />
-        </div>
+        </span>
       </button>
 
       <AnimatePresence initial={false}>
@@ -56,33 +69,23 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
             transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <div className="flex flex-col gap-4 pb-5 pl-0 sm:pl-[4.5rem]">
-              {match.summary && <p className="max-w-xl text-sm leading-relaxed text-ink-dim">{match.summary}</p>}
-
-              {match.motm && (
-                <p className="text-sm text-ink-dim">
-                  Man of the match — <span className="font-medium text-ink">{match.motm}</span>
-                </p>
+            <div className="grid gap-6 border-t border-line px-4 py-6 sm:grid-cols-2 sm:px-6">
+              {(match.summary || match.motm) && (
+                <div className="flex flex-col gap-2 sm:col-span-2">
+                  {match.summary && <p className="max-w-2xl text-sm leading-relaxed text-chalk">{match.summary}</p>}
+                  {match.motm && (
+                    <p className="text-sm text-silver">
+                      Player of the match: <span className="text-chalk">{match.motm}</span>
+                    </p>
+                  )}
+                </div>
               )}
-
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                {match.goals && match.goals.length > 0 && <EventList title="Goals" events={match.goals} />}
-                {match.assists && match.assists.length > 0 && <EventList title="Assists" events={match.assists} />}
-              </div>
-
+              {match.goals && match.goals.length > 0 && <EventList title="Goals" events={match.goals} />}
+              {match.assists && match.assists.length > 0 && <EventList title="Assists" events={match.assists} />}
               {match.lineup && match.lineup.length > 0 && (
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-xs text-ink-faint">Starting XI</span>
-                  <p className="text-sm text-ink-dim">{match.lineup.join(", ")}</p>
-                </div>
+                <NameList title="Starting eleven" names={match.lineup} className="sm:col-span-2" />
               )}
-
-              {match.subs && match.subs.length > 0 && (
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-xs text-ink-faint">Substitutes</span>
-                  <p className="text-sm text-ink-faint">{match.subs.join(", ")}</p>
-                </div>
-              )}
+              {match.subs && match.subs.length > 0 && <NameList title="Substitutes" names={match.subs} className="sm:col-span-2" />}
             </div>
           </motion.div>
         )}
@@ -93,16 +96,25 @@ export default function MatchCard({ match, matchday }: { match: Match; matchday:
 
 function EventList({ title, events }: { title: string; events: { player: string; count: number }[] }) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <span className="text-xs text-ink-faint">{title}</span>
+    <div className="flex flex-col gap-2">
+      <h4 className="type-name text-sm tracking-[0.04em] text-silver">{title}</h4>
       <ul className="flex flex-col gap-1">
         {events.map((e) => (
-          <li key={e.player} className="flex items-center justify-between text-sm">
-            <span className="text-ink">{e.player}</span>
-            {e.count > 1 && <span className="tabular text-ink-dim">×{e.count}</span>}
+          <li key={e.player} className="flex justify-between text-sm text-chalk">
+            <span>{e.player}</span>
+            {e.count > 1 && <span className="tabular text-silver">×{e.count}</span>}
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function NameList({ title, names, className }: { title: string; names: string[]; className?: string }) {
+  return (
+    <div className={cn("flex flex-col gap-2", className)}>
+      <h4 className="type-name text-sm tracking-[0.04em] text-silver">{title}</h4>
+      <p className="text-sm leading-relaxed text-chalk">{names.join(", ")}</p>
     </div>
   );
 }

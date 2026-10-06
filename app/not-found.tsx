@@ -3,25 +3,23 @@ import Crest from "@/components/club/Crest";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-[100svh] flex-col items-center justify-center gap-6 px-5 text-center">
-      <Crest size={56} />
-      <div className="flex flex-col gap-2">
-        <p className="text-xs text-ink-faint">404</p>
-        <h1 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-          This page doesn&apos;t exist.
-        </h1>
-        <p className="mx-auto max-w-sm text-sm leading-relaxed text-ink-dim">
-          The pitch you&apos;re looking for isn&apos;t here. Let&apos;s get you back on side.
-        </p>
+    <section className="floodlight flex min-h-[100svh] flex-col items-center justify-center gap-8 px-5 text-center">
+      <Crest size={88} />
+      <div className="flex flex-col gap-3">
+        <h1 className="type-display text-6xl sm:text-8xl">Page not found</h1>
+        <p className="mx-auto max-w-sm text-base text-silver">This page doesn&apos;t exist. Head back to the latest result or the full fixture list.</p>
       </div>
-      <div className="flex items-center gap-6">
-        <Link href="/" className="border-b border-ink pb-0.5 text-sm font-medium text-ink transition-colors hover:border-navy hover:text-navy">
-          Back home
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <Link href="/" className="type-name bg-chalk px-6 py-3 text-sm tracking-[0.04em] text-field transition-colors hover:bg-silver">
+          Go to home
         </Link>
-        <Link href="/matches" className="border-b border-ink-dim pb-0.5 text-sm text-ink-dim transition-colors hover:border-navy hover:text-navy">
+        <Link
+          href="/matches"
+          className="type-name border border-line-strong px-6 py-3 text-sm tracking-[0.04em] text-chalk transition-colors hover:border-chalk"
+        >
           View matches
         </Link>
       </div>
-    </div>
+    </section>
   );
 }

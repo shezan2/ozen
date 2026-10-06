@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { squad } from "@/lib/data";
-import SectionHeading from "@/components/ui/SectionHeading";
+import PageHeader from "@/components/club/PageHeader";
 import LeaderboardExplorer from "@/components/club/LeaderboardExplorer";
 import { club } from "@/lib/site";
 
@@ -12,17 +12,11 @@ export const metadata: Metadata = {
 export default function LeaderboardPage() {
   return (
     <div className="flex flex-col">
-      <section className="border-b border-line pt-28 pb-10 sm:pt-36 sm:pb-14">
-        <div className="mx-auto max-w-5xl px-5 sm:px-8">
-          <SectionHeading
-            eyebrow={`${club.season} Season`}
-            title="Leaderboard"
-            description="Season stats, ranked. See who's leading the race for the golden boot."
-          />
-        </div>
-      </section>
-
-      <section className="mx-auto w-full max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
+      <PageHeader
+        title="Leaderboard"
+        description={`Every player ranked by goals, assists and appearances in the ${club.season} season.`}
+      />
+      <section className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
         <LeaderboardExplorer players={squad} />
       </section>
     </div>

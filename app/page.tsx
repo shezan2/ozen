@@ -1,97 +1,63 @@
-import Link from "next/link";
-import {
-  matches,
-  squad,
-  getTeamRecord,
-  getForm,
-  getLeaders,
-} from "@/lib/data";
-import { club } from "@/lib/site";
+import { matches, squad, getLeaders } from "@/lib/data";
 import HomeHero from "@/components/club/HomeHero";
-import MatchCentre from "@/components/club/MatchCentre";
-import RecordLine from "@/components/club/RecordLine";
+import Rail from "@/components/club/Rail";
+import ResultTile from "@/components/club/ResultTile";
+import SeasonRecord from "@/components/club/SeasonRecord";
+import PlayerCard from "@/components/club/PlayerCard";
+import StatLeaders from "@/components/club/StatLeaders";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function Home() {
-  const record = getTeamRecord(matches);
-  const form = getForm(matches, 6);
-
-  const lastMatch = matches[matches.length - 1];
-
-  const topScorer = getLeaders(squad, "goals")[0];
-  const topAssister = getLeaders(squad, "assists")[0];
-  const mostAppearances = getLeaders(squad, "appearances")[0];
+  const played = matches.filter((m) => m.result !== "Upcoming");
+  const latest = played[played.length - 1];
+  const mostRecentFirst = [...played].reverse();
+  const regulars = getLeaders(squad, "appearances").slice(0, 8);
 
   return (
     <div className="flex flex-col">
-      <HomeHero form={form} />
+      <HomeHero match={latest} />
 
-      <section className="border-b border-line py-12 sm:py-16">
-        <div className="mx-auto max-w-5xl px-5 sm:px-8">
-          <MatchCentre match={lastMatch} />
+      <section className="py-14 sm:py-20">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 sm:px-8">
+          <SectionHeading title="Results" link={{ href: "/matches", label: "All results" }} />
+          <Rail label="Results">
+            {mostRecentFirst.map((m) => (
+              <ResultTile key={m.id} match={m} />
+            ))}
+          </Rail>
         </div>
       </section>
 
-      <section className="border-b border-line py-12 sm:py-16">
-        <div className="mx-auto max-w-5xl px-5 sm:px-8">
-          <SectionHeading eyebrow="By the numbers" title="Season record" />
-          <RecordLine
-            className="mt-6"
-            items={[
-              { label: "Played", value: record.played },
-              { label: "Won", value: record.won, accent: "win" },
-              { label: "Drawn", value: record.drawn, accent: "draw" },
-              { label: "Lost", value: record.lost, accent: "loss" },
-              { label: "For", value: record.goalsFor },
-              { label: "Against", value: record.goalsAgainst },
-              { label: "GD", value: record.goalDifference > 0 ? `+${record.goalDifference}` : record.goalDifference },
-            ]}
+      <section className="pb-14 sm:pb-20">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 sm:px-8">
+          <SectionHeading title="Season record" />
+          <SeasonRecord matches={matches} />
+        </div>
+      </section>
+
+      <section className="border-y border-line bg-ring-black/40 py-14 sm:py-20">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 sm:px-8">
+          <SectionHeading
+            title="First team"
+            description="This season's most-used players."
+            link={{ href: "/squad", label: "Full squad" }}
           />
+          <Rail label="First team">
+            {regulars.map((p) => (
+              <div key={p.id} className="w-56 sm:w-60">
+                <PlayerCard player={p} />
+              </div>
+            ))}
+          </Rail>
         </div>
       </section>
 
-      <section className="border-b border-line py-12 sm:py-16">
-        <div className="mx-auto max-w-5xl px-5 sm:px-8">
-          <SectionHeading eyebrow="Squad spotlight" title="Leading the way" />
-          <div className="mt-8 grid grid-cols-1 gap-6 border-t border-line pt-6 sm:grid-cols-3">
-            <Spotlight label="Top scorer" name={topScorer.name} value={topScorer.goals} unit="goals" />
-            <Spotlight label="Top assister" name={topAssister.name} value={topAssister.assists} unit="assists" />
-            <Spotlight label="Most appearances" name={mostAppearances.name} value={mostAppearances.appearances} unit="apps" />
-          </div>
-          <Link href="/leaderboard" className="mt-6 inline-block border-b border-ink-dim pb-0.5 text-sm text-ink-dim transition-colors hover:border-navy hover:text-navy">
-            View full leaderboard
-          </Link>
+      <section className="py-14 sm:py-20">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 sm:px-8">
+          <SectionHeading title="Leaders" link={{ href: "/leaderboard", label: "Full leaderboard" }} />
+          <StatLeaders players={squad} />
         </div>
       </section>
-
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto flex max-w-5xl flex-col gap-3 px-5 sm:px-8">
-          <p className="font-serif text-2xl italic text-navy">{club.motto}.</p>
-          <p className="max-w-md text-sm leading-relaxed text-ink-dim">
-            Follow the club for match updates, squad news and behind-the-scenes moments.
-          </p>
-          <a
-            href={club.instagram}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-2 w-fit border-b border-ink pb-0.5 text-sm font-medium text-ink transition-colors hover:border-navy hover:text-navy"
-          >
-            Follow {club.instagramHandle}
-          </a>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function Spotlight({ label, name, value, unit }: { label: string; name: string; value: number; unit: string }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="text-xs text-ink-faint">{label}</span>
-      <span className="font-serif text-xl font-medium text-ink">{name}</span>
-      <span className="tabular text-sm text-ink-dim">
-        {value} {unit}
-      </span>
     </div>
   );
 }

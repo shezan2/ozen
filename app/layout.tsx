@@ -1,21 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Besley } from "next/font/google";
+import { Archivo } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { club } from "@/lib/site";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const besley = Besley({
-  variable: "--font-besley",
-  subsets: ["latin", "latin-ext"],
-  weight: ["500", "600", "700"],
-  style: ["normal", "italic"],
+  axes: ["wdth"],
 });
 
 export const metadata: Metadata = {
@@ -59,8 +52,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${besley.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-paper text-ink">
+    <html lang="en" className={`${archivo.variable} h-full antialiased`}>
+      <body className="flex min-h-full flex-col bg-field text-silver">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

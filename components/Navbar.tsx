@@ -25,25 +25,36 @@ export default function Navbar() {
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-paper">
-      <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8">
-        <Link href="/" className="flex items-center gap-2.5" aria-label="Chèvre Noir FC — home">
-          <Crest size={28} priority />
-          <span className="text-[15px] font-semibold tracking-tight text-ink">
-            Chèvre Noir <span className="text-navy">FC</span>
+    <header className="fixed inset-x-0 top-0 z-50 bg-ring-black">
+      <nav className="relative mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+        <Link href="/" className="flex h-full items-center gap-4" aria-label="Chèvre Noir FC — home">
+          {/* The crest hangs below the bar in a tab cut to a chevron point, like the monogram's strokes. */}
+          <span
+            className="flex h-[88px] w-[72px] shrink-0 items-start justify-center self-start bg-ring-black pt-3"
+            style={{ clipPath: "polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%)" }}
+          >
+            <Crest size={52} priority />
           </span>
+          <span className="type-name text-xl">Chèvre Noir</span>
         </Link>
 
-        <div className="hidden items-center gap-7 sm:flex">
+        <div className="hidden h-full items-stretch gap-8 sm:flex">
           {links.map((l) => {
             const active = pathname === l.href;
             return (
-              <Link key={l.href} href={l.href} className="relative py-1.5 text-sm">
-                <span className={active ? "text-ink" : "text-ink-dim hover:text-ink"}>{l.label}</span>
+              <Link
+                key={l.href}
+                href={l.href}
+                className={cn(
+                  "type-name relative flex items-center text-[15px] tracking-[0.04em] transition-colors",
+                  active ? "text-chalk" : "text-silver hover:text-chalk"
+                )}
+              >
+                {l.label}
                 {active && (
                   <motion.span
-                    layoutId="nav-underline"
-                    className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] bg-navy"
+                    layoutId="nav-active"
+                    className="absolute inset-x-0 bottom-0 h-0.5 bg-gold"
                     transition={{ type: "spring", stiffness: 500, damping: 40 }}
                   />
                 )}
@@ -54,31 +65,31 @@ export default function Navbar() {
 
         <button
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex size-9 items-center justify-center text-ink sm:hidden"
+          className="inline-flex size-10 items-center justify-center text-chalk sm:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          {open ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </nav>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+            initial={{ height: 0 }}
+            animate={{ height: "auto" }}
+            exit={{ height: 0 }}
             transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-            className="overflow-hidden border-t border-line bg-paper sm:hidden"
+            className="overflow-hidden border-t border-line bg-ring-black sm:hidden"
           >
-            <div className="flex flex-col px-5 py-2">
+            <div className="flex flex-col px-5 pt-8 pb-4">
               {links.map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
                   className={cn(
-                    "border-b border-line py-3 text-base last:border-0",
-                    pathname === l.href ? "font-medium text-ink" : "text-ink-dim"
+                    "type-title border-b border-line py-4 text-3xl last:border-0",
+                    pathname === l.href ? "text-chalk" : "text-silver"
                   )}
                 >
                   {l.label}
