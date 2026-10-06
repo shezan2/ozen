@@ -25,30 +25,28 @@ export default function Navbar() {
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-black/10 bg-white/75 backdrop-blur-xl backdrop-saturate-150">
-      <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-8">
-        <Link href="/" className="flex items-center gap-2" aria-label="Chèvre Noir FC — home">
-          <Crest size={26} priority />
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-paper">
+      <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8">
+        <Link href="/" className="flex items-center gap-2.5" aria-label="Chèvre Noir FC — home">
+          <Crest size={28} priority />
           <span className="text-[15px] font-semibold tracking-tight text-ink">
-            Chèvre Noir <span className="text-blue-deep">FC</span>
+            Chèvre Noir <span className="text-navy">FC</span>
           </span>
         </Link>
 
-        <div className="hidden items-center gap-0.5 sm:flex">
+        <div className="hidden items-center gap-7 sm:flex">
           {links.map((l) => {
             const active = pathname === l.href;
             return (
-              <Link key={l.href} href={l.href} className="relative px-4 py-1.5 text-[13px] font-medium">
+              <Link key={l.href} href={l.href} className="relative py-1.5 text-sm">
+                <span className={active ? "text-ink" : "text-ink-dim hover:text-ink"}>{l.label}</span>
                 {active && (
                   <motion.span
-                    layoutId="nav-active"
-                    className="absolute inset-0 rounded-full bg-blue/10"
+                    layoutId="nav-underline"
+                    className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] bg-navy"
                     transition={{ type: "spring", stiffness: 500, damping: 40 }}
                   />
                 )}
-                <span className={cn("relative", active ? "text-blue-deep" : "text-ink-dim hover:text-ink")}>
-                  {l.label}
-                </span>
               </Link>
             );
           })}
@@ -56,7 +54,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex size-9 items-center justify-center rounded-full text-ink sm:hidden"
+          className="inline-flex size-9 items-center justify-center text-ink sm:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >
@@ -70,17 +68,17 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-black/10 bg-white/90 backdrop-blur-xl sm:hidden"
+            transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+            className="overflow-hidden border-t border-line bg-paper sm:hidden"
           >
-            <div className="flex flex-col gap-1 px-5 py-4">
+            <div className="flex flex-col px-5 py-2">
               {links.map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
                   className={cn(
-                    "rounded-xl px-3.5 py-2.5 text-[15px] font-medium transition-colors",
-                    pathname === l.href ? "bg-blue/10 text-blue-deep" : "text-ink-dim hover:text-ink"
+                    "border-b border-line py-3 text-base last:border-0",
+                    pathname === l.href ? "font-medium text-ink" : "text-ink-dim"
                   )}
                 >
                   {l.label}

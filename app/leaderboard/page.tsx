@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 export default function LeaderboardPage() {
   return (
     <div className="flex flex-col">
-      <section className="border-b border-line bg-paper pt-28 pb-14 sm:pt-36 sm:pb-16">
-        <div className="mx-auto max-w-6xl px-5 sm:px-8">
+      <section className="border-b border-line pt-28 pb-10 sm:pt-36 sm:pb-14">
+        <div className="mx-auto max-w-5xl px-5 sm:px-8">
           <SectionHeading
             eyebrow={`${club.season} Season`}
             title="Leaderboard"
@@ -22,7 +22,7 @@ export default function LeaderboardPage() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-4xl px-5 py-14 sm:px-8 sm:py-16">
+      <section className="mx-auto w-full max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
         <LeaderboardExplorer players={squad} />
       </section>
     </div>

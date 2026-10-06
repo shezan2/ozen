@@ -25,10 +25,7 @@ export default function SegmentedControl<T extends string>({
   className,
 }: SegmentedControlProps<T>) {
   return (
-    <div
-      role="tablist"
-      className={cn("inline-flex flex-wrap items-stretch gap-0.5 rounded-full bg-surface p-1", className)}
-    >
+    <div role="tablist" className={cn("flex flex-wrap items-stretch gap-x-6 gap-y-1 border-b border-line", className)}>
       {options.map((opt) => {
         const active = opt.value === value;
         return (
@@ -37,19 +34,19 @@ export default function SegmentedControl<T extends string>({
             role="tab"
             aria-selected={active}
             onClick={() => onChange(opt.value)}
-            className="relative rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors"
+            className="relative py-2.5 text-sm"
           >
+            <span className={active ? "font-medium text-ink" : "text-ink-faint hover:text-ink-dim"}>
+              {opt.label}
+              {typeof opt.count === "number" && <span className="tabular"> {opt.count}</span>}
+            </span>
             {active && (
               <motion.span
                 layoutId={layoutId}
-                className="absolute inset-0 rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,0.12)]"
+                className="absolute inset-x-0 -bottom-px h-[1.5px] bg-navy"
                 transition={{ type: "spring", stiffness: 500, damping: 38 }}
               />
             )}
-            <span className={cn("relative z-10 flex items-center gap-1.5", active ? "text-ink" : "text-ink-dim hover:text-ink")}>
-              {opt.label}
-              {typeof opt.count === "number" && <span className="tabular text-ink-faint">{opt.count}</span>}
-            </span>
           </button>
         );
       })}

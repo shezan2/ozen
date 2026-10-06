@@ -5,34 +5,34 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ---------- Chèvre Noir FC — design tokens ---------- */
-/* Apple-style system: light, airy surfaces, soft depth, pill controls,
-   restrained typography, one calm accent blue carried over from the crest. */
+/* The Club Ledger: the site as an official teamsheet / results book —
+   cool stone paper, carved serif masthead, navy ink, one brass seal accent.
+   Structure (rules, numbering) carries real information; nothing is
+   decorative card-kit or gradient wash. */
 
 :root {
-  --paper: #ffffff;
-  --paper-raised: #ffffff;
-  --surface: #f5f5f7;
-  --surface-raised: #fbfbfd;
-  --noir: #000000;
-  --line: rgba(0, 0, 0, 0.08);
-  --line-strong: rgba(0, 0, 0, 0.14);
-  --line-on-navy: rgba(255, 255, 255, 0.14);
-  --line-on-navy-strong: rgba(255, 255, 255, 0.24);
+  --paper: #edeeea;
+  --paper-raised: #f6f7f4;
+  --ink: #15181f;
+  --ink-dim: #454b59;
+  --ink-faint: #5e6472;
+  --paper-ink: #f6f7f4;
+  --paper-ink-dim: rgba(246, 247, 244, 0.72);
+  --paper-ink-faint: rgba(246, 247, 244, 0.5);
 
-  --blue: #2246a0;
-  --blue-bright: #8aa0da;
-  --blue-deep: #1b3b8d;
+  --navy: #1d2b4f;
+  --navy-deep: #121b33;
+  --brass: #8a6b32;
+  --brass-deep: #7c5e2a;
 
-  --ink: #1d1d1f;
-  --ink-dim: #6e6e73;
-  --ink-faint: #727276;
-  --paper-ink: #ffffff;
-  --paper-ink-dim: rgba(255, 255, 255, 0.72);
-  --paper-ink-faint: rgba(255, 255, 255, 0.46);
+  --line: rgba(21, 24, 31, 0.14);
+  --line-strong: rgba(21, 24, 31, 0.26);
+  --line-on-navy: rgba(246, 247, 244, 0.18);
+  --line-on-navy-strong: rgba(246, 247, 244, 0.32);
 
-  --win: #1f8a4c;
-  --draw: #6b6b6f;
-  --loss: #d4321f;
+  --win: #2f6d45;
+  --draw: #5b5f6b;
+  --loss: #8c3a2e;
 
   /* shadcn tokens remapped to the club palette */
   --background: var(--paper);
@@ -41,40 +41,38 @@
   --card-foreground: var(--ink);
   --popover: var(--paper-raised);
   --popover-foreground: var(--ink);
-  --primary: var(--noir);
-  --primary-foreground: var(--paper);
-  --secondary: var(--surface);
+  --primary: var(--navy);
+  --primary-foreground: var(--paper-ink);
+  --secondary: var(--paper-raised);
   --secondary-foreground: var(--ink);
-  --muted: var(--surface);
+  --muted: var(--paper-raised);
   --muted-foreground: var(--ink-dim);
-  --accent: var(--blue);
-  --accent-foreground: var(--noir);
+  --accent: var(--brass);
+  --accent-foreground: var(--ink);
   --destructive: var(--loss);
   --border: var(--line);
   --input: var(--line-strong);
-  --ring: var(--blue);
-  --radius: 1rem;
+  --ring: var(--navy);
+  --radius: 0.25rem;
 }
 
 @theme inline {
   --color-paper: var(--paper);
   --color-paper-raised: var(--paper-raised);
-  --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
-  --color-noir: var(--noir);
-  --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
-  --color-line-on-navy: var(--line-on-navy);
-  --color-line-on-navy-strong: var(--line-on-navy-strong);
-  --color-blue: var(--blue);
-  --color-blue-bright: var(--blue-bright);
-  --color-blue-deep: var(--blue-deep);
   --color-ink: var(--ink);
   --color-ink-dim: var(--ink-dim);
   --color-ink-faint: var(--ink-faint);
   --color-paper-ink: var(--paper-ink);
   --color-paper-ink-dim: var(--paper-ink-dim);
   --color-paper-ink-faint: var(--paper-ink-faint);
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-brass: var(--brass);
+  --color-brass-deep: var(--brass-deep);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-line-on-navy: var(--line-on-navy);
+  --color-line-on-navy-strong: var(--line-on-navy-strong);
   --color-win: var(--win);
   --color-draw: var(--draw);
   --color-loss: var(--loss);
@@ -97,82 +95,27 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) * 0.5);
-  --radius-md: calc(var(--radius) * 0.7);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.35);
-  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.6);
+  --radius-xl: calc(var(--radius) * 2.4);
+  --radius-2xl: calc(var(--radius) * 3.2);
 
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-    ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-besley), "Iowan Old Style", "Georgia", serif;
 
-  --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-pulse-glow: pulse-glow 3.5s ease-in-out infinite;
-  --animate-drift-a: drift-a 26s ease-in-out infinite;
-  --animate-drift-b: drift-b 31s ease-in-out infinite;
-  --animate-drift-c: drift-c 36s ease-in-out infinite;
+  --animate-settle: settle 0.9s cubic-bezier(0.19, 1, 0.22, 1) both;
 }
 
-@keyframes fade-up {
+@keyframes settle {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    opacity: 0.5;
-    transform: scale(0.92);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.08);
-  }
-}
-
-@keyframes drift-a {
-  0%,
-  100% {
-    transform: translate(-4%, -5%) scale(1);
-  }
-  50% {
-    transform: translate(6%, 4%) scale(1.12);
-  }
-}
-
-@keyframes drift-b {
-  0%,
-  100% {
-    transform: translate(5%, 3%) scale(1.06);
-  }
-  50% {
-    transform: translate(-6%, -5%) scale(0.95);
-  }
-}
-
-@keyframes drift-c {
-  0%,
-  100% {
-    transform: translate(-3%, 5%) scale(1);
-  }
-  50% {
-    transform: translate(4%, -4%) scale(1.1);
-  }
-}
-
-.hero-gradient {
-  background:
-    radial-gradient(ellipse 70% 55% at 22% 28%, color-mix(in srgb, var(--blue) 45%, transparent), transparent 70%),
-    radial-gradient(ellipse 65% 55% at 82% 15%, color-mix(in srgb, var(--blue-bright) 28%, transparent), transparent 70%),
-    radial-gradient(ellipse 75% 60% at 45% 95%, color-mix(in srgb, var(--blue-deep) 50%, transparent), transparent 70%),
-    var(--noir);
-  background-size: 140% 140%, 130% 130%, 150% 150%, auto;
 }
 
 html {
@@ -188,9 +131,14 @@ body {
   font-feature-settings: "cv11", "ss01";
 }
 
+:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
 ::selection {
-  background: var(--blue);
-  color: #ffffff;
+  background: var(--navy);
+  color: var(--paper-ink);
 }
 
 ::-webkit-scrollbar {
@@ -201,7 +149,6 @@ body {
 }
 ::-webkit-scrollbar-thumb {
   background: var(--line-strong);
-  border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--ink-faint);
@@ -209,22 +156,34 @@ body {
 
 /* ---------- Shared utilities ---------- */
 
-.eyebrow {
-  font-size: 0.8125rem;
-  letter-spacing: 0.01em;
-  color: var(--blue-deep);
-  font-weight: 590;
-}
-
-.eyebrow-on-navy {
-  font-size: 0.8125rem;
-  letter-spacing: 0.01em;
-  color: var(--blue-bright);
-  font-weight: 590;
-}
-
 .tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* The one signature device: a rotated, double-ruled ink stamp for a
+   match result. Used nowhere else on the site. */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid currentColor;
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.6rem;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+  position: relative;
+}
+.stamp::before {
+  content: "";
+  position: absolute;
+  inset: 2.5px;
+  border: 1px solid currentColor;
+  border-radius: calc(var(--radius-sm) - 1px);
+  opacity: 0.55;
 }
 
 @media (prefers-reduced-motion: reduce) {
