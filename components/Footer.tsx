@@ -1,53 +1,50 @@
 import Link from "next/link";
 import Crest from "@/components/club/Crest";
-import TextReveal from "@/components/motion/TextReveal";
 import { club } from "@/lib/site";
+
+const links = [
+  { href: "/squad", label: "Squad" },
+  { href: "/matches", label: "Matches" },
+  { href: "/leaderboard", label: "Leaderboard" },
+];
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-line">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{ background: "radial-gradient(ellipse 60% 70% at 50% 110%, rgba(43,79,176,0.3), transparent 70%)" }}
-      />
-      <div className="relative mx-auto max-w-[88rem] px-5 pt-24 pb-10 sm:px-10 sm:pt-32">
-        <TextReveal
-          as="p"
-          text={`${club.motto}.`}
-          className="font-display text-[clamp(4rem,13vw,12.5rem)] leading-[0.92] tracking-[-0.02em] text-chalk italic lg:opsz-36"
-        />
+    <footer className="bg-blue text-white">
+      <div className="wrap flex flex-col gap-14 pt-16 pb-10 sm:gap-20 sm:pt-24">
+        <p className="display text-[clamp(4.5rem,16vw,14rem)] leading-[0.84]">{club.motto}.</p>
 
-        <div className="mt-16 grid gap-12 border-t border-line pt-10 sm:mt-24 md:grid-cols-[1fr_auto_auto] md:gap-24">
-          <div className="flex items-center gap-4">
-            <Crest decorative size={56} className="size-14" />
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1fr_auto_auto] lg:gap-24">
+          <div className="flex items-center gap-4 sm:col-span-2 lg:col-span-1">
+            <Crest decorative size={64} className="size-14" />
             <div className="flex flex-col gap-1">
-              <p className="font-display text-xl text-chalk">{club.fullName}</p>
-              <p className="text-sm text-silver">Founded {club.founded}</p>
+              <p className="text-lg font-semibold">{club.fullName}</p>
+              <p className="text-sm text-haze">Founded {club.founded}</p>
             </div>
           </div>
 
-          <nav aria-label="Club" className="flex flex-col items-start gap-3 text-[15px]">
-            <Link href="/squad" className="link-draw text-silver hover:text-chalk">
-              Squad
-            </Link>
-            <Link href="/matches" className="link-draw text-silver hover:text-chalk">
-              Matches
-            </Link>
-            <Link href="/leaderboard" className="link-draw text-silver hover:text-chalk">
-              Leaderboard
-            </Link>
+          <nav aria-label="Club" className="flex flex-col items-start gap-3 text-[15px] font-semibold">
+            {links.map((l) => (
+              <Link key={l.href} href={l.href} className="text-haze transition-colors duration-200 hover:text-white">
+                {l.label}
+              </Link>
+            ))}
           </nav>
 
           <div className="flex flex-col items-start gap-3 text-[15px]">
-            <a href={club.instagram} target="_blank" rel="noreferrer" className="link-draw text-silver hover:text-chalk">
+            <a
+              href={club.instagram}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-haze transition-colors duration-200 hover:text-white"
+            >
               Instagram
             </a>
-            <span className="text-mist">{club.instagramHandle}</span>
+            <span className="text-haze">{club.instagramHandle}</span>
           </div>
         </div>
 
-        <p className="mt-16 text-xs text-mist">
+        <p className="text-sm text-haze">
           © {club.season} {club.fullName}
         </p>
       </div>

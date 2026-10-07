@@ -1,31 +1,35 @@
 import type { Player } from "@/lib/data";
-import { POSITION_SHORT } from "@/lib/data";
-import Monogram from "./Monogram";
+import { cn } from "@/lib/utils";
 
-export default function PlayerCard({ player }: { player: Player }) {
+/** A player set like shirt lettering: position, name, and the season's numbers. */
+export default function PlayerCard({ player, tone = "navy" }: { player: Player; tone?: "navy" | "noir" }) {
   const featured = player.appearances > 0;
 
   return (
-    <article className="glass spotlight group flex h-full flex-col overflow-hidden rounded-[1.5rem] backdrop-blur-xl">
-      <div className="relative flex aspect-[3/4] flex-col justify-between p-4 sm:aspect-[4/5] sm:p-5">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_0%,rgba(43,79,176,0.32),transparent_72%)]"
-        />
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-silver">{POSITION_SHORT[player.position]}</span>
-          {!featured && <span className="rounded-full bg-white/10 px-2.5 py-1 text-chalk">Yet to feature</span>}
+    <article
+      className={cn(
+        "flex h-full min-h-[13.5rem] flex-col justify-between gap-8 p-4 min-[375px]:p-5 sm:min-h-[15rem] sm:p-6",
+        tone === "navy" ? "bg-navy" : "bg-noir"
+      )}
+    >
+      <div className="flex flex-col gap-3">
+        <div className="flex min-h-7 flex-wrap items-center justify-between gap-2">
+          <span className="text-sm font-semibold text-silver">{player.position}</span>
+          {!featured && (
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-1 text-xs font-semibold text-silver",
+                tone === "navy" ? "bg-navy-2" : "bg-navy"
+              )}
+            >
+              Yet to feature
+            </span>
+          )}
         </div>
-        <Monogram
-          name={player.name}
-          className="mx-auto size-[4.5rem] text-[2.5rem] group-hover:scale-[1.04] group-hover:ring-gold/80 sm:size-28 sm:text-[4rem]"
-        />
-        <div>
-          <h3 className="font-display text-[1.45rem] leading-none break-words text-chalk sm:text-[2rem]">{player.name}</h3>
-          <p className="mt-2 text-sm text-silver">{player.position}</p>
-        </div>
+        <h3 className="display text-[clamp(2rem,3vw,2.6rem)] leading-[0.88] break-words text-white">{player.name}</h3>
       </div>
-      <dl className="grid grid-cols-3 border-t border-line">
+
+      <dl className="grid grid-cols-3 gap-1 min-[375px]:gap-2">
         <Stat label="Apps" value={player.appearances} />
         <Stat label="Goals" value={player.goals} />
         <Stat label="Assists" value={player.assists} />
@@ -36,9 +40,9 @@ export default function PlayerCard({ player }: { player: Player }) {
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="flex flex-col-reverse items-center gap-1 py-4 [&+&]:border-l [&+&]:border-line">
-      <dt className="text-xs text-silver">{label}</dt>
-      <dd className="figure text-2xl leading-none text-chalk">{value}</dd>
+    <div className="flex flex-col-reverse gap-1.5">
+      <dt className="text-[11px] font-semibold text-mist min-[375px]:text-xs">{label}</dt>
+      <dd className="figure text-[2.6rem] text-white">{value}</dd>
     </div>
   );
 }

@@ -11,17 +11,17 @@ export default function ResultTile({ match }: { match: Match }) {
     <Link
       href="/matches"
       draggable={false}
-      className="glass spotlight flex w-[19rem] flex-col gap-7 rounded-[1.5rem] p-6 backdrop-blur-xl"
+      className="flex w-[17.5rem] flex-col gap-7 bg-navy p-6 transition-colors duration-200 hover:bg-navy-2 sm:w-[19rem]"
     >
       <div className="flex items-center justify-between gap-3">
         <span className="text-sm text-silver">{match.date}</span>
         <ResultChip result={match.result} />
       </div>
       <div className="flex flex-col gap-3">
-        <TeamLine crest={<Crest decorative size={28} className="size-7" />} name="Chèvre Noir" goals={s?.for} />
+        <TeamLine crest={<Crest decorative size={32} className="size-7" />} name="Chèvre Noir" goals={s?.for} />
         <TeamLine crest={<OpponentCrest name={match.opponent} size={24} />} name={match.opponent} goals={s?.against} />
       </div>
-      <span className="border-t border-line pt-4 text-sm text-mist">{match.location || "Venue not recorded"}</span>
+      <span className="text-sm text-mist">{match.location || "Venue not recorded"}</span>
     </Link>
   );
 }
@@ -30,8 +30,8 @@ function TeamLine({ crest, name, goals }: { crest: React.ReactNode; name: string
   return (
     <div className="flex items-center gap-3">
       <span className="flex w-7 justify-center">{crest}</span>
-      <span className="flex-1 truncate text-base text-chalk">{name}</span>
-      <span className="figure text-3xl leading-none text-chalk">{goals ?? "–"}</span>
+      <span className="display flex-1 truncate text-[1.45rem] leading-none text-white">{name}</span>
+      <span className="figure text-[2.5rem] text-white">{goals ?? "–"}</span>
     </div>
   );
 }

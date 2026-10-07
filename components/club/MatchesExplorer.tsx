@@ -52,22 +52,22 @@ export default function MatchesExplorer({ matches }: { matches: Match[] }) {
   }, [matches, filter]);
 
   return (
-    <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-14 sm:gap-16">
       <SegmentedControl options={options} value={filter} onChange={setFilter} layoutId="matches-filter" />
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={filter}
-          className="flex flex-col gap-16"
-          initial={{ opacity: 0, y: 16, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, y: -8, filter: "blur(8px)" }}
-          transition={{ duration: 0.45, ease: EASE_OUT }}
+          className="flex flex-col gap-14 sm:gap-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.18, ease: EASE_OUT }}
         >
           {months.map(({ month, items }) => (
-            <section key={month} className="flex flex-col gap-6">
-              <h3 className="font-display text-4xl text-chalk sm:text-5xl">{month}</h3>
-              <div className="glass divide-y divide-line overflow-hidden rounded-[1.75rem] backdrop-blur-xl">
+            <section key={month} className="flex flex-col gap-5 sm:gap-6">
+              <h3 className="display text-[clamp(2.25rem,5vw,3.75rem)] text-white">{month}</h3>
+              <div className="flex flex-col bg-navy">
                 {items.map(({ match, matchday }) => (
                   <MatchCard key={match.id} match={match} matchday={matchday} />
                 ))}

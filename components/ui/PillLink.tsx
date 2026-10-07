@@ -2,30 +2,34 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+const VARIANT = {
+  white: "bg-white text-noir hover:bg-haze",
+  noir: "bg-noir text-white hover:bg-navy",
+  navy: "bg-navy text-white hover:bg-navy-2",
+  blue: "bg-blue text-white hover:bg-blue-2",
+} as const;
+
+export type PillVariant = keyof typeof VARIANT;
+
 interface PillLinkProps {
   href: string;
   children: ReactNode;
-  variant?: "solid" | "glass";
+  variant?: PillVariant;
   className?: string;
 }
 
-/** Pill CTA whose label rolls over on hover. */
-export default function PillLink({ href, children, variant = "solid", className }: PillLinkProps) {
+/** Flat pill button. Rounded shapes are kept for things you can press. */
+export default function PillLink({ href, children, variant = "white", className }: PillLinkProps) {
   return (
     <Link
       href={href}
       className={cn(
-        "group relative inline-flex h-12 items-center rounded-full px-7 text-[15px] font-medium transition-[background-color,border-color] duration-500",
-        variant === "solid" ? "bg-chalk text-noir hover:bg-white" : "glass text-chalk backdrop-blur-xl hover:border-line-strong",
+        "inline-flex h-12 shrink-0 items-center rounded-full px-6 text-[15px] font-semibold transition-colors duration-200",
+        VARIANT[variant],
         className
       )}
     >
-      <span className="relative block overflow-hidden leading-6">
-        <span className="block transition-transform duration-500 ease-out-expo group-hover:-translate-y-full">{children}</span>
-        <span aria-hidden className="absolute inset-0 translate-y-full transition-transform duration-500 ease-out-expo group-hover:translate-y-0">
-          {children}
-        </span>
-      </span>
+      {children}
     </Link>
   );
 }

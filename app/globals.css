@@ -1,66 +1,67 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "lenis/dist/lenis.css";
 
 @custom-variant dark (&:is(.dark *));
 
-/* ---------- Chèvre Noir FC — Maison Noir ----------
-   The crest is the product and the page is its stage: a black stage,
-   navy light, one royal-blue floodlight. Gold appears only the way the
-   badge uses it — as rings — never as a fill. */
+/* ---------- Chèvre Noir FC ----------
+   Flat colour taken straight from the crest: the black ring, the navy
+   field, a brighter club blue for the big moments and the crown's gold
+   for first place. No gradients, glass, outlines, shadows or rules —
+   blocks of colour and type do the structuring. */
 
 :root {
   --noir: #000000;
-  --field: #0d152d;
-  --field-2: #141d38;
-  --floodlight: #2b4fb0;
-  --chalk: #f4f5f7;
-  --silver: #9ba1ae;
-  --mist: #8e95a5;
-  --gold: #c9ae6b;
-  --line: rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(255, 255, 255, 0.16);
-  --chart-surface: #0a0f1f;
+  --navy: #0e172f; /* the crest's field */
+  --navy-2: #16224a; /* hover / raised on navy */
+  --blue: #1d3478; /* club blue */
+  --blue-2: #25418f; /* hover on blue */
+  --white: #ffffff;
+  --silver: #a4acbc; /* secondary text on black and navy */
+  --mist: #7f8799; /* tertiary text on black and navy */
+  --haze: #bac3dd; /* secondary text on blue */
+  --gold: #b8a378; /* the crown */
+  --slate: #343b4d; /* opposition crest placeholders */
+  --gutter: clamp(1.25rem, 4vw, 3rem);
 
-  --win: #4fbf86;
-  --draw: #9aa1b0;
-  --loss: #f07067;
+  --win: #3cc57e;
+  --draw: #a0a7b4;
+  --loss: #f0645a;
 
-  /* shadcn tokens remapped to the club palette */
+  /* shadcn tokens mapped onto the club palette */
   --background: var(--noir);
-  --foreground: var(--chalk);
-  --card: var(--field);
-  --card-foreground: var(--chalk);
-  --popover: var(--field);
-  --popover-foreground: var(--chalk);
-  --primary: var(--chalk);
+  --foreground: var(--white);
+  --card: var(--navy);
+  --card-foreground: var(--white);
+  --popover: var(--navy);
+  --popover-foreground: var(--white);
+  --primary: var(--white);
   --primary-foreground: var(--noir);
-  --secondary: var(--field);
-  --secondary-foreground: var(--chalk);
-  --muted: var(--field);
+  --secondary: var(--navy);
+  --secondary-foreground: var(--white);
+  --muted: var(--navy);
   --muted-foreground: var(--silver);
-  --accent: var(--gold);
-  --accent-foreground: var(--noir);
+  --accent: var(--blue);
+  --accent-foreground: var(--white);
   --destructive: var(--loss);
-  --border: var(--line);
-  --input: var(--line-strong);
-  --ring: var(--chalk);
-  --radius: 1rem;
+  --border: var(--navy-2);
+  --input: var(--navy-2);
+  --ring: var(--white);
+  --radius: 0.5rem;
 }
 
 @theme inline {
   --color-noir: var(--noir);
-  --color-field: var(--field);
-  --color-field-2: var(--field-2);
-  --color-floodlight: var(--floodlight);
-  --color-chalk: var(--chalk);
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-blue: var(--blue);
+  --color-blue-2: var(--blue-2);
+  --color-white: var(--white);
   --color-silver: var(--silver);
   --color-mist: var(--mist);
+  --color-haze: var(--haze);
   --color-gold: var(--gold);
-  --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
-  --color-chart-surface: var(--chart-surface);
+  --color-slate: var(--slate);
   --color-win: var(--win);
   --color-draw: var(--draw);
   --color-loss: var(--loss);
@@ -89,14 +90,10 @@
   --radius-xl: calc(var(--radius) * 1.25);
   --radius-2xl: calc(var(--radius) * 1.5);
 
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-bodoni), "Bodoni 72", Didot, Georgia, serif;
-  /* Bodoni's hairlines vanish at screen sizes when optical sizing follows font-size,
-     so it is pinned to a sturdier cut; giant display type opts into a finer one with opsz-*. */
-  --font-display--font-variation-settings: "opsz" var(--opsz, 18);
+  --font-sans: var(--font-sofia), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sofia-xc), "Arial Narrow", ui-sans-serif, sans-serif;
 
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 html {
@@ -112,86 +109,44 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--chalk);
+  outline: 2px solid var(--white);
   outline-offset: 3px;
-  border-radius: 6px;
 }
 
 ::selection {
-  background: var(--floodlight);
-  color: var(--chalk);
-}
-
-/* While the intro plays the page holds still underneath it. */
-html.intro-playing {
-  overflow: hidden;
-}
-html[data-intro="seen"] .intro-overlay {
-  display: none;
-}
-
-@utility opsz-* {
-  --opsz: --value(integer);
+  background: var(--blue);
+  color: var(--white);
 }
 
 @layer components {
-  /* Frosted glass that catches the floodlight. Blur is applied with
-     Tailwind's backdrop utilities in markup. */
-  .glass {
-    background:
-      radial-gradient(120% 90% at 50% -25%, rgba(43, 79, 176, 0.2), transparent 60%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.02));
-    border: 1px solid var(--line);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  /* One measure for every page: fluid gutters, capped width. */
+  .wrap {
+    width: 100%;
+    max-width: 92rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
   }
 
-  /* Clipping window for type that rises into place; padded so accents
-     and descenders are never cut. */
-  .reveal-mask {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: top;
-    padding: 0.16em 0.06em 0.2em;
-    margin: -0.16em -0.06em -0.2em;
+  /* Kit lettering: heavy extra-condensed capitals, as on the crest. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.86;
+    letter-spacing: -0.004em;
   }
 
-  /* Cursor-led light: a navy glow inside and a gold ring on the edge,
-     following the pointer (position fed by a delegated listener). */
-  .spotlight {
-    position: relative;
-    isolation: isolate;
+  /* Scoreboard figures: tall and light. Proportional spacing, because the
+     condensed cut's tabular figures leave wide gaps around the narrow 1. */
+  .figure {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-variant-numeric: lining-nums proportional-nums;
+    line-height: 0.86;
   }
-  .spotlight::before,
-  .spotlight::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.6s var(--ease-out-expo);
-  }
-  .spotlight::before {
-    z-index: 0;
-    background: radial-gradient(460px circle at var(--mx, 50%) var(--my, 0%), rgba(43, 79, 176, 0.24), transparent 55%);
-  }
-  .spotlight::after {
-    z-index: 2;
-    padding: 1px;
-    background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 0%), rgba(201, 174, 107, 0.8), transparent 60%);
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-  .spotlight:hover::before,
-  .spotlight:hover::after {
-    opacity: 1;
-  }
-  .spotlight > * {
-    position: relative;
-    z-index: 1;
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 
   .rail {
@@ -201,7 +156,7 @@ html[data-intro="seen"] .intro-overlay {
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: 1.25rem;
+    scroll-padding-inline: var(--gutter);
     scrollbar-width: none;
   }
   .rail::-webkit-scrollbar {
@@ -214,68 +169,11 @@ html[data-intro="seen"] .intro-overlay {
     scroll-snap-type: none;
     cursor: grabbing;
   }
-  @media (min-width: 40rem) {
-    .rail {
-      scroll-padding-inline: 2.5rem;
-    }
-  }
-
-  .marquee:hover .marquee-track {
-    animation-play-state: paused;
-  }
-  .marquee-track {
-    animation: marquee var(--marquee-duration, 60s) linear infinite;
-  }
-
-  .tabular {
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* Figures: thin grotesk numerals against the Didone words, like a watch dial.
-     (Bodoni's 1 reads as a roman I and its dashes are hairlines.) */
-  .figure {
-    font-family: var(--font-sans);
-    font-weight: 300;
-    font-variant-numeric: tabular-nums lining-nums;
-    letter-spacing: -0.03em;
-  }
-
-  /* An underline that draws in from the left on hover. */
-  .link-draw {
-    background-image: linear-gradient(currentColor, currentColor);
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    background-size: 0% 1px;
-    transition:
-      background-size 0.7s var(--ease-out-expo),
-      color 0.3s;
-  }
-  .link-draw:hover {
-    background-size: 100% 1px;
-  }
-
-  /* Film grain over the lit areas; overlay keeps true black untouched. */
-  .grain {
-    position: fixed;
-    inset: 0;
-    z-index: 90;
-    pointer-events: none;
-    opacity: 0.16;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size: 180px 180px;
-  }
-}
-
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
 }
 
 /* ---------- Page transitions (native View Transitions) ----------
-   The nav stays anchored; the old page dims and softens away while the
-   new one rises into focus. */
+   The nav holds still; the old page steps out quickly and the new one
+   settles in. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -291,32 +189,24 @@ html[data-intro="seen"] .intro-overlay {
   animation: none;
 }
 ::view-transition-old(.page-exit) {
-  animation: page-exit 0.45s cubic-bezier(0.7, 0, 0.84, 0) both;
+  animation: page-exit 0.16s ease-in both;
 }
 ::view-transition-new(.page-enter) {
-  animation: page-enter 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  animation: page-enter 0.32s var(--ease-out) 0.06s both;
 }
 @keyframes page-exit {
   to {
     opacity: 0;
-    filter: blur(10px);
   }
 }
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateY(48px);
-    filter: blur(8px);
+    transform: translateY(14px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  .marquee-track {
-    animation: none;
-  }
   ::view-transition-group(*),
   ::view-transition-old(*),
   ::view-transition-new(*) {

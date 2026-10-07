@@ -1,6 +1,5 @@
 import { matches, squad, getLeaders } from "@/lib/data";
 import HomeHero from "@/components/club/HomeHero";
-import ResultsTicker from "@/components/club/ResultsTicker";
 import MatchCentre from "@/components/club/MatchCentre";
 import SeasonRecord from "@/components/club/SeasonRecord";
 import Rail from "@/components/club/Rail";
@@ -18,62 +17,50 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       <HomeHero nextSectionId="latest" />
-      <ResultsTicker matches={matches} />
 
-      <section id="latest" className="scroll-mt-8 py-24 sm:py-32">
-        <div className="mx-auto flex max-w-[88rem] flex-col gap-12 px-5 sm:px-10">
-          <SectionHeading
-            title="Latest result"
-            description={`${latest.date}${latest.location ? ` at ${latest.location}` : ""}.`}
-          />
-          <MatchCentre match={latest} />
-        </div>
-      </section>
-
-      <section className="pb-24 sm:pb-32">
-        <div className="mx-auto flex max-w-[88rem] flex-col gap-12 px-5 sm:px-10">
-          <SectionHeading title="Season record" />
-          <SeasonRecord matches={matches} />
-        </div>
-      </section>
-
-      <section className="pb-24 sm:pb-32">
-        <div className="mx-auto flex max-w-[88rem] flex-col gap-12 px-5 sm:px-10">
-          <SectionHeading title="Results" link={{ href: "/matches", label: "All results" }} />
-          <Rail label="Results">
-            {mostRecentFirst.map((m) => (
-              <ResultTile key={m.id} match={m} />
-            ))}
-          </Rail>
-        </div>
-      </section>
-
-      <section className="relative overflow-hidden border-y border-line py-24 sm:py-32">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_60%_at_0%_50%,rgba(43,79,176,0.22),transparent_70%)]"
+      <section id="latest" className="wrap flex flex-col gap-10 py-20 sm:gap-12 sm:py-28">
+        <SectionHeading
+          title="Latest result"
+          description={`${latest.date}${latest.location ? ` at ${latest.location}` : ""}.`}
         />
-        <div className="relative mx-auto flex max-w-[88rem] flex-col gap-12 px-5 sm:px-10">
+        <MatchCentre match={latest} />
+      </section>
+
+      <section className="wrap flex flex-col gap-10 pb-20 sm:gap-12 sm:pb-28">
+        <SectionHeading title="Season record" />
+        <SeasonRecord matches={matches} />
+      </section>
+
+      <section className="wrap flex flex-col gap-10 pb-20 sm:gap-12 sm:pb-28">
+        <SectionHeading title="Results" link={{ href: "/matches", label: "All results" }} />
+        <Rail label="Results">
+          {mostRecentFirst.map((m) => (
+            <ResultTile key={m.id} match={m} />
+          ))}
+        </Rail>
+      </section>
+
+      <section className="bg-navy py-20 sm:py-28">
+        <div className="wrap flex flex-col gap-10 sm:gap-12">
           <SectionHeading
             title="First team"
             description="This season's most-used players."
             link={{ href: "/squad", label: "Full squad" }}
+            linkVariant="noir"
           />
-          <Rail label="First team">
+          <Rail label="First team" tone="noir">
             {regulars.map((p) => (
-              <div key={p.id} className="w-[16.5rem] sm:w-[18rem]">
-                <PlayerCard player={p} />
+              <div key={p.id} className="w-[15.5rem] sm:w-[17.5rem]">
+                <PlayerCard player={p} tone="noir" />
               </div>
             ))}
           </Rail>
         </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <div className="mx-auto flex max-w-[88rem] flex-col gap-12 px-5 sm:px-10">
-          <SectionHeading title="Leaders" link={{ href: "/leaderboard", label: "Full leaderboard" }} />
-          <StatLeaders players={squad} />
-        </div>
+      <section className="wrap flex flex-col gap-10 py-20 sm:gap-12 sm:py-28">
+        <SectionHeading title="Leaders" link={{ href: "/leaderboard", label: "Full leaderboard" }} />
+        <StatLeaders players={squad} />
       </section>
     </div>
   );

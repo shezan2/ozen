@@ -18,7 +18,7 @@ export default function SquadPage() {
         title="The squad"
         description={`${squad.length} players across ${POSITION_ORDER.length} positions in the ${club.season} season. ${featured} have played so far.`}
       />
-      <section className="mx-auto w-full max-w-[88rem] px-5 pb-28 sm:px-10 sm:pb-36">
+      <section className="wrap pb-24 sm:pb-32">
         <SquadExplorer players={squad} />
       </section>
     </div>

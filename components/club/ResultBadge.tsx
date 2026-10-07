@@ -9,20 +9,20 @@ const LABEL: Record<Match["result"], string> = {
 };
 
 const TONE: Record<Match["result"], string> = {
-  W: "bg-win/15 text-win ring-win/35",
-  D: "bg-draw/15 text-draw ring-draw/35",
-  L: "bg-loss/15 text-loss ring-loss/35",
-  Upcoming: "bg-white/5 text-silver ring-white/15",
+  W: "bg-win text-noir",
+  D: "bg-draw text-noir",
+  L: "bg-loss text-noir",
+  Upcoming: "bg-navy-2 text-silver",
 };
 
-/** Round W / D / L marker, tinted by result. */
+/** Solid W / D / L disc; the letter carries the meaning, the colour reinforces it. */
 export function ResultChip({ result, className }: { result: Match["result"]; className?: string }) {
   return (
     <span
       title={LABEL[result]}
       aria-label={LABEL[result]}
       className={cn(
-        "inline-flex size-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ring-1 ring-inset",
+        "inline-flex size-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold",
         TONE[result],
         className
       )}

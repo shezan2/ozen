@@ -5,7 +5,18 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /** Horizontally scrolling row: swipe, trackpad, keyboard, the step buttons, or drag with a mouse. */
-export default function Rail({ label, children, className }: { label: string; children: ReactNode; className?: string }) {
+export default function Rail({
+  label,
+  children,
+  className,
+  tone = "navy",
+}: {
+  label: string;
+  children: ReactNode;
+  className?: string;
+  /** Button colour: navy on black sections, noir on navy ones. */
+  tone?: "navy" | "noir";
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const drag = useRef<{ x: number; left: number; active: boolean; moved: boolean } | null>(null);
 
@@ -53,22 +64,21 @@ export default function Rail({ label, children, className }: { label: string; ch
         role="region"
         aria-label={label}
         tabIndex={0}
-        data-lenis-prevent-horizontal
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onClickCapture={onClickCapture}
         onDragStart={(e) => e.preventDefault()}
-        className="rail -mx-5 gap-4 px-5 pb-4 select-none sm:-mx-10 sm:cursor-grab sm:px-10"
+        className="rail mx-[calc(var(--gutter)*-1)] gap-3 px-[var(--gutter)] select-none sm:cursor-grab"
       >
         {children}
       </div>
       <div className="hidden justify-end gap-3 sm:flex">
-        <RailButton label={`Scroll ${label} back`} onClick={() => step(-1)}>
+        <RailButton tone={tone} label={`Scroll ${label} back`} onClick={() => step(-1)}>
           <ArrowLeft className="size-5" />
         </RailButton>
-        <RailButton label={`Scroll ${label} forward`} onClick={() => step(1)}>
+        <RailButton tone={tone} label={`Scroll ${label} forward`} onClick={() => step(1)}>
           <ArrowRight className="size-5" />
         </RailButton>
       </div>
@@ -76,12 +86,25 @@ export default function Rail({ label, children, className }: { label: string; ch
   );
 }
 
-function RailButton({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
+function RailButton({
+  tone,
+  label,
+  onClick,
+  children,
+}: {
+  tone: "navy" | "noir";
+  label: string;
+  onClick: () => void;
+  children: ReactNode;
+}) {
   return (
     <button
       onClick={onClick}
       aria-label={label}
-      className="glass flex size-12 items-center justify-center rounded-full text-chalk backdrop-blur-xl transition-[border-color,transform] duration-500 ease-out-expo hover:scale-105 hover:border-line-strong"
+      className={cn(
+        "flex size-12 items-center justify-center rounded-full text-white transition-colors duration-200",
+        tone === "navy" ? "bg-navy hover:bg-navy-2" : "bg-noir hover:bg-blue"
+      )}
     >
       {children}
     </button>

@@ -4,7 +4,6 @@ import PageHeader from "@/components/club/PageHeader";
 import SeasonRecord from "@/components/club/SeasonRecord";
 import MatchesExplorer from "@/components/club/MatchesExplorer";
 import SeasonTrend from "@/components/club/SeasonTrend";
-import Reveal from "@/components/motion/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { club } from "@/lib/site";
 
@@ -22,18 +21,14 @@ export default function MatchesPage() {
         <SeasonRecord matches={matches} />
       </PageHeader>
 
-      <section className="pb-24 sm:pb-32">
-        <div className="mx-auto flex max-w-[88rem] flex-col gap-12 px-5 sm:px-10">
-          <SectionHeading title="Goal difference over the season" />
-          <Reveal>
-            <div className="rounded-[1.75rem] border border-line bg-chart-surface p-5 sm:p-10">
-              <SeasonTrend points={trend} />
-            </div>
-          </Reveal>
+      <section className="wrap flex flex-col gap-10 pb-20 sm:gap-12 sm:pb-28">
+        <SectionHeading title="Goal difference over the season" />
+        <div className="bg-navy p-5 sm:p-10">
+          <SeasonTrend points={trend} />
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-[88rem] px-5 pb-28 sm:px-10 sm:pb-36">
+      <section className="wrap pb-24 sm:pb-32">
         <MatchesExplorer matches={matches} />
       </section>
     </div>

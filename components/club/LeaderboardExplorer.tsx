@@ -6,9 +6,7 @@ import type { Player, LeaderboardKey } from "@/lib/data";
 import { getLeaders } from "@/lib/data";
 import SegmentedControl, { type SegmentedOption } from "./SegmentedControl";
 import LeaderboardTable from "./LeaderboardTable";
-import CountUp from "@/components/motion/CountUp";
-import Reveal from "@/components/motion/Reveal";
-import Monogram from "./Monogram";
+import RankOne from "./RankOne";
 import { EASE_OUT } from "@/lib/motion";
 
 const OPTIONS: SegmentedOption<LeaderboardKey>[] = [
@@ -29,63 +27,41 @@ export default function LeaderboardExplorer({ players }: { players: Player[] }) 
   const label = OPTIONS.find((o) => o.value === statKey)!.label.toLowerCase();
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-10 sm:gap-12">
       <SegmentedControl options={OPTIONS} value={statKey} onChange={setStatKey} layoutId="leaderboard-filter" />
 
-      {leader && (
-        <Reveal>
-          <section
-            aria-label={`Leader for ${label}`}
-            className="glass spotlight grid overflow-hidden rounded-[2rem] backdrop-blur-2xl sm:grid-cols-[minmax(0,15rem)_1fr]"
-          >
-            <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden border-line sm:aspect-auto sm:border-r">
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_0%,rgba(43,79,176,0.45),transparent_72%)]"
-              />
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.div
-                  key={leader.id}
-                  initial={{ opacity: 0, scale: 0.9, filter: "blur(8px)" }}
-                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 1.06, filter: "blur(8px)" }}
-                  transition={{ duration: 0.6, ease: EASE_OUT }}
-                >
-                  <Monogram name={leader.name} className="size-32 text-[4.5rem] sm:size-40 sm:text-[5.5rem]" />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            <div className="flex flex-col justify-between gap-10 p-7 sm:flex-row sm:items-end sm:p-12">
-              <div className="flex flex-col gap-4">
-                <p className="flex items-center gap-3 text-sm text-silver">
-                  <span className="flex size-7 items-center justify-center rounded-full text-xs text-gold ring-1 ring-gold/70">1</span>
-                  Leading for {label}
+      {/* Leader beside the ranking on wide screens, so names and numbers sit close together. */}
+      <div className="grid gap-3 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start">
+        {leader && (
+          <section aria-label={`Leader for ${label}`} className="bg-blue text-white lg:sticky lg:top-24">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={`${statKey}-${leader.id}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18, ease: EASE_OUT }}
+                className="flex flex-col gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:min-h-[32rem] lg:justify-between"
+              >
+                <div className="flex min-w-0 flex-col gap-4">
+                  <p className="flex items-center gap-3 text-[15px] font-semibold text-haze">
+                    <RankOne />
+                    Leading for {label}
+                  </p>
+                  <p className="display text-[clamp(3.75rem,9vw,6.5rem)] leading-[0.84] break-words">{leader.name}</p>
+                  <p className="text-[15px] text-haze">{leader.position}</p>
+                </div>
+                <p className="flex items-baseline gap-3">
+                  <span className="figure text-[clamp(7rem,14vw,11rem)]">{valueOf(leader, statKey)}</span>
+                  <span className="text-[15px] font-semibold text-haze">{label}</span>
                 </p>
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.p
-                    key={leader.id}
-                    initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
-                    transition={{ duration: 0.45, ease: EASE_OUT }}
-                    className="font-display text-6xl leading-none text-chalk sm:text-7xl"
-                  >
-                    {leader.name}
-                  </motion.p>
-                </AnimatePresence>
-                <p className="text-[15px] text-silver">{leader.position}</p>
-              </div>
-              <p className="flex items-baseline gap-3">
-                <CountUp value={valueOf(leader, statKey)} className="figure text-8xl leading-none text-chalk sm:text-9xl" />
-                <span className="text-[15px] text-silver">{label}</span>
-              </p>
-            </div>
+              </motion.div>
+            </AnimatePresence>
           </section>
-        </Reveal>
-      )}
+        )}
 
-      <LeaderboardTable players={ranked} statKey={statKey} />
+        <LeaderboardTable players={ranked} statKey={statKey} />
+      </div>
     </div>
   );
 }

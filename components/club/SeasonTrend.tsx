@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { TrendPoint } from "@/lib/data";
-import { cn } from "@/lib/utils";
-import { formatValue } from "@/components/motion/CountUp";
+import { cn, formatSigned } from "@/lib/utils";
 
 // The chart is drawn at its container's real width, so labels keep their size on a phone.
 const DEFAULT_W = 760;
@@ -30,7 +29,6 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
   const [hover, setHover] = useState<number | null>(null);
   const [W, setW] = useState(DEFAULT_W);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const gradientId = useId();
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -75,15 +73,7 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
           role="img"
           aria-label={`Cumulative goal difference across the season, ending at ${last.cumulative}`}
         >
-          <defs>
-            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--floodlight)" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="var(--floodlight)" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-
-          {/* Zero baseline */}
-          <line x1={PAD_L} y1={yZero} x2={W - PAD_R} y2={yZero} stroke="var(--line-strong)" strokeWidth={1} />
+          {/* The flat area's top edge is the zero line, so it needs no rule of its own. */}
           <text x={PAD_L - 8} y={yZero} textAnchor="end" dominantBaseline="middle" className="fill-mist text-[11px]">
             0
           </text>
@@ -95,23 +85,23 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
               y1={PAD_T}
               x2={activeX}
               y2={H - PAD_B}
-              stroke="var(--chalk)"
-              strokeOpacity={0.25}
+              stroke="var(--white)"
+              strokeOpacity={0.3}
               strokeWidth={1}
             />
           )}
 
-          <path d={areaPath} fill={`url(#${gradientId})`} />
-          <path d={linePath} fill="none" stroke="var(--chalk)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+          <path d={areaPath} fill="var(--blue)" />
+          <path d={linePath} fill="none" stroke="var(--white)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
 
           {/* The season's running total, labelled where the line ends */}
           <text
             x={x(points.length - 1) + 12}
             y={y(last.cumulative)}
             dominantBaseline="middle"
-            className={cn("figure fill-chalk text-[20px] transition-opacity duration-300", hover !== null && "opacity-30")}
+            className={cn("figure fill-white text-[24px] transition-opacity duration-200", hover !== null && "opacity-30")}
           >
-            {formatValue(last.cumulative, true)}
+            {formatSigned(last.cumulative)}
           </text>
 
           {points.map((p, i) => (
@@ -120,21 +110,18 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
                 x={x(i)}
                 y={H - PAD_B + 18}
                 textAnchor="middle"
-                className={cn("text-[11px] transition-colors", hover === i ? "fill-chalk" : "fill-mist")}
+                className={cn("text-[11px] transition-colors", hover === i ? "fill-white" : "fill-mist")}
               >
                 {p.matchday}
               </text>
-              {hover === i && (
-                <circle cx={x(i)} cy={y(p.cumulative)} r={13} fill={RESULT_VAR[p.result]} fillOpacity={0.18} />
-              )}
               <circle
                 cx={x(i)}
                 cy={y(p.cumulative)}
-                r={hover === i ? 6.5 : 5}
+                r={hover === i ? 7 : 5}
                 fill={RESULT_VAR[p.result]}
-                stroke="var(--chart-surface)"
+                stroke="var(--navy)"
                 strokeWidth={2}
-                className="transition-[r] duration-300 ease-out-expo"
+                className="transition-[r] duration-200"
               />
               {/* Generous, invisible hit target */}
               <circle
@@ -158,22 +145,21 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
 
         {active && (
           <div
-            className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full glass rounded-2xl px-4 py-3 text-center backdrop-blur-xl"
+            className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full bg-white px-4 py-3 text-center text-noir"
             style={{
               left: `${(activeX / W) * 100}%`,
               top: `${(y(active.cumulative) / H) * 100}%`,
               marginTop: "-10px",
             }}
           >
-            <p className="text-[11px] whitespace-nowrap text-mist">Matchday {active.matchday}</p>
-            <p className="mt-0.5 font-display text-lg leading-tight whitespace-nowrap text-chalk">{active.opponent}</p>
-            <p className="mt-2 flex items-center justify-center gap-2.5 text-xs whitespace-nowrap text-silver">
+            <p className="text-xs font-semibold whitespace-nowrap text-noir/60">Matchday {active.matchday}</p>
+            <p className="display mt-1 text-[1.6rem] leading-none whitespace-nowrap">{active.opponent}</p>
+            <p className="mt-2 flex items-center justify-center gap-3 text-xs font-semibold whitespace-nowrap text-noir/70">
               <span>
-                {RESULT_LABEL[active.result]} <span className="figure text-chalk">{active.score.replace(/\s*-\s*/, "–")}</span>
+                {RESULT_LABEL[active.result]} <span className="text-noir">{active.score.replace(/\s*-\s*/, "–")}</span>
               </span>
-              <span aria-hidden className="h-3 w-px bg-white/15" />
               <span>
-                Goal difference <span className="figure text-chalk">{formatValue(active.cumulative, true)}</span>
+                Goal difference <span className="text-noir">{formatSigned(active.cumulative)}</span>
               </span>
             </p>
           </div>
@@ -182,7 +168,7 @@ export default function SeasonTrend({ points }: { points: TrendPoint[] }) {
 
       <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
         {(["W", "D", "L"] as const).map((r) => (
-          <span key={r} className="flex items-center gap-1.5 text-xs font-medium text-silver">
+          <span key={r} className="flex items-center gap-1.5 text-xs font-semibold text-silver">
             <span className="size-2.5 rounded-full" style={{ background: RESULT_VAR[r] }} aria-hidden />
             {RESULT_LABEL[r]}
           </span>

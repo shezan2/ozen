@@ -1,23 +1,20 @@
 import type { Metadata } from "next";
-import { Archivo, Bodoni_Moda } from "next/font/google";
+import { Sofia_Sans, Sofia_Sans_Extra_Condensed } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Providers from "@/components/motion/Providers";
-import { INTRO_BOOT_SCRIPT } from "@/lib/motion";
+import Providers from "@/components/Providers";
 import { club } from "@/lib/site";
 import "./globals.css";
 
-const archivo = Archivo({
-  variable: "--font-archivo",
+const sofia = Sofia_Sans({
+  variable: "--font-sofia",
   subsets: ["latin", "latin-ext"],
-  axes: ["wdth"],
 });
 
-const bodoni = Bodoni_Moda({
-  variable: "--font-bodoni",
+// The display cut: names, headings and scores.
+const sofiaExtraCondensed = Sofia_Sans_Extra_Condensed({
+  variable: "--font-sofia-xc",
   subsets: ["latin", "latin-ext"],
-  axes: ["opsz"],
-  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -61,19 +58,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${bodoni.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${sofia.variable} ${sofiaExtraCondensed.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-noir text-silver">
-        <script dangerouslySetInnerHTML={{ __html: INTRO_BOOT_SCRIPT }} />
-        <noscript>
-          <style>{`.intro-overlay{display:none}`}</style>
-        </noscript>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <Providers>
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />
         </Providers>
-        <div aria-hidden className="grain" />
       </body>
     </html>
   );
