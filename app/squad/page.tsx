@@ -15,10 +15,10 @@ export default function SquadPage() {
   return (
     <div className="flex flex-col">
       <PageHeader
-        title="First team squad"
+        title="The squad"
         description={`${squad.length} players across ${POSITION_ORDER.length} positions in the ${club.season} season. ${featured} have played so far.`}
       />
-      <section className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
+      <section className="mx-auto w-full max-w-[88rem] px-5 pb-28 sm:px-10 sm:pb-36">
         <SquadExplorer players={squad} />
       </section>
     </div>

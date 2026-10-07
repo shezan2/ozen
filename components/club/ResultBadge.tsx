@@ -8,28 +8,22 @@ const LABEL: Record<Match["result"], string> = {
   Upcoming: "Upcoming",
 };
 
-const BG: Record<Match["result"], string> = {
-  W: "bg-win",
-  D: "bg-draw",
-  L: "bg-loss",
-  Upcoming: "bg-field-3",
+const TONE: Record<Match["result"], string> = {
+  W: "bg-win/15 text-win ring-win/35",
+  D: "bg-draw/15 text-draw ring-draw/35",
+  L: "bg-loss/15 text-loss ring-loss/35",
+  Upcoming: "bg-white/5 text-silver ring-white/15",
 };
 
-interface ResultProps {
-  result: Match["result"];
-  className?: string;
-}
-
-/** Square result tile with the W / D / L letter — the standard pro fixtures marker. */
-export function ResultChip({ result, className }: ResultProps) {
+/** Round W / D / L marker, tinted by result. */
+export function ResultChip({ result, className }: { result: Match["result"]; className?: string }) {
   return (
     <span
       title={LABEL[result]}
       aria-label={LABEL[result]}
       className={cn(
-        "type-name inline-flex size-7 shrink-0 items-center justify-center text-sm text-field",
-        BG[result],
-        result === "Upcoming" && "text-chalk",
+        "inline-flex size-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ring-1 ring-inset",
+        TONE[result],
         className
       )}
     >

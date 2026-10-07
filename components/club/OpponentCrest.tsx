@@ -11,30 +11,30 @@ function opponentInitials(name: string) {
   return (words[0][0] + words[1][0]).toUpperCase();
 }
 
-/** Monochrome shield placeholder for opposition crests until real artwork is supplied. */
+/** Glass shield placeholder for opposition crests until real artwork is supplied.
+ *  Decorative: the opponent's name is always printed beside it. */
 export default function OpponentCrest({ name, size = 48, className }: { name: string; size?: number; className?: string }) {
   return (
     <svg
       viewBox="0 0 40 46"
       width={size}
       height={size * 1.15}
-      role="img"
-      aria-label={`${name} crest placeholder`}
+      aria-hidden
       className={cn("shrink-0", className)}
     >
       <path
         d="M20 1.5 37.5 7v15.5c0 10.6-7.3 18.6-17.5 22-10.2-3.4-17.5-11.4-17.5-22V7Z"
-        fill="var(--field-3)"
-        stroke="var(--silver-dim)"
-        strokeWidth="1.5"
+        fill="rgba(255,255,255,0.05)"
+        stroke="rgba(255,255,255,0.28)"
+        strokeWidth="1"
       />
       <text
         x="20"
-        y="25"
+        y="24.5"
         textAnchor="middle"
         dominantBaseline="middle"
-        fill="var(--silver)"
-        style={{ fontStretch: "75%", fontWeight: 700, fontSize: 12 }}
+        fill="var(--chalk)"
+        style={{ fontFamily: "var(--font-display)", fontSize: 12 }}
       >
         {opponentInitials(name)}
       </text>

@@ -25,32 +25,39 @@ export default function SegmentedControl<T extends string>({
   className,
 }: SegmentedControlProps<T>) {
   return (
-    <div role="tablist" className={cn("flex flex-wrap gap-x-8 gap-y-1 border-b border-line", className)}>
-      {options.map((opt) => {
-        const active = opt.value === value;
-        return (
-          <button
-            key={opt.value}
-            role="tab"
-            aria-selected={active}
-            onClick={() => onChange(opt.value)}
-            className={cn(
-              "type-name relative py-3 text-base tracking-[0.03em] transition-colors",
-              active ? "text-chalk" : "text-silver-dim hover:text-silver"
-            )}
-          >
-            {opt.label}
-            {typeof opt.count === "number" && <span className="tabular ml-1.5 text-silver-dim">{opt.count}</span>}
-            {active && (
-              <motion.span
-                layoutId={layoutId}
-                className="absolute inset-x-0 -bottom-px h-0.5 bg-gold"
-                transition={{ type: "spring", stiffness: 500, damping: 38 }}
-              />
-            )}
-          </button>
-        );
-      })}
+    <div className={cn("max-w-full", className)}>
+      <div
+        role="tablist"
+        data-lenis-prevent-horizontal
+        className="glass flex w-max max-w-full gap-1 overflow-x-auto rounded-full p-1.5 backdrop-blur-xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {options.map((opt) => {
+          const active = opt.value === value;
+          return (
+            <button
+              key={opt.value}
+              role="tab"
+              aria-selected={active}
+              onClick={() => onChange(opt.value)}
+              className="relative shrink-0 rounded-full px-4 py-2.5 text-sm whitespace-nowrap sm:px-5"
+            >
+              {active && (
+                <motion.span
+                  layoutId={layoutId}
+                  className="absolute inset-0 rounded-full bg-chalk"
+                  transition={{ type: "spring", stiffness: 420, damping: 36 }}
+                />
+              )}
+              <span className={cn("relative transition-colors duration-300", active ? "text-noir" : "text-silver hover:text-chalk")}>
+                {opt.label}
+                {typeof opt.count === "number" && (
+                  <span className={cn("tabular ml-2", active ? "text-noir/60" : "text-mist")}>{opt.count}</span>
+                )}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

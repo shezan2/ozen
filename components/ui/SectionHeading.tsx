@@ -1,29 +1,43 @@
-import type { ReactNode } from "react";
-import Link from "next/link";
+import TextReveal from "@/components/motion/TextReveal";
+import Reveal from "@/components/motion/Reveal";
+import PillLink from "@/components/ui/PillLink";
 import { cn } from "@/lib/utils";
 
 interface SectionHeadingProps {
-  title: ReactNode;
+  title: string;
   description?: string;
   as?: "h1" | "h2";
   link?: { href: string; label: string };
   className?: string;
 }
 
-export default function SectionHeading({ title, description, as: Tag = "h2", link, className }: SectionHeadingProps) {
+export default function SectionHeading({ title, description, as = "h2", link, className }: SectionHeadingProps) {
   return (
-    <div className={cn("flex flex-wrap items-end justify-between gap-x-8 gap-y-3", className)}>
-      <div className="flex flex-col gap-3">
-        <Tag className={cn("type-title", Tag === "h1" ? "text-6xl sm:text-8xl" : "text-4xl sm:text-5xl")}>{title}</Tag>
-        {description && <p className="max-w-xl text-base leading-relaxed text-silver">{description}</p>}
+    <div className={cn("flex flex-wrap items-end justify-between gap-x-10 gap-y-6", className)}>
+      <div className="flex max-w-3xl flex-col gap-5">
+        <TextReveal
+          as={as}
+          text={title}
+          className={cn(
+            "font-display tracking-[-0.02em] text-chalk",
+            // Size and leading share a string: tailwind-merge drops a leading that precedes a font size.
+            as === "h1"
+              ? "text-[clamp(3.75rem,10vw,9.5rem)] leading-[0.95] lg:opsz-36"
+              : "text-[clamp(2.75rem,5.4vw,5rem)] leading-[0.95]"
+          )}
+        />
+        {description && (
+          <Reveal delay={0.15}>
+            <p className="max-w-xl text-base leading-relaxed text-silver sm:text-lg">{description}</p>
+          </Reveal>
+        )}
       </div>
       {link && (
-        <Link
-          href={link.href}
-          className="type-name border-b border-gold pb-1 text-sm tracking-[0.04em] text-chalk transition-colors hover:text-gold"
-        >
-          {link.label}
-        </Link>
+        <Reveal delay={0.2}>
+          <PillLink href={link.href} variant="glass">
+            {link.label}
+          </PillLink>
+        </Reveal>
       )}
     </div>
   );

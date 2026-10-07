@@ -1,75 +1,52 @@
 import type { Match } from "@/lib/data";
 import { getTeamRecord, getForm } from "@/lib/data";
-import Crest from "./Crest";
+import CountUp from "@/components/motion/CountUp";
+import Reveal from "@/components/motion/Reveal";
 import FormGuide from "./FormGuide";
+import { cn } from "@/lib/utils";
 
-export function formatGoalDifference(gd: number) {
-  if (gd > 0) return `+${gd}`;
-  if (gd < 0) return `−${Math.abs(gd)}`;
-  return "0";
-}
-
-/** The club's line from a standings table: the same columns a league table uses. */
+/** The club's season line, as a standings table would give it. */
 export default function SeasonRecord({ matches }: { matches: Match[] }) {
   const r = getTeamRecord(matches);
   const form = getForm(matches, 5);
 
-  const cols = [
-    { label: "Played", short: "P", value: r.played },
-    { label: "Won", short: "W", value: r.won },
-    { label: "Drawn", short: "D", value: r.drawn },
-    { label: "Lost", short: "L", value: r.lost },
-    { label: "Goals for", short: "GF", value: r.goalsFor, wide: true },
-    { label: "Goals against", short: "GA", value: r.goalsAgainst, wide: true },
-    { label: "Goal difference", short: "GD", value: formatGoalDifference(r.goalDifference) },
+  const cols: { label: string; value: number; signed?: boolean }[] = [
+    { label: "Played", value: r.played },
+    { label: "Won", value: r.won },
+    { label: "Drawn", value: r.drawn },
+    { label: "Lost", value: r.lost },
+    { label: "Goals for", value: r.goalsFor },
+    { label: "Goals against", value: r.goalsAgainst },
+    { label: "Goal difference", value: r.goalDifference, signed: true },
   ];
 
   return (
-    <div className="overflow-x-auto bg-field-2">
-      <table className="w-full min-w-[20rem] border-collapse text-left">
-        <thead>
-          <tr className="border-b border-line text-xs text-silver-dim">
-            <th scope="col" className="py-3 pr-4 pl-4 font-normal sm:pl-6">
-              Club
-            </th>
-            {cols.map((c) => (
-              <th
-                key={c.short}
-                scope="col"
-                className={`w-12 py-3 text-center font-normal ${c.wide ? "hidden sm:table-cell" : ""}`}
-              >
-                <abbr title={c.label} className="no-underline">
-                  {c.short}
-                </abbr>
-              </th>
-            ))}
-            <th scope="col" className="hidden py-3 pr-6 pl-4 font-normal md:table-cell">
-              Form
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row" className="py-4 pr-4 pl-4 sm:pl-6">
-              <span className="flex items-center gap-3">
-                <Crest size={32} />
-                <span className="type-name text-lg">Chèvre Noir</span>
-              </span>
-            </th>
-            {cols.map((c) => (
-              <td
-                key={c.short}
-                className={`type-name tabular py-4 text-center text-xl ${c.wide ? "hidden sm:table-cell" : ""}`}
-              >
-                {c.value}
-              </td>
-            ))}
-            <td className="hidden py-4 pr-6 pl-4 md:table-cell">
+    <Reveal>
+      <div className="glass overflow-hidden rounded-[1.75rem] backdrop-blur-2xl">
+        <dl className="-mt-px -ml-px grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7">
+          {cols.map((c, i) => (
+            <div
+              key={c.label}
+              className={cn(
+                "flex flex-col gap-3 border-t border-l border-line px-6 py-7",
+                // The odd seventh cell spans the spare width so the two- and four-column grids close square.
+                i === cols.length - 1 && "col-span-2 lg:col-span-1"
+              )}
+            >
+              <dt className="text-sm text-silver">{c.label}</dt>
+              <dd className="figure text-5xl leading-none text-chalk">
+                <CountUp value={c.value} signed={c.signed} />
+              </dd>
+            </div>
+          ))}
+          <div className="col-span-2 flex flex-wrap items-center justify-between gap-3 border-t border-l border-line px-6 py-6 sm:col-span-4 lg:col-span-7">
+            <dt className="text-sm text-silver">Last five results</dt>
+            <dd>
               <FormGuide results={form} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </Reveal>
   );
 }

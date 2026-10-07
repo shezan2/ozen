@@ -5,13 +5,15 @@ interface CrestProps {
   size?: number;
   className?: string;
   priority?: boolean;
+  /** Set where the club name is printed alongside, so it isn't announced twice. */
+  decorative?: boolean;
 }
 
-export default function Crest({ size = 40, className = "", priority = false }: CrestProps) {
+export default function Crest({ size = 40, className = "", priority = false, decorative = false }: CrestProps) {
   return (
     <Image
       src="/crest.png"
-      alt={`${club.fullName} crest`}
+      alt={decorative ? "" : `${club.fullName} crest`}
       width={size}
       height={size}
       priority={priority}

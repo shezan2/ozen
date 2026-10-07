@@ -16,7 +16,7 @@ export default function LeaderboardPage() {
         title="Leaderboard"
         description={`Every player ranked by goals, assists and appearances in the ${club.season} season.`}
       />
-      <section className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
+      <section className="mx-auto w-full max-w-[88rem] px-5 pb-28 sm:px-10 sm:pb-36">
         <LeaderboardExplorer players={squad} />
       </section>
     </div>

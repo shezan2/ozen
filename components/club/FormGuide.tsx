@@ -5,9 +5,9 @@ import { ResultChip } from "./ResultBadge";
 export default function FormGuide({ results }: { results: Match["result"][] }) {
   const oldestFirst = [...results].reverse();
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1.5">
       {oldestFirst.map((r, i) => (
-        <ResultChip key={i} result={r} className="size-6 text-xs" />
+        <ResultChip key={i} result={r} />
       ))}
     </div>
   );
