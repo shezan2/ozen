@@ -1,0 +1,149 @@
+{
+  "file": "ozen-launch-15s-sound.wav",
+  "content": "sound design only \u2014 no music, no instruments, no tuned tones",
+  "sample_rate": 48000,
+  "duration": 15.0,
+  "integrated_lufs": -16.05,
+  "true_peak_dbtp": -1.6,
+  "stem_gain_db": {
+    "amb": -27.77,
+    "sig": -0.72,
+    "fx": -4.69,
+    "ui": -8.7,
+    "impact": -0.07
+  },
+  "events": [
+    {
+      "t": 0.12,
+      "event": "signature swirl"
+    },
+    {
+      "t": 0.43,
+      "event": "signature thock"
+    },
+    {
+      "t": 0.76,
+      "event": "signature tick"
+    },
+    {
+      "t": 0.85,
+      "event": "signature tick"
+    },
+    {
+      "t": 0.868,
+      "event": "signature swish crest"
+    },
+    {
+      "t": 1.75,
+      "event": "sheen glint (L\u2192R)"
+    },
+    {
+      "t": 2.2035,
+      "event": "sheet whoosh crest"
+    },
+    {
+      "t": 2.475,
+      "event": "impact: sheet lands"
+    },
+    {
+      "t": 2.6852,
+      "event": "word swish"
+    },
+    {
+      "t": 3.3652,
+      "event": "word swish"
+    },
+    {
+      "t": 4.0152,
+      "event": "word swish"
+    },
+    {
+      "t": 4.9715,
+      "event": "pull-back whoosh crest"
+    },
+    {
+      "t": 5.38,
+      "event": "scroll wheel detents (speed-following)"
+    },
+    {
+      "t": 5.74,
+      "event": "page-scroll whoosh crest"
+    },
+    {
+      "t": 6.14,
+      "event": "card lift"
+    },
+    {
+      "t": 6.22,
+      "event": "card lift"
+    },
+    {
+      "t": 6.3,
+      "event": "card lift"
+    },
+    {
+      "t": 7.645,
+      "event": "form whoosh crest (R\u2192L)"
+    },
+    {
+      "t": 8.958,
+      "event": "click: Custom Website"
+    },
+    {
+      "t": 8.98,
+      "event": "selection air"
+    },
+    {
+      "t": 9.14,
+      "event": "chip pop"
+    },
+    {
+      "t": 9.78,
+      "event": "UI-exit whoosh crest"
+    },
+    {
+      "t": 9.975,
+      "event": "impact: 'Fixed price.'"
+    },
+    {
+      "t": 10.16,
+      "event": "glint on 'Before work begins.'"
+    },
+    {
+      "t": 10.75,
+      "event": "Get a Quote appears"
+    },
+    {
+      "t": 11.51,
+      "event": "click: Get a Quote"
+    },
+    {
+      "t": 11.9024,
+      "event": "expansion whoosh crest"
+    },
+    {
+      "t": 11.975,
+      "event": "impact: end card"
+    },
+    {
+      "t": 12.08,
+      "event": "signature swirl (reprise)"
+    },
+    {
+      "t": 12.34,
+      "event": "signature thock (reprise)"
+    },
+    {
+      "t": 12.6,
+      "event": "signature tick (reprise)"
+    },
+    {
+      "t": 12.68,
+      "event": "signature tick (reprise)"
+    },
+    {
+      "t": 12.7015,
+      "event": "signature swish crest (reprise)"
+    }
+  ]
+}

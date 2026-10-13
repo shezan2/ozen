@@ -1,6 +1,6 @@
 out/*
 !out/ozen-launch-15s.mp4
-!out/ozen-launch-15s-score.wav
-!out/score-cues.json
+!out/ozen-launch-15s-sound.wav
+!out/sound-cues.json
 .venv/
 __pycache__/

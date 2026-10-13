@@ -5,10 +5,10 @@
  *   node render.mjs                      # 1920×1080 · 60fps · motion blur → out/ozen-launch-15s.mp4
  *   node render.mjs --stills 1.2,3.4     # review stills → out/stills/
  *   node render.mjs --sub 1              # no motion blur (fast draft)
- *   node render.mjs --mux                # re-attach the score to the existing film (no re-render)
+ *   node render.mjs --mux                # re-attach the sound to the existing film (no re-render)
  *
- * The soundtrack comes from audio/score.py (→ out/ozen-launch-15s-score.wav). When that WAV exists it
- * is muxed in as 320 kbps AAC; otherwise the film is written silent.
+ * The sound design comes from audio/sound.py (→ out/ozen-launch-15s-sound.wav). When that WAV exists
+ * it is muxed in as 320 kbps AAC; otherwise the film is written silent.
  *
  * Options: --fps 60  --sub 4 (motion-blur samples per frame)  --shutter 0.5 (180°)
  *          --scale 1 (device scale; 2 = supersampled)  --workers 4  --crf 16  --grain 4  --out <file>
@@ -50,7 +50,7 @@ const CRF = String(args.crf ?? 16);
 const OUT = resolve(here, args.out ?? "out/ozen-launch-15s.mp4");
 const URL = pathToFileURL(join(here, "index.html")).href + "?render" + (args.debug ? `&debug=${encodeURIComponent(args.debug)}` : "");
 const GRAIN = Number(args.grain ?? 4); // temporal luma grain added at encode (0 = off)
-const SCORE = resolve(here, args.score ?? "out/ozen-launch-15s-score.wav");
+const SOUND = resolve(here, args.sound ?? "out/ozen-launch-15s-sound.wav");
 
 async function openPage(browser) {
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: SCALE });
@@ -170,17 +170,17 @@ async function film() {
   console.log(`${OUT} · ${((Date.now() - started) / 1000).toFixed(0)}s`);
 }
 
-// Attach the score: video stream copied untouched, audio encoded once to AAC.
+// Attach the sound: video stream copied untouched, audio encoded once to AAC.
 async function mux(videoIn, out) {
   const tmp = `${out}.mux.mp4`;
-  if (!existsSync(SCORE)) {
-    console.log(`No score at ${SCORE} — writing the film silent (run audio/score.py first).`);
+  if (!existsSync(SOUND)) {
+    console.log(`No sound at ${SOUND} — writing the film silent (run audio/sound.py first).`);
     const copy = ffmpeg(["-i", videoIn, "-map", "0:v:0", "-c", "copy", "-movflags", "+faststart", tmp]);
     copy.stdin.end();
     await copy.done;
   } else {
     const m = ffmpeg([
-      "-i", videoIn, "-i", SCORE,
+      "-i", videoIn, "-i", SOUND,
       "-map", "0:v:0", "-map", "1:a:0",
       "-c:v", "copy", "-c:a", "aac", "-b:a", "320k", "-ar", "48000",
       "-movflags", "+faststart", tmp,
@@ -196,7 +196,7 @@ if (args.stills) {
 } else if (args.mux) {
   if (!existsSync(OUT)) throw new Error(`${OUT} missing — render the film first`);
   await mux(OUT, OUT);
-  console.log(`${OUT} · score muxed from ${SCORE}`);
+  console.log(`${OUT} · sound muxed from ${SOUND}`);
 } else {
   if (!existsSync(join(here, "index.html"))) throw new Error("index.html missing");
   await film();
