@@ -5,6 +5,10 @@
  *   node render.mjs                      # 1920×1080 · 60fps · motion blur → out/ozen-launch-15s.mp4
  *   node render.mjs --stills 1.2,3.4     # review stills → out/stills/
  *   node render.mjs --sub 1              # no motion blur (fast draft)
+ *   node render.mjs --mux                # re-attach the score to the existing film (no re-render)
+ *
+ * The soundtrack comes from audio/score.py (→ out/ozen-launch-15s-score.wav). When that WAV exists it
+ * is muxed in as 320 kbps AAC; otherwise the film is written silent.
  *
  * Options: --fps 60  --sub 4 (motion-blur samples per frame)  --shutter 0.5 (180°)
  *          --scale 1 (device scale; 2 = supersampled)  --workers 4  --crf 16  --grain 4  --out <file>
@@ -13,18 +17,20 @@
  */
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
-import { mkdirSync, rmSync, writeFileSync, existsSync } from "node:fs";
+import { mkdirSync, rmSync, writeFileSync, existsSync, renameSync } from "node:fs";
 import { cpus } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const require = createRequire(import.meta.url);
-let chromium;
-try {
-  ({ chromium } = require("playwright"));
-} catch {
-  console.error("Playwright not found. Install it with `npm i -D playwright` (or put a global install on NODE_PATH).");
-  process.exit(1);
+// Loaded lazily so `--mux` works without a browser installed.
+function playwright() {
+  try {
+    return require("playwright");
+  } catch {
+    console.error("Playwright not found. Install it with `npm i -D playwright` (or put a global install on NODE_PATH).");
+    process.exit(1);
+  }
 }
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -44,6 +50,7 @@ const CRF = String(args.crf ?? 16);
 const OUT = resolve(here, args.out ?? "out/ozen-launch-15s.mp4");
 const URL = pathToFileURL(join(here, "index.html")).href + "?render" + (args.debug ? `&debug=${encodeURIComponent(args.debug)}` : "");
 const GRAIN = Number(args.grain ?? 4); // temporal luma grain added at encode (0 = off)
+const SCORE = resolve(here, args.score ?? "out/ozen-launch-15s-score.wav");
 
 async function openPage(browser) {
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: SCALE });
@@ -58,7 +65,7 @@ async function grab(page, t) {
 }
 
 function launch() {
-  return chromium.launch({
+  return playwright().chromium.launch({
     args: ["--force-color-profile=srgb", "--disable-lcd-text", "--font-render-hinting=none", "--hide-scrollbars"],
   });
 }
@@ -153,16 +160,43 @@ async function film() {
     "-c:v", "libx264", "-preset", "slow", "-crf", CRF, "-tune", "film",
     "-x264-params", "aq-mode=3:deblock=-1,-1",
     "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
-    "-movflags", "+faststart", "-r", String(FPS), OUT,
+    "-movflags", "+faststart", "-r", String(FPS), `${OUT}.video.mp4`,
   ]);
   enc.stdin.end();
   await enc.done;
   if (!args["keep-chunks"]) rmSync(tmp, { recursive: true, force: true });
+  await mux(`${OUT}.video.mp4`, OUT);
+  rmSync(`${OUT}.video.mp4`, { force: true });
   console.log(`${OUT} · ${((Date.now() - started) / 1000).toFixed(0)}s`);
+}
+
+// Attach the score: video stream copied untouched, audio encoded once to AAC.
+async function mux(videoIn, out) {
+  const tmp = `${out}.mux.mp4`;
+  if (!existsSync(SCORE)) {
+    console.log(`No score at ${SCORE} — writing the film silent (run audio/score.py first).`);
+    const copy = ffmpeg(["-i", videoIn, "-map", "0:v:0", "-c", "copy", "-movflags", "+faststart", tmp]);
+    copy.stdin.end();
+    await copy.done;
+  } else {
+    const m = ffmpeg([
+      "-i", videoIn, "-i", SCORE,
+      "-map", "0:v:0", "-map", "1:a:0",
+      "-c:v", "copy", "-c:a", "aac", "-b:a", "320k", "-ar", "48000",
+      "-movflags", "+faststart", tmp,
+    ]);
+    m.stdin.end();
+    await m.done;
+  }
+  renameSync(tmp, out);
 }
 
 if (args.stills) {
   await stills(String(args.stills).split(",").map(Number));
+} else if (args.mux) {
+  if (!existsSync(OUT)) throw new Error(`${OUT} missing — render the film first`);
+  await mux(OUT, OUT);
+  console.log(`${OUT} · score muxed from ${SCORE}`);
 } else {
   if (!existsSync(join(here, "index.html"))) throw new Error("index.html missing");
   await film();
