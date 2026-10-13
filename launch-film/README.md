@@ -3,7 +3,9 @@
 A 15-second launch spot for [ozendigital.co](https://ozendigital.co), built as code: a single HTML
 composition where every frame is a pure function of time, rendered frame by frame to video.
 
-**Output:** `out/ozen-launch-15s.mp4`: 1920×1080, 60 fps, H.264, about 15 s, silent (ready for a music bed).
+**Output:** `out/ozen-launch-15s.mp4`: 1920×1080, 60 fps, H.264 + 320 kbps AAC stereo, 15.000 s,
+with an original score mastered to −14 LUFS / −1.5 dBTP. The score is also in
+`out/ozen-launch-15s-score.wav` (48 kHz, 24-bit) for editing, with its cue sheet in `out/score-cues.json`.
 
 ## The cut
 
@@ -16,8 +18,36 @@ composition where every frame is a pure function of time, rendered frame by fram
 | 9.6 – 11.6 | **The promise.** "Fixed price. *Before work begins.*" with proof points and a Get a Quote button, which gets clicked… |
 | 11.58 – 15.0 | **The end card.** …and the button opens into the cobalt end card: the white wordmark, "Let's talk about your project.", ozendigital.co and the service line. |
 
-Music cue points if you add a track: hits at **1.95** (sheet rises), **4.55** (pull-back),
-**6.1** (cards lift), **8.95** (click), **11.5** (Get a Quote click) and **12.1** (logo).
+## Soundtrack
+
+An original score and sound design, synthesised entirely in code (`audio/score.py`, numpy + scipy).
+There are no samples and no licences: everything is oscillators and filtered noise, so Ozen owns it outright.
+
+- **Locked to picture.** The groove is 120 BPM, anchored so its beats land on the sheet landing (2.475),
+  the "Fixed price." statement (9.975) and the end-card hit (11.975). One 3/4 bar keeps the grid aligned.
+  Whooshes peak where the motion peaks (wipe, sheet, pull-back, page scroll, form, UI exit, expansion),
+  and the clicks land on the cursor presses.
+- **Harmony.** F major: Fmaj9 → Dm9 → B♭maj9 → Gm9 → C9sus4, which resolves to C7 as the option is
+  selected, then B♭maj9 → C9sus4 → Fmaj9 home on the end card.
+- **Sonic logo.** F5–C6–A5 on a clean FM bell, one note per logo-build event (the mark lands, the first
+  umlaut bar lands, the ZEN wipe completes). It plays in the intro and again, in the same rhythm, as the
+  end-card logo rebuilds.
+- **Arc.** A spacious intro (−19 LUFS), a lift on the sheet, the groove, a dip for the break, a breakdown
+  under the statement, and the end card as the loudest moment (−9 LUFS momentary). It decays on its own by
+  14.8 s.
+- **Translation.** Bass and impacts carry harmonics so they read on phone speakers. Mono-safe
+  (decorrelated stereo, no delay tricks). The true-peak ceiling leaves headroom for AAC.
+
+Regenerate and re-attach it (no video re-render needed):
+
+```bash
+python3 -m venv launch-film/.venv && launch-film/.venv/bin/pip install -r launch-film/audio/requirements.txt
+launch-film/.venv/bin/python launch-film/audio/score.py   # → out/ozen-launch-15s-score.wav
+node launch-film/render.mjs --mux                          # attach it to out/ozen-launch-15s.mp4
+```
+
+Cue times live in the `CUE` dict at the top of `score.py`. If the picture's timing changes, update
+them there.
 
 ## Brand sources
 
@@ -50,7 +80,10 @@ Needs ffmpeg and Playwright's Chromium (`npm i -D playwright && npx playwright i
 node launch-film/render.mjs                      # final: 4-sample motion blur, film grain
 node launch-film/render.mjs --sub 1 --grain 0    # fast draft
 node launch-film/render.mjs --stills 3.2,7.0     # review stills → out/stills/
+node launch-film/render.mjs --mux                # re-attach the score without re-rendering
 ```
+
+A full render muxes `out/ozen-launch-15s-score.wav` automatically when it exists.
 
 | Option | Default | Meaning |
 | --- | --- | --- |

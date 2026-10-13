@@ -1,0 +1,199 @@
+{
+  "file": "ozen-launch-15s-score.wav",
+  "sample_rate": 48000,
+  "duration": 15.0,
+  "bpm": 120,
+  "grid0": 2.475,
+  "integrated_lufs": -14.03,
+  "true_peak_dbtp": -1.6,
+  "stem_gain_db": {
+    "kick": -9.84,
+    "bass": -12.7,
+    "pad": -16.99,
+    "arp": -17.78,
+    "perc": -8.34,
+    "bells": -12.28,
+    "logo": -16.5,
+    "fx": -5.38,
+    "impact": -13.68,
+    "ui": -13.53,
+    "air": -38.96
+  },
+  "harmony": [
+    {
+      "start": 0.0,
+      "end": 2.475,
+      "chord": "Fmaj9"
+    },
+    {
+      "start": 2.475,
+      "end": 4.475,
+      "chord": "Dm9"
+    },
+    {
+      "start": 4.475,
+      "end": 6.475,
+      "chord": "Bbmaj9"
+    },
+    {
+      "start": 6.475,
+      "end": 7.975,
+      "chord": "Gm9"
+    },
+    {
+      "start": 7.975,
+      "end": 8.975,
+      "chord": "C9sus4"
+    },
+    {
+      "start": 8.975,
+      "end": 9.975,
+      "chord": "C7"
+    },
+    {
+      "start": 9.975,
+      "end": 10.975,
+      "chord": "Bbmaj9"
+    },
+    {
+      "start": 10.975,
+      "end": 11.975,
+      "chord": "C9sus4"
+    },
+    {
+      "start": 11.975,
+      "end": 15.0,
+      "chord": "Fmaj9_end"
+    }
+  ],
+  "kicks": [
+    2.475,
+    3.475,
+    4.475,
+    4.975,
+    5.475,
+    5.975,
+    6.475,
+    6.975,
+    7.475,
+    7.975,
+    8.475,
+    8.975,
+    9.975,
+    11.975
+  ],
+  "events": [
+    {
+      "t": 0.43,
+      "event": "sonic logo 77"
+    },
+    {
+      "t": 0.76,
+      "event": "sonic logo 84"
+    },
+    {
+      "t": 0.8387,
+      "event": "wipe swish crest (L\u2192R)"
+    },
+    {
+      "t": 1.32,
+      "event": "sonic logo 81"
+    },
+    {
+      "t": 1.699,
+      "event": "sheen shimmer (L\u2192R)"
+    },
+    {
+      "t": 2.2035,
+      "event": "sheet whoosh crest"
+    },
+    {
+      "t": 2.475,
+      "event": "sheet lands \u2014 impact"
+    },
+    {
+      "t": 2.66,
+      "event": "word mallet 69"
+    },
+    {
+      "t": 3.34,
+      "event": "word mallet 72"
+    },
+    {
+      "t": 3.99,
+      "event": "word mallet 76"
+    },
+    {
+      "t": 4.9715,
+      "event": "pull-back whoosh crest"
+    },
+    {
+      "t": 5.74,
+      "event": "page-scroll whoosh crest"
+    },
+    {
+      "t": 6.15,
+      "event": "card lift 74"
+    },
+    {
+      "t": 6.23,
+      "event": "card lift 77"
+    },
+    {
+      "t": 6.31,
+      "event": "card lift 81"
+    },
+    {
+      "t": 7.645,
+      "event": "form whoosh crest (R\u2192L)"
+    },
+    {
+      "t": 8.958,
+      "event": "click: Custom Website"
+    },
+    {
+      "t": 9.0,
+      "event": "selection mallets G5\u2192C6"
+    },
+    {
+      "t": 9.14,
+      "event": "chip pop"
+    },
+    {
+      "t": 9.78,
+      "event": "UI-exit whoosh crest"
+    },
+    {
+      "t": 9.975,
+      "event": "statement \u2014 impact"
+    },
+    {
+      "t": 10.17,
+      "event": "accent on 'Before work begins.'"
+    },
+    {
+      "t": 11.51,
+      "event": "click: Get a Quote"
+    },
+    {
+      "t": 11.9024,
+      "event": "expansion whoosh crest"
+    },
+    {
+      "t": 11.975,
+      "event": "end card \u2014 impact"
+    },
+    {
+      "t": 12.34,
+      "event": "sonic logo (reprise) 77"
+    },
+    {
+      "t": 12.6,
+      "event": "sonic logo (reprise) 84"
+    },
+    {
+      "t": 13.06,
+      "event": "sonic logo (reprise) 81"
+    }
+  ]
+}
