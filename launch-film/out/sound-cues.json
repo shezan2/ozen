@@ -6,35 +6,35 @@
   "integrated_lufs": -16.05,
   "true_peak_dbtp": -1.6,
   "stem_gain_db": {
-    "amb": -27.77,
+    "amb": -27.27,
     "sig": -0.72,
-    "fx": -4.69,
+    "fx": -4.61,
     "ui": -8.7,
-    "impact": -0.07
+    "impact": -1.59
   },
   "events": [
     {
       "t": 0.12,
-      "event": "signature swirl"
+      "event": "logo cue: swirl"
     },
     {
-      "t": 0.43,
-      "event": "signature thock"
+      "t": 0.49,
+      "event": "logo cue: thock"
     },
     {
       "t": 0.76,
-      "event": "signature tick"
+      "event": "logo cue: tick"
     },
     {
       "t": 0.85,
-      "event": "signature tick"
+      "event": "logo cue: tick"
     },
     {
       "t": 0.868,
-      "event": "signature swish crest"
+      "event": "logo cue: swish crest"
     },
     {
-      "t": 1.75,
+      "t": 1.685,
       "event": "sheen glint (L\u2192R)"
     },
     {
@@ -50,11 +50,11 @@
       "event": "word swish"
     },
     {
-      "t": 3.3652,
+      "t": 3.354,
       "event": "word swish"
     },
     {
-      "t": 4.0152,
+      "t": 4.0264,
       "event": "word swish"
     },
     {
@@ -70,20 +70,24 @@
       "event": "page-scroll whoosh crest"
     },
     {
-      "t": 6.14,
-      "event": "card lift"
+      "t": 6.12,
+      "event": "card lift air"
     },
     {
-      "t": 6.22,
-      "event": "card lift"
+      "t": 6.2,
+      "event": "card lift air"
     },
     {
-      "t": 6.3,
-      "event": "card lift"
+      "t": 6.28,
+      "event": "card lift air"
     },
     {
       "t": 7.645,
       "event": "form whoosh crest (R\u2192L)"
+    },
+    {
+      "t": 7.865,
+      "event": "browser recede pressure"
     },
     {
       "t": 8.958,
@@ -102,11 +106,11 @@
       "event": "UI-exit whoosh crest"
     },
     {
-      "t": 9.975,
+      "t": 10.04,
       "event": "impact: 'Fixed price.'"
     },
     {
-      "t": 10.16,
+      "t": 10.2,
       "event": "glint on 'Before work begins.'"
     },
     {
@@ -122,28 +126,28 @@
       "event": "expansion whoosh crest"
     },
     {
-      "t": 11.975,
+      "t": 11.91,
       "event": "impact: end card"
     },
     {
       "t": 12.08,
-      "event": "signature swirl (reprise)"
+      "event": "logo cue: swirl (reprise)"
     },
     {
-      "t": 12.34,
-      "event": "signature thock (reprise)"
+      "t": 12.39,
+      "event": "logo cue: thock (reprise)"
     },
     {
       "t": 12.6,
-      "event": "signature tick (reprise)"
+      "event": "logo cue: tick (reprise)"
     },
     {
       "t": 12.68,
-      "event": "signature tick (reprise)"
+      "event": "logo cue: tick (reprise)"
     },
     {
       "t": 12.7015,
-      "event": "signature swish crest (reprise)"
+      "event": "logo cue: swish crest (reprise)"
     }
   ]
 }

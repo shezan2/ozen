@@ -12,9 +12,9 @@ placed on a visual event, so the motion itself sets the rhythm.
 
 Deterministic: each sound draws from its own seeded noise stream.
 
-Sonic signature (intro and end card): a swirl as the compass-O spins in, a soft magnetic
+Logo sound cues (intro and end card): a swirl as the compass-O spins in, a soft magnetic
 "thock" as it lands, two precise ticks as the umlaut bars land, and an airy swish across the
-ZEN wipe. The end card repeats the same four sounds in the same rhythm.
+ZEN wipe. The end card repeats the same four sounds as the logo rebuilds.
 """
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ OUT = HERE.parent / "out"
 # (derived from its easing curves and checked against frame differences of the render).
 CUE = {
     "mark_spin": 0.12,  # compass-O starts spinning in
-    "mark_land": 0.43,  # compass-O settles
+    "mark_land": 0.49,  # compass-O settles (90% of its rotation)
     "bar_land": (0.76, 0.85),  # umlaut bars land
     "wipe": (0.40, 1.32),  # ZEN wipe; peak speed 0.86
     "sheen": (1.32, 2.05),  # cobalt sheen; crosses the logo 1.47–1.90
@@ -58,13 +58,13 @@ CUE = {
     "fill": (9.05, 9.60),  # progress bar fills to 20%
     "chip": 9.14,  # "We reply within 24 hours" chip pops
     "exit": (9.60, 10.10),  # UI rig scrolls up and away; visible motion peaks 9.81–9.87
-    "statement": (9.975, 10.16),  # "Fixed price." / "Before work begins."
+    "statement": (10.04, 10.20),  # "Fixed price." / "Before work begins." first visible
     "cta": 10.75,  # Get a Quote button appears
     "click2": 11.51,  # cursor press on Get a Quote (press peak 11.52)
     "expand": (11.58, 12.30),  # button opens into the end card; peak speed 11.90
-    "end_hit": 11.975,  # end card 85% open at 12.01
+    "end_hit": 11.91,  # on the bloom: the card expansion's peak motion
     "end_spin": 12.08,  # end-card mark starts spinning in
-    "end_mark": 12.34,  # end-card mark settles
+    "end_mark": 12.39,  # end-card mark settles (90% of its rotation)
     "end_bars": (12.60, 12.68),  # end-card umlaut bars land
     "end_wipe": (12.31, 13.06),  # end-card ZEN wipe; peak speed 12.69
     "end_text": (12.68, 12.94),  # "Let's talk about your project." / ozendigital.co pill
@@ -205,7 +205,7 @@ def swirl(dur, rate0=7.0, rate1=1.2, f0=2600.0, f1=700.0, width=0.45):
     u = np.linspace(0, 1, n)
     rate = rate0 * (rate1 / rate0) ** u
     ph = 2 * np.pi * np.cumsum(rate) / SR
-    env = np.clip(u / 0.08, 0, 1) ** 1.5 * (1 - u) ** 1.3
+    env = np.where(u < 0.45, (u / 0.45) ** 1.5, ((1 - u) / 0.55) ** 1.3)
     x = norm(tv_filter(pink(n), "bandpass", f0 * (f1 / f0) ** u, width_oct=1.5)) * env
     x *= 1 + 0.22 * np.sin(2 * ph)  # rotating-air flutter
     gl, gr = pan_gains(width * np.sin(ph))
@@ -216,9 +216,9 @@ def thock(weight=1.0):
     """Soft magnetic snap-into-place: damped noise body with a low thud. Untuned."""
     n = int(0.25 * SR)
     body = filt(noise(n), "lowpass", 1400) * decay_env(n, 0.0004, 0.007)
-    low = filt(noise(n), "lowpass", 220, order=4) * decay_env(n, 0.001, 0.035)
+    low = filt(noise(n), "lowpass", 160, order=2) * decay_env(n, 0.001, 0.035)
     snap = filt(noise(n), "highpass", 3500) * decay_env(n, 0.0002, 0.0012)
-    return fade_edges(norm(0.8 * norm(body) + weight * norm(low) + 0.35 * norm(snap)), a=0.0002, r=0.03)
+    return fade_edges(norm(1.0 * norm(body) + weight * norm(low) + 0.35 * norm(snap)), a=0.0002, r=0.03)
 
 
 def tick(bright=1.0):
@@ -285,7 +285,7 @@ def pressure(dur, peak=0.45):
     n = int(dur * SR)
     u = np.linspace(0, 1, n)
     env = np.where(u < peak, (u / peak) ** 2, ((1 - u) / (1 - peak)) ** 1.5)
-    st = np.vstack([filt(brown(n), "lowpass", 160, order=4) for _ in range(2)])
+    st = np.vstack([filt(pink(n), "lowpass", 160, order=2) for _ in range(2)])
     return fade_edges(st / (np.max(np.abs(st)) + 1e-9) * env, a=0.01, r=0.02)
 
 
@@ -294,8 +294,8 @@ def impact(size=1.0):
     Built from filtered noise only, so it is a sound effect rather than a drum or a note."""
     dur = 0.6 + 1.6 * size
     n = int(dur * SR)
-    sub = filt(brown(n), "lowpass", 95, order=4) * decay_env(n, 0.002, 0.16 + 0.22 * size)
-    thud = filt(noise(n), "lowpass", 260, order=4) * decay_env(n, 0.0008, 0.05)
+    sub = filt(pink(n), "lowpass", 95, order=2) * decay_env(n, 0.002, 0.16 + 0.22 * size)
+    thud = filt(noise(n), "lowpass", 200, order=2) * decay_env(n, 0.0008, 0.05)
     body = np.vstack([filt(noise(n), "bandpass", [300, 2200]) * decay_env(n, 0.0005, 0.035) for _ in range(2)])
     crack = np.vstack([filt(noise(n), "highpass", 2500) * decay_env(n, 0.0002, 0.006) for _ in range(2)])
     tail = np.vstack([filt(noise(n), "lowpass", 900) * decay_env(n, 0.03, 0.35 * size) for _ in range(2)])
@@ -310,7 +310,7 @@ def ui_click(weight=1.0):
     n = int(0.12 * SR)
     t_ = filt(filt(noise(n), "highpass", 4000), "lowpass", 11000) * decay_env(n, 0.0001, 0.0012)
     body = filt(noise(n), "bandpass", [600, 2500]) * decay_env(n, 0.0003, 0.008)
-    low = filt(noise(n), "lowpass", 220, order=4) * decay_env(n, 0.001, 0.018)
+    low = filt(noise(n), "lowpass", 160, order=2) * decay_env(n, 0.001, 0.018)
     return fade_edges(norm(0.7 * norm(t_) + 0.6 * norm(body) + weight * 0.8 * norm(low)), a=0.0001, r=0.02)
 
 
@@ -330,7 +330,7 @@ def ambience(dur, level_curve):
     drift_n = int(dur * 50) + 2
     out = []
     for _ in range(2):
-        low = filt(brown(n), "lowpass", 180, order=2) * 0.55
+        low = filt(pink(n), "lowpass", 200, order=2) * 0.55
         mid = filt(pink(n), "bandpass", [250, 2500]) * 0.12
         air = filt(filt(noise(n), "highpass", 6500), "lowpass", 14000) * 0.15
         slow = np.convolve(_rng.standard_normal(drift_n), np.ones(25) / 25, mode="same")  # ~0.5 s smoothing
@@ -455,8 +455,8 @@ def design():
     def ev(t, what):
         events.append({"t": round(float(t), 4), "event": what})
 
-    def signature(spin, land, bars, wipe, scale=1.0, label=""):
-        """The four-sound sonic signature: swirl → thock → tick tick → swish."""
+    def logo_cues(spin, land, bars, wipe, label=""):
+        """Logo sound cues: swirl → thock → tick tick → swish."""
         put("sig", swirl((land - spin) + 0.06), spin, gain=0.75, send=0.35)
         put("sig", thock(1.0), land, gain=1.0, send=0.5)
         for t, p in zip(bars, (-0.25, -0.12)):
@@ -464,21 +464,21 @@ def design():
         w0, w1 = wipe
         wd = (w1 - w0) + 0.12
         put("sig", whoosh(wd, peak=0.45, f0=900, f1=5200, pan0=-0.55, pan1=0.55, width_oct=1.2), w0, gain=0.55, send=0.2)
-        ev(spin, f"signature swirl{label}")
-        ev(land, f"signature thock{label}")
+        ev(spin, f"logo cue: swirl{label}")
+        ev(land, f"logo cue: thock{label}")
         for t in bars:
-            ev(t, f"signature tick{label}")
-        ev(w0 + 0.45 * wd, f"signature swish crest{label}")
+            ev(t, f"logo cue: tick{label}")
+        ev(w0 + 0.45 * wd, f"logo cue: swish crest{label}")
 
     # ---- room tone under everything (fades in, drops away at the very end)
     reseed("ambience")
     put("amb", ambience(DUR, lambda u: np.clip(u / 0.04, 0, 1) * (1 - 0.6 * np.clip((u - 0.9) / 0.08, 0, 1))), 0.0)
 
-    # ---- intro: the sonic signature, then a glint across the sheen
+    # ---- intro: the logo sound cues, then a glint across the sheen
     reseed("intro")
-    signature(CUE["mark_spin"], CUE["mark_land"], CUE["bar_land"], CUE["wipe"])
-    put("fx", glint(0.6), 1.45, gain=0.45, send=0.4)
-    ev(1.45 + 0.3, "sheen glint (L→R)")
+    logo_cues(CUE["mark_spin"], CUE["mark_land"], CUE["bar_land"], CUE["wipe"])
+    put("fx", glint(0.5), 1.435, gain=0.45, send=0.4)
+    ev(1.435 + 0.25, "sheen glint (L→R)")
 
     # ---- the sheet rises: noise riser + upward whoosh, landing impact
     reseed("sheet")
@@ -494,9 +494,9 @@ def design():
 
     # ---- words roll in: a small swish for each
     reseed("words")
-    for t in CUE["words"]:
-        put("fx", whoosh(0.34, peak=0.28, f0=1400, f1=4200, pan0=-0.35, pan1=-0.15, width_oct=1.2), t - 0.03, gain=0.35, send=0.15)
-        ev(t - 0.03 + 0.28 * 0.34, "word swish")
+    for t, (a, b, d, p) in zip(CUE["words"], ((1400, 4200, 0.34, -0.35), (1250, 3600, 0.30, -0.28), (1550, 4600, 0.38, -0.40))):
+        put("fx", whoosh(d, peak=0.28, f0=a, f1=b, pan0=p, pan1=p + 0.2, width_oct=1.3), t - 0.03, gain=0.35, send=0.15)
+        ev(t - 0.03 + 0.28 * d, "word swish")
 
     # ---- pull-back: big airy camera move with a low pressure swell
     reseed("pullback")
@@ -517,14 +517,15 @@ def design():
     reseed("cards")
     for t, p, g in zip(CUE["cards"], (-0.4, 0.0, 0.4), (0.4, 0.5, 0.6)):
         put("fx", whoosh(0.42, peak=0.22, f0=500, f1=2200, pan0=p, pan1=p, width_oct=1.5), t, gain=g, send=0.2)
-        put("ui", thock(0.6) * 0.5, t + 0.02, pan=p, gain=g * 0.5)
-        ev(t + 0.02, "card lift")
+        ev(t, "card lift air")
 
     # ---- form + info cards slide in (opposite directions)
     reseed("form")
     put("fx", whoosh(0.62, peak=0.25, f0=1600, f1=420, pan0=0.75, pan1=0.1), CUE["form_in"] - 0.06, gain=0.6)
     put("fx", whoosh(0.55, peak=0.25, f0=1300, f1=380, pan0=-0.75, pan1=-0.15), CUE["info_in"] - 0.05, gain=0.35)
     ev(CUE["form_in"] - 0.06 + 0.25 * 0.62, "form whoosh crest (R→L)")
+    put("fx", pressure(0.7, peak=0.45), 7.55, gain=0.4)
+    ev(7.55 + 0.45 * 0.7, "browser recede pressure")
 
     # ---- the click, the selection, the progress fill, the chip
     reseed("ui")
@@ -533,7 +534,7 @@ def design():
     put("fx", whoosh(0.22, peak=0.2, f0=2200, f1=5000, pan0=0.3, pan1=0.3, width_oct=1.2), CUE["select"], gain=0.3, send=0.2)
     ev(CUE["select"], "selection air")
     f0_, f1_ = CUE["fill"]
-    put("fx", whoosh(f1_ - f0_, peak=0.8, f0=1200, f1=5000, pan0=0.1, pan1=0.35, width_oct=1.0), f0_, gain=0.18)
+    put("fx", whoosh(0.28, peak=0.15, f0=1200, f1=5000, pan0=0.1, pan1=0.35, width_oct=1.2), f0_ - 0.01, gain=0.18)
     put("ui", pop(), CUE["chip"], pan=0.55, gain=0.55, send=0.25)
     ev(CUE["chip"], "chip pop")
 
@@ -546,7 +547,7 @@ def design():
     put("fx", reverse_swell(0.5), CUE["statement"][0] - 0.5, gain=0.4)
     put("impact", impact(0.6), CUE["statement"][0], gain=0.6, send=0.5)
     ev(CUE["statement"][0], "impact: 'Fixed price.'")
-    put("fx", glint(0.5, pan0=-0.3, pan1=0.3, density=90.0), CUE["statement"][1], gain=0.3, send=0.35)
+    put("fx", glint(0.3, pan0=-0.3, pan1=0.3, density=90.0), CUE["statement"][1], gain=0.3, send=0.35)
     ev(CUE["statement"][1], "glint on 'Before work begins.'")
     put("fx", whoosh(0.3, peak=0.25, f0=900, f1=2600, width_oct=1.3), CUE["cta"], gain=0.25, send=0.15)
     ev(CUE["cta"], "Get a Quote appears")
@@ -561,12 +562,17 @@ def design():
     put("fx", pressure(0.7, peak=0.5), x0, gain=0.6)
     ev(x0 + 0.52 * 0.62, "expansion whoosh crest")
     put("fx", reverse_swell(0.7), CUE["end_hit"] - 0.75, gain=0.5)
-    put("impact", impact(1.3), CUE["end_hit"], gain=1.0, send=0.75)
+    imp = impact(1.3)
+    k0 = int((CUE["end_spin"] - 0.03 - CUE["end_hit"]) * SR)  # get out of the way of the reprise
+    kn = int(0.03 * SR)
+    imp[:, k0 : k0 + kn] *= np.linspace(1, db(-9), kn)
+    imp[:, k0 + kn :] *= db(-9)
+    put("impact", imp, CUE["end_hit"], gain=1.0, send=0.35)
     ev(CUE["end_hit"], "impact: end card")
 
-    # ---- the end card: the same signature as the logo rebuilds, then air
+    # ---- the end card: the same logo cues as the logo rebuilds, then air
     reseed("end")
-    signature(CUE["end_spin"], CUE["end_mark"], CUE["end_bars"], CUE["end_wipe"], label=" (reprise)")
+    logo_cues(CUE["end_spin"], CUE["end_mark"], CUE["end_bars"], CUE["end_wipe"], label=" (reprise)")
     put("fx", whoosh(0.4, peak=0.3, f0=1200, f1=3500, width_oct=1.2), CUE["end_text"][0], gain=0.22, send=0.2)
     put("fx", whoosh(0.32, peak=0.3, f0=1500, f1=4200, width_oct=1.2), CUE["end_text"][1], gain=0.18, send=0.2)
 
