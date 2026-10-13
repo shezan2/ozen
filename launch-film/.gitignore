@@ -3,3 +3,4 @@ out/*
 !out/ozen-launch-15s-score.wav
 !out/score-cues.json
 .venv/
+__pycache__/
