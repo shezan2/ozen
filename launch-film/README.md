@@ -59,7 +59,7 @@ node launch-film/render.mjs --stills 3.2,7.0     # review stills → out/stills/
 | `--grain` | 4 | Temporal luma grain added at encode (0 = off) |
 | `--scale` | 1 | Device scale. 2 renders at 4K and downsamples for extra crispness |
 | `--workers` | CPU count (max 4) | Parallel Chromium instances |
-| `--crf` | 12 | x264 quality (lower = larger and cleaner) |
+| `--crf` | 16 | x264 quality (lower = larger; 16 ≈ 17 Mbps, visually lossless with grain) |
 
 Frames render in parallel chunks to lossless intermediates, then one final encode produces
 BT.709 `yuv420p` H.264 with `+faststart`.

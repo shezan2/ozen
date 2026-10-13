@@ -7,7 +7,7 @@
  *   node render.mjs --sub 1              # no motion blur (fast draft)
  *
  * Options: --fps 60  --sub 4 (motion-blur samples per frame)  --shutter 0.5 (180°)
- *          --scale 1 (device scale; 2 = supersampled)  --workers 4  --crf 12  --grain 4  --out <file>
+ *          --scale 1 (device scale; 2 = supersampled)  --workers 4  --crf 16  --grain 4  --out <file>
  *
  * Needs Playwright (npm i -D playwright, or a global install on NODE_PATH) and ffmpeg.
  */
@@ -40,7 +40,7 @@ const SUB = Math.max(1, Number(args.sub ?? 4));
 const SHUTTER = Number(args.shutter ?? 0.5);
 const SCALE = Number(args.scale ?? 1);
 const WORKERS = Math.max(1, Number(args.workers ?? Math.min(4, cpus().length)));
-const CRF = String(args.crf ?? 12);
+const CRF = String(args.crf ?? 16);
 const OUT = resolve(here, args.out ?? "out/ozen-launch-15s.mp4");
 const URL = pathToFileURL(join(here, "index.html")).href + "?render" + (args.debug ? `&debug=${encodeURIComponent(args.debug)}` : "");
 const GRAIN = Number(args.grain ?? 4); // temporal luma grain added at encode (0 = off)
