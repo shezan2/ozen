@@ -4,3 +4,5 @@ out/*
 !out/sound-cues.json
 .venv/
 __pycache__/
+audio/models/
+!out/voiceover.wav

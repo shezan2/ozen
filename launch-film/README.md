@@ -4,7 +4,7 @@ A 15-second launch spot for [ozendigital.co](https://ozendigital.co), built as c
 composition where every frame is a pure function of time, rendered frame by frame to video.
 
 **Output:** `out/ozen-launch-15s.mp4`: 1920×1080, 60 fps, H.264 + 320 kbps AAC stereo, 15.000 s,
-with original sound design (no music) at −16 LUFS / −1.5 dBTP. The sound is also in
+with original sound design (no music) and narration at −15 LUFS / −1.5 dBTP. The sound is also in
 `out/ozen-launch-15s-sound.wav` (48 kHz, 24-bit) for editing, with its cue sheet in `out/sound-cues.json`.
 
 ## The cut
@@ -34,13 +34,21 @@ Nothing is sampled, so Ozen owns it outright.
   the same rhythm as the logo rebuilds.
 - **Checked for tonality.** A persistent-tone detector (narrow spectral peaks lasting over 64 ms) finds
   0% tonal frames, against 83% for a musical score. Onset analysis finds no periodic beat.
-- **Delivery.** −16 LUFS integrated with a −1.5 dBTP ceiling (it stays under −1 dBTP after AAC
+- **Delivery.** −15 LUFS integrated with a −1.5 dBTP ceiling (it stays under −1 dBTP after AAC
   encoding), and mono-safe (decorrelated stereo).
+
+- **Narration.** A female voice (Kokoro TTS, voice `af_heart`) reads four lines on the cuts:
+  "We build websites, online stores, and digital tools." (2.55 s) · "Designed to perform. Priced
+  before we start." (5.75 s) · "Fixed price. Before work begins." (10.05 s) · "Ozen Digital. Let's
+  talk about your project." (12.2 s). `audio/voice.py` writes `out/voiceover.wav`. The effects dip
+  4 dB under the voice. To use a human recording, replace that WAV (15 s, 48 kHz, same timing) and
+  re-run `sound.py`. Model files go in `audio/models/` (links in `voice.py`).
 
 Regenerate and re-attach it (no video re-render needed):
 
 ```bash
 python3 -m venv launch-film/.venv && launch-film/.venv/bin/pip install -r launch-film/audio/requirements.txt
+launch-film/.venv/bin/python launch-film/audio/voice.py   # → out/voiceover.wav (narration)
 launch-film/.venv/bin/python launch-film/audio/sound.py   # → out/ozen-launch-15s-sound.wav
 node launch-film/render.mjs --mux                          # attach it to out/ozen-launch-15s.mp4
 ```

@@ -586,7 +586,10 @@ STEM_PEAK_DBFS = {"ui": -11.0}
 STEM_LUFS = {"amb": -38.0}
 REVERB_LUFS = -26.0
 
-TARGET_LUFS = -16.0  # sound design only: sparser than music, so a little lower than -14
+TARGET_LUFS = -15.0
+VO_LUFS = -20.0  # narration level relative to the effects before normalisation
+VO_DUCK_DB = -4.0  # effects dip this much while the narrator speaks
+VOICEOVER = OUT / "voiceover.wav"  # from audio/voice.py (or a human recording on the same timing)
 CEILING_DBTP = -1.5
 
 
@@ -607,6 +610,44 @@ def stem_gain(name: str, x: np.ndarray) -> float:
     return g
 
 
+def load_voiceover():
+    """Narration track (48 kHz, 15 s) cleaned up: high-pass, a little presence, gentle levelling."""
+    if not VOICEOVER.exists():
+        return None
+    import subprocess
+
+    raw = subprocess.run(
+        ["ffmpeg", "-v", "error", "-i", str(VOICEOVER), "-f", "f32le", "-ac", "2", "-ar", str(SR), "-"],
+        capture_output=True, check=True,
+    ).stdout
+    vo = np.frombuffer(raw, np.float32).reshape(-1, 2).T.astype(np.float64)
+    vo = np.pad(vo, ((0, 0), (0, max(0, N - vo.shape[1]))))[:, :N]
+    vo = filt(vo, "highpass", 90, order=2)
+    # presence: +2 dB shelf-ish lift around 4 kHz (RBJ peaking, Q 0.8)
+    a_, w = 10 ** (2.0 / 40), 2 * np.pi * 4000 / SR
+    al = np.sin(w) / (2 * 0.8)
+    b = np.array([1 + al * a_, -2 * np.cos(w), 1 - al * a_])
+    a = np.array([1 + al / a_, -2 * np.cos(w), 1 - al / a_])
+    vo = signal.lfilter(b / a[0], a / a[0], vo, axis=-1)
+    # gentle levelling: 2:1 above the speech's median level, 10 ms / 150 ms
+    lvl = np.sqrt(uniform_filter1d(np.mean(vo**2, axis=0), int(0.03 * SR)) + 1e-12)
+    thr = np.median(lvl[lvl > np.max(lvl) * 0.05]) if np.any(lvl > 0) else 1.0
+    gain = np.where(lvl > thr, (thr / lvl) ** 0.5, 1.0)
+    gain = uniform_filter1d(gain, int(0.02 * SR))
+    vo = vo * gain
+    return vo * db(VO_LUFS - lufs(vo))
+
+
+def duck_under(vo: np.ndarray) -> np.ndarray:
+    """Gain curve for everything else: dips while the voice is active, smooth in and out."""
+    env = np.sqrt(uniform_filter1d(np.mean(vo**2, axis=0), int(0.05 * SR)) + 1e-12)
+    active = (env > np.max(env) * db(-30)).astype(float)
+    active = uniform_filter1d(minimum_filter1d(active, int(0.02 * SR)), int(0.06 * SR))  # 60 ms ramps
+    held = uniform_filter1d(active, int(0.25 * SR))  # widen by ~125 ms either side
+    m = np.clip(np.maximum(active, held), 0, 1)
+    return db(VO_DUCK_DB * m)
+
+
 def master(buses, rev):
     gains = {name: stem_gain(name, bus.x) for name, bus in buses.items()}
     for name, bus in buses.items():
@@ -615,10 +656,13 @@ def master(buses, rev):
     wet *= db(REVERB_LUFS - lufs(wet))
 
     mix = sum(b.x for b in buses.values()) + wet
+    vo = load_voiceover()
+    if vo is not None:
+        mix = mix * duck_under(vo) + vo
     mix = filt(mix, "highpass", 25, order=4)
     t = secs(N)
     mix *= np.clip(t / 0.01, 0, 1)
-    mix *= 0.5 + 0.5 * np.cos(np.pi * np.clip((t - 14.7) / 0.3, 0, 1))  # tail into silence at 15.0
+    mix *= 0.5 + 0.5 * np.cos(np.pi * np.clip((t - 14.8) / 0.2, 0, 1))  # tail into silence at 15.0
 
     out = mix
     for _ in range(5):
