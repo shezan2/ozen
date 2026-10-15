@@ -37,12 +37,16 @@ Nothing is sampled, so Ozen owns it outright.
 - **Delivery.** −15 LUFS integrated with a −1.5 dBTP ceiling (it stays under −1 dBTP after AAC
   encoding), and mono-safe (decorrelated stereo).
 
-- **Narration.** A female voice (Kokoro TTS, voice `af_heart`) reads four lines on the cuts:
-  "We build websites, online stores, and digital tools." (2.55 s) · "Designed to perform. Priced
-  before we start." (5.75 s) · "Fixed price. Before work begins." (10.05 s) · "Ozen Digital. Let's
-  talk about your project." (12.2 s). `audio/voice.py` writes `out/voiceover.wav`. The effects dip
-  8 dB under the voice. To use a human recording, replace that WAV (15 s, 48 kHz, same timing) and
-  re-run `sound.py`. Model files go in `audio/models/` (links in `voice.py`).
+- **Narration.** A warm female voice (Kokoro TTS, an even blend of `af_heart` and `af_kore`) reads
+  four lines: "Websites. Online stores. Digital tools." (each word on its roll-in, from 2.62 s) ·
+  "Designed to perform. Priced before we start." (5.2 s) · "Fixed price. Before work begins." (9.9 s,
+  finishing before the 11.91 s hit) · "Ozen Digital. Let's talk about your project." (12.05 s, as
+  the end-card mark builds). Each line is spoken as one take so the intonation runs through it.
+  The take is cut at its word boundaries (DTW-aligned against the phrases read separately) so a
+  phrase can wait for its beat. The voice then goes through a broadcast chain (EQ, de-esser, 3:1
+  compression, light saturation, a short room). `audio/voice.py` writes `out/voiceover.wav`, and
+  the effects dip 8 dB under it. To use a human recording, replace that WAV (15 s, 48 kHz, same
+  timing) and re-run `sound.py`. Model files go in `audio/models/` (links in `voice.py`).
 
 Regenerate and re-attach it (no video re-render needed):
 
