@@ -45,7 +45,7 @@ LINES = [  # (speed, phrases)
 ]
 GAP = 0.10  # minimum breath between lines (inside a line the take keeps its own pauses)
 TAKES = HERE / "takes"  # recorded takes (e.g. ElevenLabs): line1…line4, used instead of Kokoro when present
-INNER_PAUSE = 0.2  # pause between the phrases of a recorded line once tightened
+INNER_PAUSE = 0.12  # added between the phrases of a recorded line (each already keeps ~0.05–0.13 s of its own decay and lead-in)
 MAX_STRETCH = 1.2  # most a recorded take may be sped up to fit
 HARD_LIMITS = {6: 11.86, 8: 14.78}  # phrase index (counting across lines) → must end by (hit at 11.91; fade from 14.8)
 
@@ -235,25 +235,42 @@ def ffmpeg_audio(src, filters=None):
     else:
         cmd += ["-i", str(src)]
     cmd += (["-af", filters] if filters else []) + ["-ar", str(SR), "-ac", "1", "-f", "f64le", "-"]
-    return np.frombuffer(subprocess.run(cmd, input=data, capture_output=True, check=True).stdout, dtype="<f8").copy()
+    run = subprocess.run(cmd, input=data, capture_output=True)
+    if run.returncode:
+        raise RuntimeError(f"ffmpeg failed on {src if data is None else 'audio'}: {run.stderr.decode(errors='replace').strip()}")
+    return np.frombuffer(run.stdout, dtype="<f8").copy()
+
+
+AUDIO = {".wav", ".mp3", ".flac", ".m4a", ".aac", ".ogg", ".aif", ".aiff"}
 
 
 def take_files(folder):
-    files = [next(iter(sorted(Path(folder).glob(f"line{n}.*"))), None) for n in range(1, len(LINES) + 1)]
+    """line1…lineN audio files in `folder`, or None unless every line has one."""
+    files = [next((f for f in sorted(Path(folder).glob(f"line{n}.*")) if f.suffix.lower() in AUDIO), None) for n in range(1, len(LINES) + 1)]
     return files if all(files) else None
 
 
 def pause_split(a, parts):
-    """Cut a recorded line into phrases at its `parts - 1` longest pauses, dropping the pauses."""
+    """Cut a recorded line into phrases at its `parts - 1` longest pauses. Each phrase keeps its
+    natural decay into the pause (until the level reaches the pause's floor) and 20 ms of lead-in
+    before the next word, so no word tail or breath onset is clipped."""
     env = uniform_filter1d(np.abs(a), int(0.02 * SR))
     quiet = env < env.max() * db(-38)
     edges = np.flatnonzero(np.diff(np.concatenate([[0], quiet.astype(int), [0]])))
     runs = [(e1 - e0, e0, e1) for e0, e1 in zip(edges[::2], edges[1::2]) if e0 > 0 and e1 < len(a)]
     if len(runs) < parts - 1:
         raise ValueError(f"expected {parts - 1} pauses, found {len(runs)}")
-    cuts = sorted((e0, e1) for _, e0, e1 in sorted(runs)[len(runs) - (parts - 1) :])
-    bounds = [0] + [x for c in cuts for x in c] + [len(a)]
-    return [trim(a[b0:b1]) for b0, b1 in zip(bounds[::2], bounds[1::2])]
+    rms = np.sqrt(uniform_filter1d(a**2, int(0.005 * SR)))
+    bounds = [0]
+    for _, e0, e1 in sorted(sorted(runs)[len(runs) - (parts - 1) :], key=lambda r: r[1]):
+        floor = np.median(rms[e0:e1]) * db(3)
+        tail = e0 + int(np.argmax(rms[e0 : e0 + (e1 - e0) // 2] <= floor))
+        bounds += [tail, max(tail, e1 - int(0.02 * SR))]
+    bounds.append(len(a))
+    pieces = [a[b0:b1] for b0, b1 in zip(bounds[::2], bounds[1::2])]
+    if min(len(p) for p in pieces) < 0.25 * SR:  # a stray breath or click was taken for a phrase
+        raise ValueError(f"a phrase came out shorter than 0.25 s ({[round(len(p) / SR, 2) for p in pieces]})")
+    return pieces
 
 
 def take_lines(folder, stretch):
@@ -297,6 +314,8 @@ def main():
     args = ap.parse_args()
 
     takes = None if args.tts or not take_files(args.takes) else args.takes
+    if not args.tts and not takes and Path(args.takes) != TAKES:  # asked for takes that aren't all there
+        sys.exit(f"--takes {args.takes}: need line1…line{len(LINES)} audio files")
     dry, placed, stretch = render(args.voice, takes)
     # Recorded takes arrive EQ'd and compressed, so they only get the clean-up half of the chain.
     st = room(broadcast_chain(dry, light=bool(takes)))
