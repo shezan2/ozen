@@ -6,12 +6,14 @@
  *   node render.mjs --stills 1.2,3.4     # review stills → out/stills/
  *   node render.mjs --sub 1              # no motion blur (fast draft)
  *   node render.mjs --mux                # re-attach the sound to the existing film (no re-render)
+ *   node render.mjs --format 9x16        # vertical cut → out/ozen-launch-15s-9x16.mp4 (also 4x5)
  *
  * The sound design comes from audio/sound.py (→ out/ozen-launch-15s-sound.wav). When that WAV exists
  * it is muxed in as 320 kbps AAC; otherwise the film is written silent.
  *
- * Options: --fps 60  --sub 4 (motion-blur samples per frame)  --shutter 0.5 (180°)
- *          --scale 1 (device scale; 2 = supersampled)  --workers 4  --crf 16  --grain 4  --out <file>
+ * Options: --format 16x9|9x16|4x5 (layouts in formats/)  --fps 60  --sub 4 (motion-blur samples per
+ *          frame)  --shutter 0.5 (180°)  --scale 1 (device scale; 2 = supersampled)  --workers 4
+ *          --crf 16  --grain 4  --out <file>
  *
  * Needs Playwright (npm i -D playwright, or a global install on NODE_PATH) and ffmpeg.
  */
@@ -47,15 +49,26 @@ const SHUTTER = Number(args.shutter ?? 0.5);
 const SCALE = Number(args.scale ?? 1);
 const WORKERS = Math.max(1, Number(args.workers ?? Math.min(4, cpus().length)));
 const CRF = String(args.crf ?? 16);
-const OUT = resolve(here, args.out ?? "out/ozen-launch-15s.mp4");
-const URL = pathToFileURL(join(here, "index.html")).href + "?render" + (args.debug ? `&debug=${encodeURIComponent(args.debug)}` : "");
+const FORMAT = String(args.format ?? "16x9");
+const SUFFIX = FORMAT === "16x9" ? "" : `-${FORMAT}`; // other formats get their own files
+const OUT = resolve(here, args.out ?? `out/ozen-launch-15s${SUFFIX}.mp4`);
+const URL =
+  pathToFileURL(join(here, "index.html")).href +
+  `?render&format=${encodeURIComponent(FORMAT)}` +
+  (args.debug ? `&debug=${encodeURIComponent(args.debug)}` : "");
 const GRAIN = Number(args.grain ?? 4); // temporal luma grain added at encode (0 = off)
 const SOUND = resolve(here, args.sound ?? "out/ozen-launch-15s-sound.wav");
 
+let SIZE = null; // the format's frame size, read from the page
+
 async function openPage(browser) {
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: SCALE });
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e));
   await page.goto(URL);
-  await page.evaluate(() => window.film.ready);
+  if (errors.length) throw errors[0];
+  SIZE = await page.evaluate(async () => (await window.film.ready, { width: window.film.width, height: window.film.height }));
+  await page.setViewportSize(SIZE);
   return page;
 }
 
@@ -71,7 +84,7 @@ function launch() {
 }
 
 async function stills(times) {
-  const dir = resolve(here, "out/stills");
+  const dir = resolve(here, `out/stills${SUFFIX}`);
   mkdirSync(dir, { recursive: true });
   const browser = await launch();
   const page = await openPage(browser);
@@ -93,7 +106,7 @@ function ffmpeg(argv) {
 async function renderChunk(browser, frames, file, onFrame) {
   const page = await openPage(browser);
   const filters = [];
-  if (SCALE !== 1) filters.push("scale=1920:1080:flags=lanczos");
+  if (SCALE !== 1) filters.push(`scale=${SIZE.width}:${SIZE.height}:flags=lanczos`);
   if (SUB > 1) {
     filters.push(`tmix=frames=${SUB}:weights='${Array(SUB).fill(1).join(" ")}'`);
     filters.push(`select='eq(mod(n\\,${SUB})\\,${SUB - 1})'`);
@@ -120,7 +133,7 @@ async function renderChunk(browser, frames, file, onFrame) {
 
 async function film() {
   const total = Math.round(15 * FPS);
-  const tmp = resolve(here, "out/.chunks");
+  const tmp = resolve(here, `out/.chunks${SUFFIX}`);
   rmSync(tmp, { recursive: true, force: true });
   mkdirSync(tmp, { recursive: true });
   mkdirSync(dirname(OUT), { recursive: true });

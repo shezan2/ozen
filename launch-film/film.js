@@ -15,11 +15,15 @@
 (() => {
   "use strict";
 
-  const W = 1920;
-  const H = 1080;
+  const QUERY = new URLSearchParams(location.search);
+  // Output format (formats/<id>.js): ?format=9x16 or 4x5; the default is the 16:9 film.
+  const FORMAT = QUERY.get("format") || "16x9";
+  const F = (window.OZEN_FORMATS || {})[FORMAT];
+  if (!F) throw new Error(`Unknown format "${FORMAT}" (expected one of ${Object.keys(window.OZEN_FORMATS || {})})`);
+  const W = F.width;
+  const H = F.height;
   const DURATION = 15;
   const FPS = 60;
-  const QUERY = new URLSearchParams(location.search);
   const RENDER = QUERY.has("render");
   // ?debug={"browser":{…}} overrides a pose — handy for framing experiments.
   const DEBUG = (() => {
@@ -30,6 +34,7 @@
     }
   })();
   if (RENDER) document.documentElement.classList.add("render");
+  document.documentElement.classList.add(`f-${FORMAT}`);
 
   /* ---------------------------------------------------------------- math & easing */
 
@@ -229,32 +234,53 @@
     cursor: $("cursor"), grain: $("grain"),
   };
 
-  const logo1 = buildLogo($("s1-logo"), 900, "#111111", true);
-  logo1.host.style.left = `${(W - 900) / 2}px`;
-  logo1.host.style.top = `${(H - logo1.height) / 2 - 8}px`;
+  // Frame size and the format's box sizes (film.css reads these variables).
+  Object.assign(el.stage.style, { width: `${W}px`, height: `${H}px` });
+  const vars = { "--bw": F.browser.w, "--bh": F.browser.h, "--hero-h": F.heroH, "--headline": F.headlineSize, "--card-w": F.card.w, "--card-h": F.card.h };
+  for (const [k, v] of Object.entries(vars)) el.stage.style.setProperty(k, `${v}px`);
+
+  const logo1 = buildLogo($("s1-logo"), F.logo1.w, "#111111", true);
+  logo1.host.style.left = `${(W - F.logo1.w) / 2}px`;
+  logo1.host.style.top = `${(H - logo1.height) / 2 + F.logo1.dy}px`;
   if (logo1.sheen) logo1.sheen.style.backgroundImage = "none";
 
   const navLogo = buildLogo($("nav-logo"), 124, "#ffffff", false);
   navLogo.host.style.position = "relative";
 
-  const endLogo = buildLogo($("end-logo"), 760, "#ffffff", false);
-  endLogo.host.style.left = `${(1872 - 760) / 2}px`;
-  endLogo.host.style.top = "286px";
+  // End card: the content box is the card at full size, so its layout holds while it opens.
+  const ENDCARD = { x: F.endCard.inset, y: F.endCard.inset, w: W - 2 * F.endCard.inset, h: H - 2 * F.endCard.inset, r: F.endCard.r };
+  Object.assign(el.endContent.style, {
+    width: `${ENDCARD.w}px`,
+    height: `${ENDCARD.h}px`,
+    margin: `${-ENDCARD.h / 2}px 0 0 ${-ENDCARD.w / 2}px`,
+  });
+  const endLogo = buildLogo($("end-logo"), F.endLogo.w, "#ffffff", false);
+  endLogo.host.style.left = `${(ENDCARD.w - F.endLogo.w) / 2}px`;
+  endLogo.host.style.top = `${F.endLogo.top}px`;
+
+  // The Get a Quote button, which the end card opens out of.
+  const CTA = { x: W / 2 - F.cta.w / 2, y: F.cta.top, w: F.cta.w, h: F.cta.h, r: 12 };
+  Object.assign(el.cta.style, { top: `${CTA.y}px`, width: `${CTA.w}px`, height: `${CTA.h}px`, marginLeft: `${-CTA.w / 2}px` });
 
   const PLANS = [
     { title: "Your website", pre: "From $", value: 500, post: "", desc: "One-off. We agree the features in a consultation and send a fixed price before any work starts." },
     { title: "Ozen Care", pre: "$", value: 80, post: "/mo", desc: "Hosting, security and maintenance, plus one revision a month." },
     { title: "Ozen Care Plus", pre: "$", value: 150, post: "/mo", desc: "Everything in Ozen Care, plus the client portal: enquiry inbox, content editing and automations." },
   ];
-  const CARD = { w: 464, h: 392, gap: 24, x0: 80, pageY: 1040 };
-  const SCROLL_TO = -(CARD.pageY - 250); // pricing row sits mid-viewport
+  const CARD = F.card;
+  const SCROLL_TO = F.scrollTo; // brings the pricing row into view
+  Object.assign(el.pricing.style, { left: `${CARD.x0}px`, top: `${CARD.pageY}px` });
 
+  // Flat cards sit in the page's pricing row; their pop-out twins sit at the same spot on the
+  // browser (56 px of chrome + the row's scrolled position) so they can lift off it in 3D.
   function planCard(plan, i, pop) {
     const c = document.createElement("div");
     c.className = `pcard${pop ? " pop obj-card" : ""}`;
     c.innerHTML = `<h3>${plan.title}</h3><div class="price">${plan.pre}${plan.value}${plan.post}</div><p>${plan.desc}</p>`;
-    c.style.left = `${(pop ? CARD.x0 : 0) + i * (CARD.w + CARD.gap)}px`;
-    c.style.top = pop ? `${56 + CARD.pageY + SCROLL_TO}px` : "0px";
+    const col = i % CARD.cols;
+    const row = Math.floor(i / CARD.cols);
+    c.style.left = `${(pop ? CARD.x0 : 0) + col * (CARD.w + CARD.gap)}px`;
+    c.style.top = `${(pop ? 56 + CARD.pageY + SCROLL_TO : 0) + row * (CARD.h + CARD.gap)}px`;
     return c;
   }
   const flatCards = PLANS.map((p, i) => el.pricing.appendChild(planCard(p, i, false)));
@@ -264,39 +290,27 @@
 
   /* ---------------------------------------------------------------- poses */
 
+  // The hero card: browser.w - 32 wide, its top 72 px into the browser (56 chrome + 16 inset).
+  const HERO_W = F.browser.w - 32;
+  const HERO_DY = 72 + F.heroH / 2 - F.browser.h / 2; // hero centre below the browser's centre
   // Browser framing where the hero card fills the frame edge to edge.
-  const HERO_FILL = H / 860;
-  const FULL = { x: 0, y: -2 * HERO_FILL, z: 0, rx: 0, ry: 0, rz: 0, s: HERO_FILL };
+  const HERO_FILL = Math.max(H / F.heroH, W / HERO_W);
+  const FULL = { x: 0, y: -HERO_DY * HERO_FILL, z: 0, rx: 0, ry: 0, rz: 0, s: HERO_FILL };
   // While the sheet rises the hero card spans the frame width exactly, so its own rounded
   // corners lead the rise; it then grows to full bleed. The card's top edge stays at y=0.
-  const HERO_SPAN = W / 1568;
-  const RISE = { ...FULL, y: -540 + 428 * HERO_SPAN, s: HERO_SPAN };
+  const HERO_SPAN = W / HERO_W;
+  const RISE = { ...FULL, y: -H / 2 - (72 - F.browser.h / 2) * HERO_SPAN, s: HERO_SPAN };
 
+  const eased = (keys) => keys.map(([t, v, e]) => [t, v, e && E[e]]);
   const browserKeys = [
     [1.95, RISE],
     [2.55, FULL, E.sheet],
-    [4.55, { ...FULL, s: HERO_FILL * 1.028 }, E.inOutSine],
-    [5.55, { x: -30, y: 34, z: 0, rx: 14, ry: -9, rz: 2.4, s: 0.74 }, E.dolly],
-    [7.55, { x: -64, y: 22, z: 70, rx: 12, ry: -15, rz: 2.6, s: 0.75 }, E.inOutSine],
-    [8.25, { x: -470, y: -20, z: -420, rx: 10, ry: -22, rz: 2.6, s: 0.75 }, E.dolly],
-    [9.75, { x: -500, y: -30, z: -470, rx: 10, ry: -24, rz: 2.7, s: 0.75 }, E.linear],
+    [4.55, { ...FULL, s: HERO_FILL * F.heroPush }, E.inOutSine],
+    ...eased(F.browserKeys),
   ];
-
-  const formKeys = [
-    [7.55, { x: 1500, y: 120, z: 160, rx: 8, ry: -38, rz: 2, s: 1 }],
-    [8.3, { x: 230, y: 40, z: 90, rx: 5, ry: -9, rz: -0.4, s: 1 }, E.glide],
-    [9.75, { x: 205, y: 30, z: 120, rx: 4, ry: -6, rz: -0.6, s: 1 }, E.linear],
-  ];
-  const infoKeys = [
-    [7.65, { x: -1400, y: 40, z: -120, rx: 6, ry: 26, rz: 0, s: 1 }],
-    [8.4, { x: -500, y: 150, z: -150, rx: 6, ry: 14, rz: 0.6, s: 1 }, E.glide],
-    [9.75, { x: -520, y: 142, z: -150, rx: 6, ry: 15, rz: 0.6, s: 1 }, E.linear],
-  ];
-  const chipKeys = [
-    [9.12, { x: 580, y: -360, z: 260, rx: 0, ry: -6, rz: 0, s: 0.6 }],
-    [9.62, { x: 560, y: -300, z: 260, rx: 0, ry: -6, rz: 0, s: 1 }, E.lift],
-    [9.75, { x: 556, y: -306, z: 260, rx: 0, ry: -6, rz: 0, s: 1 }, E.linear],
-  ];
+  const formKeys = eased(F.formKeys);
+  const infoKeys = eased(F.infoKeys);
+  const chipKeys = eased(F.chipKeys);
 
   /* ---------------------------------------------------------------- cursor */
 
@@ -392,7 +406,7 @@
         a *= 1 - E.inCubic(pout);
         b += lerp(0, 10, E.inCubic(pout));
       }
-      tf(w, { y: (y / 100) * 140 * 1.14 });
+      tf(w, { y: (y / 100) * F.headlineSize * 1.14 });
       op(w, a);
       blur(w, b);
     });
@@ -463,7 +477,7 @@
 
     // Exit: the whole rig scrolls up and away.
     const out = prog(t, 9.6, 10.1);
-    tf(el.rig, { y: lerp(0, -820, E.inCubic(out)) });
+    tf(el.rig, { y: lerp(0, F.rigExit, E.inCubic(out)) });
     blur(el.rig, lerp(0, 12, E.inCubic(out)));
     op(el.rig, 1 - E.inOutSine(out));
 
@@ -501,14 +515,13 @@
     op(el.cta, t < 11.58 ? E.outCubic(pc) : 0);
   }
 
-  const ENDCARD = { x: 24, y: 24, w: W - 48, h: H - 48, r: 36 };
   function sceneEnd(t) {
     const on = t >= 11.58;
     display(el.s5, on);
     if (!on) return;
 
     // The Get a Quote button opens into the cobalt end card.
-    const ctaRect = { x: W / 2 - 134, y: 760, w: 268, h: 76, r: 12 };
+    const ctaRect = CTA;
     const p = E.dolly(prog(t, 11.58, 12.3));
     const r = {
       x: lerp(ctaRect.x, ENDCARD.x, p),
@@ -555,7 +568,7 @@
     // Beat 3b: enter from lower right, glide to "Custom Website", click.
     if (t >= 8.0 && t < 9.7) {
       const target = pointOf(el.optWeb, 0.36, 0.56);
-      const from = [1720, 1150];
+      const from = F.cursor.formFrom;
       const p = E.dolly(prog(t, 8.05, 8.84));
       const xy = arc(from, target, p, -0.12);
       const press = Math.sin(Math.PI * prog(t, 8.86, 9.06));
@@ -565,8 +578,8 @@
     }
     // Beat 4: to the Get a Quote button, click.
     if (t >= 10.85 && t < 12.05) {
-      const target = [W / 2 + 46, 760 + 46];
-      const from = [1640, 1160];
+      const target = [W / 2 + F.cursor.ctaAt[0], CTA.y + F.cursor.ctaAt[1]];
+      const from = F.cursor.ctaFrom;
       const p = E.dolly(prog(t, 10.89, 11.41));
       const xy = arc(from, target, p, 0.1);
       const press = Math.sin(Math.PI * prog(t, 11.43, 11.61));
@@ -592,6 +605,7 @@
     sceneEnd(t);
     sceneCursor(t);
     grain(t);
+    if (F.adjust) F.adjust(t, { el, E, W, H, clamp, lerp, prog, tw, kf, tf, op, blur, display });
   }
 
   const ready = (async () => {
@@ -609,7 +623,7 @@
     seek(0);
   })();
 
-  window.film = { seek, ready, duration: DURATION, fps: FPS, width: W, height: H };
+  window.film = { seek, ready, duration: DURATION, fps: FPS, width: W, height: H, format: FORMAT };
 
   /* ---------------------------------------------------------------- preview player */
 

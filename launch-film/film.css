@@ -171,9 +171,10 @@ body {
   transform-style: preserve-3d;
 }
 
+/* Box sizes come from the format (formats/<id>.js) via variables set on #stage. */
 .browser {
-  width: 1600px;
-  height: 1000px;
+  width: var(--bw, 1600px);
+  height: var(--bh, 1000px);
   border-radius: 20px;
   box-shadow:
     0 2px 0 rgba(255, 255, 255, 0.6) inset,
@@ -185,7 +186,7 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: 1600px;
+  width: var(--bw, 1600px);
   height: 56px;
   border-radius: 20px 20px 0 0;
   background: linear-gradient(#f1efeb, #eae7e2);
@@ -230,8 +231,8 @@ body {
   position: absolute;
   left: 0;
   top: 56px;
-  width: 1600px;
-  height: 944px;
+  width: var(--bw, 1600px);
+  height: calc(var(--bh, 1000px) - 56px);
   overflow: hidden;
   border-radius: 0 0 20px 20px;
   background: var(--cream);
@@ -241,7 +242,7 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: 1600px;
+  width: var(--bw, 1600px);
   height: 1800px;
   background: var(--cream);
 }
@@ -250,8 +251,8 @@ body {
   position: absolute;
   left: 16px;
   top: 16px;
-  width: 1568px;
-  height: 860px;
+  width: calc(var(--bw, 1600px) - 32px);
+  height: var(--hero-h, 860px);
   border-radius: 24px;
   overflow: hidden;
   color: #fff;
@@ -306,7 +307,7 @@ body {
   left: 80px;
   width: 1400px;
   bottom: 76px;
-  font: 400 140px/1.02 var(--serif);
+  font: 400 var(--headline, 140px)/1.02 var(--serif);
   letter-spacing: -0.035em;
   color: #fff;
 }
@@ -356,8 +357,8 @@ body {
 
 .pcard {
   position: absolute;
-  width: 464px;
-  height: 392px;
+  width: var(--card-w, 464px);
+  height: var(--card-h, 392px);
   border-radius: 18px;
   background: var(--cream-card);
   padding: 34px 36px;
@@ -412,8 +413,8 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: 1600px;
-  height: 1000px;
+  width: var(--bw, 1600px);
+  height: var(--bh, 1000px);
   transform-style: preserve-3d;
   pointer-events: none;
 }
