@@ -41,7 +41,7 @@ Nothing is sampled, so Ozen owns it outright.
   "We build websites, online stores, and digital tools." (2.55 s) · "Designed to perform. Priced
   before we start." (5.75 s) · "Fixed price. Before work begins." (10.05 s) · "Ozen Digital. Let's
   talk about your project." (12.2 s). `audio/voice.py` writes `out/voiceover.wav`. The effects dip
-  4 dB under the voice. To use a human recording, replace that WAV (15 s, 48 kHz, same timing) and
+  8 dB under the voice. To use a human recording, replace that WAV (15 s, 48 kHz, same timing) and
   re-run `sound.py`. Model files go in `audio/models/` (links in `voice.py`).
 
 Regenerate and re-attach it (no video re-render needed):

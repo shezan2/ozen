@@ -587,8 +587,8 @@ STEM_LUFS = {"amb": -38.0}
 REVERB_LUFS = -26.0
 
 TARGET_LUFS = -15.0
-VO_LUFS = -20.0  # narration level relative to the effects before normalisation
-VO_DUCK_DB = -4.0  # effects dip this much while the narrator speaks
+VO_LUFS = -16.0  # narration level relative to the effects before normalisation
+VO_DUCK_DB = -8.0  # effects dip this much while the narrator speaks
 VOICEOVER = OUT / "voiceover.wav"  # from audio/voice.py (or a human recording on the same timing)
 CEILING_DBTP = -1.5
 
