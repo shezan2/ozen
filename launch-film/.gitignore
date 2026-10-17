@@ -13,3 +13,4 @@ out/*
 __pycache__/
 audio/models/
 !out/voiceover.wav
+!out/voiceover-hook.wav

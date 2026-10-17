@@ -130,9 +130,18 @@ launch-film/.venv/bin/python launch-film/audio/sound.py --hook   # → out/ozen-
 node launch-film/render.mjs --hook --format 9x16                 # → out/ozen-launch-15s-9x16-hook.mp4
 ```
 
-Preview it with `?hook` on the URL (with `&format=9x16` for another format). To have the narrator speak
-the hook, put the take in `audio/takes/hook.mp3`, then run `voice.py --hook` (it writes
-`out/voiceover-hook.wav`, which `sound.py --hook` picks up) and `render.mjs --hook --mux`.
+Preview it with `?hook` on the URL (with `&format=9x16` for another format).
+
+The narrator speaks the hook from `audio/takes/hook.mp3` (ElevenLabs, "Katherine – Calm Luxury
+Narrator"). `voice.py --hook` gives it its own fit: inner pauses tightened and the smallest speed-up
+that ends it by 2.70 s (currently ×1.21). "Websites." then follows a breath later, at 2.92 s, while
+its word is still on screen. The rest of the narration keeps the main cut's timing.
+
+```bash
+launch-film/.venv/bin/python launch-film/audio/voice.py --hook   # → out/voiceover-hook.wav
+launch-film/.venv/bin/python launch-film/audio/sound.py --hook   # picks it up
+node launch-film/render.mjs --hook --mux --format 9x16           # re-attach, no re-render
+```
 
 ## Formats
 

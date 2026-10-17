@@ -43,9 +43,12 @@ LINES = [  # (speed, phrases)
     (0.95, [("Fixed price.", 9.90), ("Before work begins.", 10.70)]),  # promise words rise from 10.0
     (1.0, [("Ozen Digital.", 12.05), ("Let's talk about your project.", 13.15)]),  # end-card mark builds
 ]
-# The hook cut opens on a spoken worry before the first line (take: takes/hook.*; --hook).
-HOOK_LINE = (1.0, [("Tired of quotes that keep growing?", 0.25)])
-HOOK_END = 2.45  # must finish before "Websites." at 2.62
+# The hook cut opens on a spoken worry before the first line (take: takes/hook.*; --hook). It gets
+# its own fit: inner pauses tightened, then the smallest speed-up that ends it by HOOK_END. A breath
+# follows before "Websites.", which may then land a little after its word appears (2.62–3.30 s).
+HOOK_LINE = (1.0, [("Tired of quotes that keep growing?", 0.0)], 0.22)  # (speed, phrases, breath after)
+HOOK_END = 2.70
+MAX_HOOK_STRETCH = 1.25
 GAP = 0.10  # minimum breath between lines (inside a line the take keeps its own pauses)
 TAKES = HERE / "takes"  # recorded takes (e.g. ElevenLabs): script.* or line1…line4, used instead of Kokoro when present
 MIN_PAUSE = 0.12  # shortest gap in a recorded line that counts as a pause between phrases
@@ -192,18 +195,20 @@ def place(lines, inner_gap, spec=None, limits=None):
     phrase, or None if it cannot fit. `spec`/`limits` default to LINES/HARD_LIMITS."""
     spec, limits = spec or LINES, limits or HARD_LIMITS
     placed, t_free, i = [], 0.0, 0
-    for (_, line), pieces in zip(spec, lines):
+    for k, ((_, line, *_), pieces) in enumerate(zip(spec, lines)):
+        # the first line may start at 0; later ones wait a breath (a line may ask for a longer one after it)
+        gap = 0.0 if k == 0 else spec[k - 1][2] if len(spec[k - 1]) > 2 else GAP
         n = len(line)
         if len(pieces) < n:  # the take ran this line's phrases together: one piece on the first anchor
             line = [(" ".join(text for text, _ in line), line[0][1])]
-        starts, ends, t = [], [], t_free + GAP
+        starts, ends, t = [], [], t_free + gap
         for j, ((_, anchor), a) in enumerate(zip(line, pieces)):
             starts.append(max(anchor, t + (inner_gap if j else 0)))
             t = starts[-1] + len(a) / SR
             ends.append(t)
         over = max([ends[min(j, len(ends) - 1)] - limits[i + j] for j in range(n) if i + j in limits] + [0])
         if over > 0:
-            if starts[0] - over < t_free + GAP - 1e-6:
+            if starts[0] - over < t_free + gap - 1e-6:
                 return None
             starts, ends = [x - over for x in starts], [x - over for x in ends]
         placed += [(s0, e0, text, a) for (text, _), a, s0, e0 in zip(line, pieces, starts, ends)]
@@ -227,7 +232,7 @@ def tts_lines(voice, spec=None):
         return signal.resample_poly(np.asarray(a, dtype=np.float64), SR, sr)
 
     lines = []
-    for speed, line in spec or LINES:
+    for speed, line, *_ in spec or LINES:
         whole = trim(say(" ".join(t for t, _ in line), speed))
         lines.append(split(whole, [trim(say(t, speed)) for t, _ in line]) if len(line) > 1 else [whole])
     return lines
@@ -304,6 +309,32 @@ def pause_split(a, parts):
     return pieces
 
 
+def tighten(a, max_pause=0.08):
+    """Shorten every pause inside a take to `max_pause` s, cutting from the middle of the silence."""
+    keep, fade = int(max_pause * SR), int(0.005 * SR)
+    parts, pos = [], 0
+    for _, e0, e1 in sorted(pauses(a, max_pause), key=lambda r: r[1]):
+        parts.append(a[pos : e0 + keep // 2].copy())
+        pos = e1 - keep // 2
+    parts.append(a[pos:].copy())
+    for j, p in enumerate(parts):  # short fades where the silence was cut
+        if j:
+            p[:fade] *= np.linspace(0, 1, min(fade, len(p)))
+        if j < len(parts) - 1:
+            p[-fade:] *= np.linspace(1, 0, min(fade, len(p)))
+    return np.concatenate(parts)
+
+
+def hook_take(path):
+    """The hook take with its pauses tightened and the smallest speed-up that ends it by HOOK_END."""
+    room = HOOK_END - HOOK_LINE[1][0][1]
+    for stretch in np.round(np.arange(1.0, MAX_HOOK_STRETCH + 1e-9, 0.01), 2):
+        a = tighten(trim(ffmpeg_audio(path, f"atempo={stretch:.3f}" if stretch != 1 else None)))
+        if len(a) / SR <= room:
+            return a, stretch
+    raise ValueError(f"hook take does not fit {room:.2f}s even at {MAX_HOOK_STRETCH}x — record it shorter")
+
+
 def take_lines(folder, stretch):
     """Recorded takes (script.* or line1…line4): sped up with ffmpeg's atempo (WSOLA, pitch kept; it scored as
     transparent on a naturalness model at 1.12x, where Rubber Band's R2 engine audibly smeared) and
@@ -325,11 +356,14 @@ def render(voice: str, takes=None, hook=False):
         hook_file = take_file(takes, "hook") if hook else None
         if hook and not hook_file:
             raise FileNotFoundError(f"--hook needs a hook take ({takes}/hook.mp3 or similar)")
+        if hook_file:
+            hook_audio, hook_stretch = hook_take(hook_file)
+            print(f"hook take: tempo ×{hook_stretch:.2f}, {len(hook_audio) / SR:.2f}s")
         # The smallest uniform speed-up that lets every line fit its window.
         for stretch in np.round(np.arange(1.0, MAX_STRETCH + 1e-9, 0.01), 2):
             lines = take_lines(takes, stretch)
             if hook_file:
-                lines = [[trim(ffmpeg_audio(hook_file, f"atempo={stretch:.3f}" if stretch != 1 else None))]] + lines
+                lines = [[hook_audio]] + lines
             placed = place(lines, INNER_PAUSE, spec, limits)
             if placed:
                 break
