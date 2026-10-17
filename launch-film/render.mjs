@@ -7,6 +7,7 @@
  *   node render.mjs --sub 1              # no motion blur (fast draft)
  *   node render.mjs --mux                # re-attach the sound to the existing film (no re-render)
  *   node render.mjs --format 9x16        # vertical cut → out/ozen-launch-15s-9x16.mp4 (also 4x5)
+ *   node render.mjs --hook               # hook cut (opens on the viewer's worry) → …-hook.mp4
  *
  * The sound design comes from audio/sound.py (→ out/ozen-launch-15s-sound.wav). When that WAV exists
  * it is muxed in as 320 kbps AAC; otherwise the film is written silent.
@@ -50,14 +51,16 @@ const SCALE = Number(args.scale ?? 1);
 const WORKERS = Math.max(1, Number(args.workers ?? Math.min(4, cpus().length)));
 const CRF = String(args.crf ?? 16);
 const FORMAT = String(args.format ?? "16x9");
-const SUFFIX = FORMAT === "16x9" ? "" : `-${FORMAT}`; // other formats get their own files
+const HOOK = Boolean(args.hook); // the hook cut opens on the viewer's worry instead of the logo
+const SUFFIX = (FORMAT === "16x9" ? "" : `-${FORMAT}`) + (HOOK ? "-hook" : ""); // each cut gets its own files
 const OUT = resolve(here, args.out ?? `out/ozen-launch-15s${SUFFIX}.mp4`);
 const URL =
   pathToFileURL(join(here, "index.html")).href +
   `?render&format=${encodeURIComponent(FORMAT)}` +
+  (HOOK ? "&hook" : "") +
   (args.debug ? `&debug=${encodeURIComponent(args.debug)}` : "");
 const GRAIN = Number(args.grain ?? 4); // temporal luma grain added at encode (0 = off)
-const SOUND = resolve(here, args.sound ?? "out/ozen-launch-15s-sound.wav");
+const SOUND = resolve(here, args.sound ?? `out/ozen-launch-15s${HOOK ? "-hook" : ""}-sound.wav`);
 
 let SIZE = null; // the format's frame size, read from the page
 

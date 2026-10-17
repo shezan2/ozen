@@ -25,6 +25,7 @@
   const DURATION = 15;
   const FPS = 60;
   const RENDER = QUERY.has("render");
+  const HOOK = QUERY.has("hook"); // the hook cut: open on the viewer's worry instead of the logo
   // ?debug={"browser":{…}} overrides a pose — handy for framing experiments.
   const DEBUG = (() => {
     try {
@@ -35,6 +36,7 @@
   })();
   if (RENDER) document.documentElement.classList.add("render");
   document.documentElement.classList.add(`f-${FORMAT}`);
+  if (HOOK) document.documentElement.classList.add("hook-on");
 
   /* ---------------------------------------------------------------- math & easing */
 
@@ -232,6 +234,7 @@
     endLine: $("end-line"), endUrl: $("end-url"), endCta: $("end-cta"),
     endServices: Array.from($("end-services").children),
     cursor: $("cursor"), grain: $("grain"),
+    hook: $("hook"), hookLines: [$("hk-1"), $("hk-2")], hookMeter: $("hook-meter"), hookTotal: $("hook-total"),
   };
 
   // Frame size and the format's box sizes (film.css reads these variables).
@@ -345,6 +348,7 @@
     tf(el.s1glow, { y: tw(t, 0, 1.9, 340, 0, E.glide) + 10 * Math.sin(t * 1.3) });
     op(el.s1glow, tw(t, 0, 1.4, 0, 1, E.outCubic));
 
+    if (HOOK) return sceneHook(t);
     animateLogo(logo1, t, 0.12);
 
     // Cobalt sheen passes across the ink once the mark has settled.
@@ -364,6 +368,29 @@
       s: tw(t, 0, 2.2, 0.965, 1.0, E.outCubic) * lerp(1, 0.94, E.inCubic(exit)),
     });
     op(logo1.host, 1 - E.inQuart(exit) * 0.9);
+  }
+
+  // The hook: "Tired of quotes / that keep growing?" rises in like the promise lines, and a
+  // quote total ticks up underneath, faster and faster, until the cobalt sheet rises over it.
+  const HOOK_FROM = 2400;
+  const HOOK_TO = 6150;
+  function sceneHook(t) {
+    el.hookLines.forEach((n, i) => {
+      const p = prog(t, 0.1 + i * 0.16, 0.93 + i * 0.16);
+      tf(n, { y: lerp(n.offsetHeight * 1.3, 0, E.glide(p)) });
+      blur(n, lerp(8, 0, E.outCubic(p)));
+    });
+    const pm = prog(t, 0.5, 1.02);
+    tf(el.hookMeter, { y: lerp(26, 0, E.glide(pm)), s: lerp(0.94, 1, E.glide(pm)) });
+    el.hookMeter.style.transform = `translateX(-50%) ${el.hookMeter.style.transform}`;
+    op(el.hookMeter, E.outCubic(pm));
+    const v = HOOK_FROM + (HOOK_TO - HOOK_FROM) * E.inCubic(prog(t, 0.62, 1.9));
+    el.hookTotal.textContent = `$${(Math.round(v / 10) * 10).toLocaleString("en-US")}`;
+
+    // The cobalt sheet rises over it, as it does over the logo.
+    const exit = prog(t, 1.95, 2.6);
+    tf(el.hook, { y: lerp(0, -150, E.inCubic(exit)), s: lerp(1, 0.94, E.inCubic(exit)) });
+    op(el.hook, 1 - E.inQuart(exit) * 0.9);
   }
 
   function sceneProduct(t) {

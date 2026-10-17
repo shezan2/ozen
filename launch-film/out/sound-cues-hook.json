@@ -1,0 +1,145 @@
+{
+  "file": "ozen-launch-15s-hook-sound.wav",
+  "content": "sound design only \u2014 no music, no instruments, no tuned tones",
+  "sample_rate": 48000,
+  "duration": 15.0,
+  "integrated_lufs": -15.07,
+  "true_peak_dbtp": -1.6,
+  "stem_gain_db": {
+    "amb": -27.27,
+    "sig": -0.11,
+    "fx": -4.61,
+    "ui": -8.7,
+    "impact": -1.59
+  },
+  "events": [
+    {
+      "t": 0.258,
+      "event": "hook line air lift"
+    },
+    {
+      "t": 0.418,
+      "event": "hook line air lift"
+    },
+    {
+      "t": 0.52,
+      "event": "quote total pops in"
+    },
+    {
+      "t": 0.62,
+      "event": "meter ticks (quickening with the count)"
+    },
+    {
+      "t": 2.2035,
+      "event": "sheet whoosh crest"
+    },
+    {
+      "t": 2.475,
+      "event": "impact: sheet lands"
+    },
+    {
+      "t": 2.6852,
+      "event": "word swish"
+    },
+    {
+      "t": 3.354,
+      "event": "word swish"
+    },
+    {
+      "t": 4.0264,
+      "event": "word swish"
+    },
+    {
+      "t": 4.9715,
+      "event": "pull-back whoosh crest"
+    },
+    {
+      "t": 5.38,
+      "event": "scroll wheel detents (speed-following)"
+    },
+    {
+      "t": 5.74,
+      "event": "page-scroll whoosh crest"
+    },
+    {
+      "t": 6.12,
+      "event": "card lift air"
+    },
+    {
+      "t": 6.2,
+      "event": "card lift air"
+    },
+    {
+      "t": 6.28,
+      "event": "card lift air"
+    },
+    {
+      "t": 7.645,
+      "event": "form whoosh crest (R\u2192L)"
+    },
+    {
+      "t": 7.865,
+      "event": "browser recede pressure"
+    },
+    {
+      "t": 8.958,
+      "event": "click: Custom Website"
+    },
+    {
+      "t": 8.98,
+      "event": "selection air"
+    },
+    {
+      "t": 9.14,
+      "event": "chip pop"
+    },
+    {
+      "t": 9.78,
+      "event": "UI-exit whoosh crest"
+    },
+    {
+      "t": 10.04,
+      "event": "impact: 'Fixed price.'"
+    },
+    {
+      "t": 10.2,
+      "event": "glint on 'Before work begins.'"
+    },
+    {
+      "t": 10.75,
+      "event": "Get a Quote appears"
+    },
+    {
+      "t": 11.51,
+      "event": "click: Get a Quote"
+    },
+    {
+      "t": 11.9024,
+      "event": "expansion whoosh crest"
+    },
+    {
+      "t": 11.91,
+      "event": "impact: end card"
+    },
+    {
+      "t": 12.08,
+      "event": "logo cue: swirl (reprise)"
+    },
+    {
+      "t": 12.39,
+      "event": "logo cue: thock (reprise)"
+    },
+    {
+      "t": 12.6,
+      "event": "logo cue: tick (reprise)"
+    },
+    {
+      "t": 12.68,
+      "event": "logo cue: tick (reprise)"
+    },
+    {
+      "t": 12.7015,
+      "event": "logo cue: swish crest (reprise)"
+    }
+  ]
+}

@@ -238,3 +238,22 @@
   height: 0;
   background: none;
 }
+
+/* Hook cut: the worry, stacked to the width, centred in the safe area. */
+.f-9x16 .hook-lines {
+  left: 65px;
+  right: 65px;
+  top: 470px;
+  font-size: 132px;
+  line-height: 1.02;
+}
+.f-9x16 .hook-meter {
+  top: 1010px;
+  height: 92px;
+  padding: 0 40px;
+  border-radius: 46px;
+  font-size: 34px;
+}
+.f-9x16 .hook-meter b {
+  font-size: 56px;
+}

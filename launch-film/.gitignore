@@ -2,6 +2,11 @@ out/*
 !out/ozen-launch-15s.mp4
 !out/ozen-launch-15s-9x16.mp4
 !out/ozen-launch-15s-4x5.mp4
+!out/ozen-launch-15s-hook.mp4
+!out/ozen-launch-15s-9x16-hook.mp4
+!out/ozen-launch-15s-4x5-hook.mp4
+!out/ozen-launch-15s-hook-sound.wav
+!out/sound-cues-hook.json
 !out/ozen-launch-15s-sound.wav
 !out/sound-cues.json
 .venv/

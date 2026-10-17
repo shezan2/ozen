@@ -114,6 +114,26 @@ A full render muxes `out/ozen-launch-15s-sound.wav` automatically when it exists
 Frames render in parallel chunks to lossless intermediates, then one final encode produces
 BT.709 `yuv420p` H.264 with `+faststart`.
 
+## Hook cut
+
+A second cut opens on the viewer's worry instead of the logo, for paid social, where the first
+second decides whether anyone keeps watching. "Tired of quotes / that keep growing?" rises in, in
+the same ink and cobalt-italic type as the later "Fixed price. Before work begins.", which answers it.
+Underneath, a "Quote total" ticks up from $2,400 like a meter running. At 1.95 s the cobalt sheet rises
+over it and the film continues unchanged, so the timing, voiceover and the rest of the sound match the
+main cut. The hook's sound replaces the logo signature with an air lift per line, a soft pop for the
+meter and fine ticks that quicken with the count. It is still no music: 0% tonal frames and no beat
+on the effects-only mix.
+
+```bash
+launch-film/.venv/bin/python launch-film/audio/sound.py --hook   # → out/ozen-launch-15s-hook-sound.wav
+node launch-film/render.mjs --hook --format 9x16                 # → out/ozen-launch-15s-9x16-hook.mp4
+```
+
+Preview it with `?hook` on the URL (with `&format=9x16` for another format). To have the narrator speak
+the hook, put the take in `audio/takes/hook.mp3`, then run `voice.py --hook` (it writes
+`out/voiceover-hook.wav`, which `sound.py --hook` picks up) and `render.mjs --hook --mux`.
+
 ## Formats
 
 Each format is laid out natively rather than cropped: `formats/<id>.js` holds every number that

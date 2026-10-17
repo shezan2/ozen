@@ -148,6 +148,66 @@ body {
   mask-repeat: no-repeat;
 }
 
+/* ---------- Hook (the ?hook cut opens on this instead of the logo) ---------- */
+
+.hook {
+  display: none;
+  position: absolute;
+  inset: 0;
+}
+.hook-on .hook {
+  display: block;
+}
+.hook-on #s1-logo {
+  display: none;
+}
+.hook-lines {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 300px;
+  text-align: center;
+  font: 400 156px/1 var(--serif);
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+.hook-lines .accent {
+  font-style: italic;
+  letter-spacing: -0.035em;
+  background: linear-gradient(100deg, #1b3a9e 0%, #2551be 35%, #3a78e0 70%, #7fa6ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding: 0 0.06em;
+}
+/* A running quote total, ticking up like a meter. */
+.hook-meter {
+  position: absolute;
+  left: 50%;
+  top: 680px;
+  transform: translateX(-50%);
+  height: 88px;
+  padding: 0 40px;
+  border-radius: 44px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  white-space: nowrap;
+  font: 400 30px/1 var(--sans);
+  color: var(--ink-3);
+  box-shadow:
+    0 30px 60px -24px rgba(27, 58, 158, 0.3),
+    0 10px 24px -14px rgba(17, 17, 17, 0.2);
+}
+.hook-meter b {
+  display: inline-block;
+  min-width: 4.1em;
+  font: 500 52px/1 var(--serif);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
 /* ---------- Cobalt gradient panel ---------- */
 
 .cobalt {

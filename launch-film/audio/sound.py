@@ -8,6 +8,7 @@ placed on a visual event, so the motion itself sets the rhythm.
 
     python3 -m venv .venv && .venv/bin/pip install -r audio/requirements.txt
     .venv/bin/python audio/sound.py      # → out/ozen-launch-15s-sound.wav + out/sound-cues.json
+    .venv/bin/python audio/sound.py --hook   # hook cut → out/ozen-launch-15s-hook-sound.wav
     node render.mjs --mux                # attach it to the film
 
 Deterministic: each sound draws from its own seeded noise stream.
@@ -15,6 +16,10 @@ Deterministic: each sound draws from its own seeded noise stream.
 Logo sound cues (intro and end card): a swirl as the compass-O spins in, a soft magnetic
 "thock" as it lands, two precise ticks as the umlaut bars land, and an airy swish across the
 ZEN wipe. The end card repeats the same four sounds as the logo rebuilds.
+
+Hook cut (--hook): the film opens on "Tired of quotes / that keep growing?" instead of the logo,
+so the intro cues become an air lift for each line, a soft pop as the quote total appears, and fine
+ticks that quicken as the total climbs, like a meter running.
 """
 from __future__ import annotations
 
@@ -73,6 +78,14 @@ CUE = {
 # ---------------------------------------------------------------------------- helpers
 
 _rng = np.random.default_rng(SEED)
+
+
+HOOK = "--hook" in sys.argv  # the hook cut (film.js ?hook): opens on the worry instead of the logo
+HOOK_CUE = {
+    "lines": (0.10, 0.26),  # "Tired of quotes" / "that keep growing?" start rising
+    "meter": 0.52,  # quote total pops in
+    "count": (0.62, 1.90),  # total climbs $2,400 → $6,150 (ease-in cubic)
+}
 
 
 def reseed(tag: str):
@@ -339,6 +352,18 @@ def ambience(dur, level_curve):
     return np.vstack(out) * level_curve(np.linspace(0, 1, n))
 
 
+def meter_ticks(t0, t1, v0, v1, step, min_gap=0.045):
+    """A tick each time the hook's quote total (film.js: v0→v1 on an ease-in cubic over t0–t1)
+    passes another `step`, thinned to `min_gap` and jittered, so it quickens like a meter."""
+    times, last = [], -1.0
+    for k in range(1, int((v1 - v0) / step) + 1):
+        t = t0 + (t1 - t0) * (k * step / (v1 - v0)) ** (1 / 3)
+        if t - last >= min_gap:
+            times.append(t + _rng.normal(0, 0.004))
+            last = t
+    return times
+
+
 def scroll_ticks(t0, t1, max_rate=16.0):
     """Mouse-wheel detents during the page scroll: soft ticks whose rate follows the scroll
     speed, jittered so they never form a regular pulse."""
@@ -474,11 +499,24 @@ def design():
     reseed("ambience")
     put("amb", ambience(DUR, lambda u: np.clip(u / 0.04, 0, 1) * (1 - 0.6 * np.clip((u - 0.9) / 0.08, 0, 1))), 0.0)
 
-    # ---- intro: the logo sound cues, then a glint across the sheen
-    reseed("intro")
-    logo_cues(CUE["mark_spin"], CUE["mark_land"], CUE["bar_land"], CUE["wipe"])
-    put("fx", glint(0.5), 1.435, gain=0.45, send=0.4)
-    ev(1.435 + 0.25, "sheen glint (L→R)")
+    if HOOK:
+        # ---- hook intro: air lifts for the two lines, a pop for the quote total, quickening ticks
+        reseed("hook")
+        for t, (a, b, p, g) in zip(HOOK_CUE["lines"], ((650, 3600, -0.15, 0.55), (850, 4300, 0.1, 0.45))):
+            put("fx", whoosh(0.55, peak=0.36, f0=a, f1=b, pan0=p, pan1=p + 0.15, width_oct=1.4), t - 0.04, gain=g, send=0.25)
+            ev(t - 0.04 + 0.36 * 0.55, "hook line air lift")
+        put("ui", pop(0.09), HOOK_CUE["meter"], gain=0.5, send=0.2)
+        ev(HOOK_CUE["meter"], "quote total pops in")
+        m0, m1 = HOOK_CUE["count"]
+        for i, t in enumerate(meter_ticks(m0, m1, 2400, 6150, 120)):
+            put("ui", filt(tick(0.7), "lowpass", 6500), t, pan=0.05, gain=0.16 + 0.08 * min(1, i / 20))
+        ev(m0, "meter ticks (quickening with the count)")
+    else:
+        # ---- intro: the logo sound cues, then a glint across the sheen
+        reseed("intro")
+        logo_cues(CUE["mark_spin"], CUE["mark_land"], CUE["bar_land"], CUE["wipe"])
+        put("fx", glint(0.5), 1.435, gain=0.45, send=0.4)
+        ev(1.435 + 0.25, "sheen glint (L→R)")
 
     # ---- the sheet rises: noise riser + upward whoosh, landing impact
     reseed("sheet")
@@ -590,6 +628,8 @@ TARGET_LUFS = -15.0
 VO_LUFS = -16.0  # narration level relative to the effects before normalisation
 VO_DUCK_DB = -8.0  # effects dip this much while the narrator speaks
 VOICEOVER = OUT / "voiceover.wav"  # from audio/voice.py (or a human recording on the same timing)
+if HOOK and (OUT / "voiceover-hook.wav").exists():  # narration with the spoken hook line
+    VOICEOVER = OUT / "voiceover-hook.wav"
 CEILING_DBTP = -1.5
 
 
@@ -687,7 +727,7 @@ def write_wav24(path: Path, x: np.ndarray):
 def main():
     buses, rev, events = design()
     out, gains = master(buses, rev)
-    wav = OUT / "ozen-launch-15s-sound.wav"
+    wav = OUT / ("ozen-launch-15s-hook-sound.wav" if HOOK else "ozen-launch-15s-sound.wav")
     write_wav24(wav, out)
     report = {
         "file": wav.name,
@@ -699,7 +739,7 @@ def main():
         "stem_gain_db": {k: round(20 * np.log10(v), 2) for k, v in gains.items()},
         "events": sorted(events, key=lambda e: e["t"]),
     }
-    (OUT / "sound-cues.json").write_text(json.dumps(report, indent=2))
+    (OUT / ("sound-cues-hook.json" if HOOK else "sound-cues.json")).write_text(json.dumps(report, indent=2))
     print(f"{wav}  {report['integrated_lufs']} LUFS  {report['true_peak_dbtp']} dBTP")
     return 0
 

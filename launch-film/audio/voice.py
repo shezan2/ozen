@@ -43,6 +43,9 @@ LINES = [  # (speed, phrases)
     (0.95, [("Fixed price.", 9.90), ("Before work begins.", 10.70)]),  # promise words rise from 10.0
     (1.0, [("Ozen Digital.", 12.05), ("Let's talk about your project.", 13.15)]),  # end-card mark builds
 ]
+# The hook cut opens on a spoken worry before the first line (take: takes/hook.*; --hook).
+HOOK_LINE = (1.0, [("Tired of quotes that keep growing?", 0.25)])
+HOOK_END = 2.45  # must finish before "Websites." at 2.62
 GAP = 0.10  # minimum breath between lines (inside a line the take keeps its own pauses)
 TAKES = HERE / "takes"  # recorded takes (e.g. ElevenLabs): script.* or line1…line4, used instead of Kokoro when present
 MIN_PAUSE = 0.12  # shortest gap in a recorded line that counts as a pause between phrases
@@ -182,13 +185,14 @@ def split(line, separate):
     return np.split(line, cuts)
 
 
-def place(lines, inner_gap):
+def place(lines, inner_gap, spec=None, limits=None):
     """Lay phrases on the timeline. Each starts on its anchor, or after the phrase before it (plus
     `inner_gap` inside a line, GAP between lines), whichever is later. A line that would overrun a
     hard limit is pulled earlier, never into the line before. Returns (start, end, text, audio) per
-    phrase, or None if it cannot fit."""
+    phrase, or None if it cannot fit. `spec`/`limits` default to LINES/HARD_LIMITS."""
+    spec, limits = spec or LINES, limits or HARD_LIMITS
     placed, t_free, i = [], 0.0, 0
-    for (_, line), pieces in zip(LINES, lines):
+    for (_, line), pieces in zip(spec, lines):
         n = len(line)
         if len(pieces) < n:  # the take ran this line's phrases together: one piece on the first anchor
             line = [(" ".join(text for text, _ in line), line[0][1])]
@@ -197,7 +201,7 @@ def place(lines, inner_gap):
             starts.append(max(anchor, t + (inner_gap if j else 0)))
             t = starts[-1] + len(a) / SR
             ends.append(t)
-        over = max([ends[min(j, len(ends) - 1)] - HARD_LIMITS[i + j] for j in range(n) if i + j in HARD_LIMITS] + [0])
+        over = max([ends[min(j, len(ends) - 1)] - limits[i + j] for j in range(n) if i + j in limits] + [0])
         if over > 0:
             if starts[0] - over < t_free + GAP - 1e-6:
                 return None
@@ -208,7 +212,7 @@ def place(lines, inner_gap):
     return placed
 
 
-def tts_lines(voice):
+def tts_lines(voice, spec=None):
     """Kokoro: each line spoken as one take, cut at its word boundaries (pieces keep the take's own
     pauses, so they join back seamlessly)."""
     from kokoro_onnx import Kokoro
@@ -223,7 +227,7 @@ def tts_lines(voice):
         return signal.resample_poly(np.asarray(a, dtype=np.float64), SR, sr)
 
     lines = []
-    for speed, line in LINES:
+    for speed, line in spec or LINES:
         whole = trim(say(" ".join(t for t, _ in line), speed))
         lines.append(split(whole, [trim(say(t, speed)) for t, _ in line]) if len(line) > 1 else [whole])
     return lines
@@ -246,6 +250,11 @@ def ffmpeg_audio(src, filters=None):
 
 
 AUDIO = {".wav", ".mp3", ".flac", ".m4a", ".aac", ".ogg", ".aif", ".aiff"}
+
+
+def take_file(folder, stem):
+    """`folder`/stem.<audio ext>, or None."""
+    return next((f for f in sorted(Path(folder).glob(f"{stem}.*")) if f.suffix.lower() in AUDIO), None)
 
 
 def take_files(folder):
@@ -305,19 +314,30 @@ def take_lines(folder, stretch):
     return [pause_split(a, len(line)) for a, (_, line) in zip(takes, LINES)]
 
 
-def render(voice: str, takes=None):
-    """Returns the dry narration track, its placement, and the tempo applied (1 = as recorded)."""
+def render(voice: str, takes=None, hook=False):
+    """Returns the dry narration track, its placement, and the tempo applied (1 = as recorded).
+    With `hook`, the hook line opens the track (from takes/hook.*, or Kokoro without takes)."""
+    spec, limits = LINES, HARD_LIMITS
+    if hook:
+        spec = [HOOK_LINE] + LINES
+        limits = {0: HOOK_END} | {k + 1: v for k, v in HARD_LIMITS.items()}
     if takes:
+        hook_file = take_file(takes, "hook") if hook else None
+        if hook and not hook_file:
+            raise FileNotFoundError(f"--hook needs a hook take ({takes}/hook.mp3 or similar)")
         # The smallest uniform speed-up that lets every line fit its window.
         for stretch in np.round(np.arange(1.0, MAX_STRETCH + 1e-9, 0.01), 2):
-            placed = place(take_lines(takes, stretch), INNER_PAUSE)
+            lines = take_lines(takes, stretch)
+            if hook_file:
+                lines = [[trim(ffmpeg_audio(hook_file, f"atempo={stretch:.3f}" if stretch != 1 else None))]] + lines
+            placed = place(lines, INNER_PAUSE, spec, limits)
             if placed:
                 break
         else:
             raise ValueError(f"takes do not fit even at {MAX_STRETCH}x — record them tighter")
     else:
         stretch = 1.0
-        placed = place(tts_lines(voice), 0.0)
+        placed = place(tts_lines(voice, spec), 0.0, spec, limits)
         if not placed:
             raise ValueError("narration does not fit its windows")
     track = np.zeros(N)
@@ -334,13 +354,15 @@ def main():
     ap.add_argument("--voice", default=DEFAULT_VOICE, help="Kokoro voice (or blend) when there are no takes")
     ap.add_argument("--takes", default=str(TAKES), help="folder of recorded takes: script.* or line1…line4 (any audio format)")
     ap.add_argument("--tts", action="store_true", help="use Kokoro even if takes exist")
-    ap.add_argument("--out", default=str(OUT / "voiceover.wav"))
+    ap.add_argument("--hook", action="store_true", help="open with the hook line (takes/hook.*) → voiceover-hook.wav")
+    ap.add_argument("--out", default=None)
     args = ap.parse_args()
+    args.out = args.out or str(OUT / ("voiceover-hook.wav" if args.hook else "voiceover.wav"))
 
     takes = None if args.tts or not take_files(args.takes) else args.takes
     if not args.tts and not takes and Path(args.takes) != TAKES:  # asked for takes that aren't all there
         sys.exit(f"--takes {args.takes}: need script.* or line1…line{len(LINES)} audio files")
-    dry, placed, stretch = render(args.voice, takes)
+    dry, placed, stretch = render(args.voice, takes, args.hook)
     # Recorded takes arrive EQ'd and compressed, so they only get the clean-up half of the chain.
     st = room(broadcast_chain(dry, light=bool(takes)))
     st *= np.clip(np.arange(N) / (0.01 * SR), 0, 1)
