@@ -44,7 +44,8 @@ LINES = [  # (speed, phrases)
     (1.0, [("Ozen Digital.", 12.05), ("Let's talk about your project.", 13.15)]),  # end-card mark builds
 ]
 GAP = 0.10  # minimum breath between lines (inside a line the take keeps its own pauses)
-TAKES = HERE / "takes"  # recorded takes (e.g. ElevenLabs): line1…line4, used instead of Kokoro when present
+TAKES = HERE / "takes"  # recorded takes (e.g. ElevenLabs): script.* or line1…line4, used instead of Kokoro when present
+MIN_PAUSE = 0.12  # shortest gap in a recorded line that counts as a pause between phrases
 INNER_PAUSE = 0.12  # added between the phrases of a recorded line (each already keeps ~0.05–0.13 s of its own decay and lead-in)
 MAX_STRETCH = 1.2  # most a recorded take may be sped up to fit
 HARD_LIMITS = {6: 11.86, 8: 14.78}  # phrase index (counting across lines) → must end by (hit at 11.91; fade from 14.8)
@@ -188,19 +189,22 @@ def place(lines, inner_gap):
     phrase, or None if it cannot fit."""
     placed, t_free, i = [], 0.0, 0
     for (_, line), pieces in zip(LINES, lines):
+        n = len(line)
+        if len(pieces) < n:  # the take ran this line's phrases together: one piece on the first anchor
+            line = [(" ".join(text for text, _ in line), line[0][1])]
         starts, ends, t = [], [], t_free + GAP
         for j, ((_, anchor), a) in enumerate(zip(line, pieces)):
             starts.append(max(anchor, t + (inner_gap if j else 0)))
             t = starts[-1] + len(a) / SR
             ends.append(t)
-        over = max([ends[j] - HARD_LIMITS[i + j] for j in range(len(line)) if i + j in HARD_LIMITS] + [0])
+        over = max([ends[min(j, len(ends) - 1)] - HARD_LIMITS[i + j] for j in range(n) if i + j in HARD_LIMITS] + [0])
         if over > 0:
             if starts[0] - over < t_free + GAP - 1e-6:
                 return None
             starts, ends = [x - over for x in starts], [x - over for x in ends]
         placed += [(s0, e0, text, a) for (text, _), a, s0, e0 in zip(line, pieces, starts, ends)]
         t_free = ends[-1]
-        i += len(line)
+        i += n
     return placed
 
 
@@ -245,21 +249,39 @@ AUDIO = {".wav", ".mp3", ".flac", ".m4a", ".aac", ".ogg", ".aif", ".aiff"}
 
 
 def take_files(folder):
-    """line1…lineN audio files in `folder`, or None unless every line has one."""
-    files = [next((f for f in sorted(Path(folder).glob(f"line{n}.*")) if f.suffix.lower() in AUDIO), None) for n in range(1, len(LINES) + 1)]
+    """The takes in `folder`: a whole-script take (script.*) or one per line (line1…lineN), or None."""
+    audio = lambda stem: next((f for f in sorted(Path(folder).glob(f"{stem}.*")) if f.suffix.lower() in AUDIO), None)
+    if script := audio("script"):
+        return [script]
+    files = [audio(f"line{n}") for n in range(1, len(LINES) + 1)]
     return files if all(files) else None
+
+
+def script_lines(a):
+    """Cut a whole-script take into LINES at its longest pauses (the breaks between lines)."""
+    runs = pauses(a, 0.25)
+    if len(runs) < len(LINES) - 1:
+        raise ValueError(f"script take: expected {len(LINES) - 1} pauses between lines, found {len(runs)}")
+    cuts = sorted((e0 + e1) // 2 for _, e0, e1 in sorted(runs)[len(runs) - (len(LINES) - 1) :])
+    return [trim(x) for x in np.split(a, cuts)]
+
+
+def pauses(a, min_len):
+    """Quiet runs inside `a` at least `min_len` s long, as (length, start, end) in samples."""
+    env = uniform_filter1d(np.abs(a), int(0.02 * SR))
+    quiet = env < env.max() * db(-38)
+    edges = np.flatnonzero(np.diff(np.concatenate([[0], quiet.astype(int), [0]])))
+    return [(e1 - e0, e0, e1) for e0, e1 in zip(edges[::2], edges[1::2]) if e0 > 0 and e1 < len(a) and e1 - e0 >= min_len * SR]
 
 
 def pause_split(a, parts):
     """Cut a recorded line into phrases at its `parts - 1` longest pauses. Each phrase keeps its
     natural decay into the pause (until the level reaches the pause's floor) and 20 ms of lead-in
-    before the next word, so no word tail or breath onset is clipped."""
-    env = uniform_filter1d(np.abs(a), int(0.02 * SR))
-    quiet = env < env.max() * db(-38)
-    edges = np.flatnonzero(np.diff(np.concatenate([[0], quiet.astype(int), [0]])))
-    runs = [(e1 - e0, e0, e1) for e0, e1 in zip(edges[::2], edges[1::2]) if e0 > 0 and e1 < len(a)]
+    before the next word, so no word tail or breath onset is clipped. A take that runs its phrases
+    together (no real pause) stays whole rather than being cut mid-phrase."""
+    runs = pauses(a, MIN_PAUSE)
     if len(runs) < parts - 1:
-        raise ValueError(f"expected {parts - 1} pauses, found {len(runs)}")
+        return [a]
     rms = np.sqrt(uniform_filter1d(a**2, int(0.005 * SR)))
     bounds = [0]
     for _, e0, e1 in sorted(sorted(runs)[len(runs) - (parts - 1) :], key=lambda r: r[1]):
@@ -274,11 +296,13 @@ def pause_split(a, parts):
 
 
 def take_lines(folder, stretch):
-    """Recorded takes (line1…line4): sped up with ffmpeg's atempo (WSOLA, pitch kept; it scored as
+    """Recorded takes (script.* or line1…line4): sped up with ffmpeg's atempo (WSOLA, pitch kept; it scored as
     transparent on a naturalness model at 1.12x, where Rubber Band's R2 engine audibly smeared) and
     split at their sentence pauses, which `place` then tightens to INNER_PAUSE."""
     tempo = f"atempo={stretch:.3f}" if stretch != 1 else None
-    return [pause_split(trim(ffmpeg_audio(f, tempo)), len(line)) for f, (_, line) in zip(take_files(folder), LINES)]
+    files = take_files(folder)
+    takes = script_lines(trim(ffmpeg_audio(files[0], tempo))) if len(files) == 1 else [trim(ffmpeg_audio(f, tempo)) for f in files]
+    return [pause_split(a, len(line)) for a, (_, line) in zip(takes, LINES)]
 
 
 def render(voice: str, takes=None):
@@ -308,14 +332,14 @@ def render(voice: str, takes=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--voice", default=DEFAULT_VOICE, help="Kokoro voice (or blend) when there are no takes")
-    ap.add_argument("--takes", default=str(TAKES), help="folder of recorded takes line1…line4 (any audio format)")
+    ap.add_argument("--takes", default=str(TAKES), help="folder of recorded takes: script.* or line1…line4 (any audio format)")
     ap.add_argument("--tts", action="store_true", help="use Kokoro even if takes exist")
     ap.add_argument("--out", default=str(OUT / "voiceover.wav"))
     args = ap.parse_args()
 
     takes = None if args.tts or not take_files(args.takes) else args.takes
     if not args.tts and not takes and Path(args.takes) != TAKES:  # asked for takes that aren't all there
-        sys.exit(f"--takes {args.takes}: need line1…line{len(LINES)} audio files")
+        sys.exit(f"--takes {args.takes}: need script.* or line1…line{len(LINES)} audio files")
     dry, placed, stretch = render(args.voice, takes)
     # Recorded takes arrive EQ'd and compressed, so they only get the clean-up half of the chain.
     st = room(broadcast_chain(dry, light=bool(takes)))

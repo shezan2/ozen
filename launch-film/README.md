@@ -39,17 +39,19 @@ Nothing is sampled, so Ozen owns it outright.
 - **Delivery.** −15 LUFS integrated with a −1.5 dBTP ceiling (it stays under −1 dBTP after AAC
   encoding), and mono-safe (decorrelated stereo).
 
-- **Narration.** A female voiceover from ElevenLabs (voice "Kristen", one take per line in
-  `audio/takes/line1…line4.mp3`) reads four lines: "Websites. Online stores. Digital tools." (from
-  2.62 s, as the first word rolls in) · "Designed to perform. Priced before we start." (6.0 s) ·
-  "Fixed price. Before work begins." (9.3 s, finishing before the 11.91 s hit) · "Ozen Digital.
-  Let's talk about your project." (12.05 s, as the end-card mark builds).
-  - **Fitting it to the picture.** `audio/voice.py` splits each take at its sentence pauses and
-    tightens those pauses to 0.2 s. It then applies the smallest uniform speed-up that fits every
-    line in its window (currently ×1.13, with ffmpeg's pitch-preserving `atempo`).
+- **Narration.** A calm female voiceover from ElevenLabs (Eleven v3, one whole-script take in
+  `audio/takes/script.mp3`). It reads "Websites. Online stores. Digital tools." (from 2.62 s, as the
+  first word rolls in) · "Designed to perform. Priced before we start." (5.9 s) · "A fixed price before
+  the work begins." (9.5 s, finishing before the 11.91 s hit; the take adds "A" and "the" to the
+  on-screen line) · "Ozen Digital. Let's talk about your project." (12.0 s, as the end-card mark builds).
+  - **Fitting it to the picture.** `audio/voice.py` splits the take into lines at its long pauses and
+    into phrases at its sentence pauses, keeping each word's natural decay. A line spoken without a
+    pause stays whole. It tightens the pauses and applies the smallest uniform speed-up that fits every
+    line in its window (currently ×1.09, with ffmpeg's pitch-preserving `atempo`).
   - **Processing.** A light clean-up (high-pass, de-esser, 2:1 compression, a short room), then
     `out/voiceover.wav`. The effects dip 8 dB under the voice.
-  - **New takes.** Drop new takes into `audio/takes/` (any audio format, same names) and re-run.
+  - **New takes.** Replace `audio/takes/script.mp3` (any audio format), or use one file per line
+    (`line1…line4`), and re-run.
   - **Offline fallback.** Without takes, or with `--tts`, the script uses Kokoro TTS (an
     `af_heart`/`af_kore` blend; model files go in `audio/models/`, links in `voice.py`).
 

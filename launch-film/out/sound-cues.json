@@ -3,7 +3,7 @@
   "content": "sound design only \u2014 no music, no instruments, no tuned tones",
   "sample_rate": 48000,
   "duration": 15.0,
-  "integrated_lufs": -15.01,
+  "integrated_lufs": -15.07,
   "true_peak_dbtp": -1.6,
   "stem_gain_db": {
     "amb": -27.27,
