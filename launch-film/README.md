@@ -4,7 +4,9 @@ A 15-second launch spot for [ozendigital.co](https://ozendigital.co), built as c
 composition where every frame is a pure function of time, rendered frame by frame to video.
 
 **Output:** `out/ozen-launch-15s.mp4`: 1920×1080, 60 fps, H.264 + 320 kbps AAC stereo, 15.000 s,
-with original sound design (no music) and narration at −15 LUFS / −1.5 dBTP. The sound is also in
+with original sound design (no music) and narration at −15 LUFS / −1.5 dBTP. Social cuts with the
+same timing and sound: `out/ozen-launch-15s-9x16.mp4` (1080×1920, Reels/Stories/TikTok/Shorts) and
+`out/ozen-launch-15s-4x5.mp4` (1080×1350, in-feed). The sound is also in
 `out/ozen-launch-15s-sound.wav` (48 kHz, 24-bit) for editing, with its cue sheet in `out/sound-cues.json`.
 
 ## The cut
@@ -109,6 +111,23 @@ A full render muxes `out/ozen-launch-15s-sound.wav` automatically when it exists
 
 Frames render in parallel chunks to lossless intermediates, then one final encode produces
 BT.709 `yuv420p` H.264 with `+faststart`.
+
+## Formats
+
+Each format is laid out natively rather than cropped: `formats/<id>.js` holds every number that
+depends on the frame's shape (frame size, browser and hero box, pricing grid, camera poses, CTA, end
+card, cursor paths, plus an optional per-frame `adjust` hook), and `formats/<id>.css` holds its
+styles, scoped under `html.f-<id>`. All formats share the timing, so one sound mix serves them all.
+
+- **16:9** (`16x9`): the original film.
+- **9:16** (`9x16`): the site at a phone-like width. The nav collapses, the pricing cards stack in a
+  column and the form's options are a single column. The promise and end card are stacked. Key copy
+  stays inside the Reels/TikTok safe area (x 65–1015, y 250–1250).
+- **4:5** (`4x5`): the same portrait approach for feed placements, with key copy at least 60 px from
+  every edge.
+
+Preview a format with `?format=9x16` on the URL. Render it with `node launch-film/render.mjs --format 9x16`
+(stills go to `out/stills-9x16/`).
 
 ## Editing
 

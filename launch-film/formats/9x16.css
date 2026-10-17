@@ -1,1 +1,240 @@
-/* 9:16 vertical (Reels, Stories, TikTok, Shorts): format-specific styles, scoped under html.f-9x16. */
+/* 9:16 vertical (Reels, Stories, TikTok, Shorts): format-specific styles, scoped under html.f-9x16.
+   Static layout only; film.js drives transform/opacity/filter/display every frame.
+   Key copy stays inside x 65–1015, y 250–1250 (platform UI covers the rest). */
+
+/* ---------- The site at a narrow width ---------- */
+
+.f-9x16 .chrome .url {
+  width: 380px;
+  margin-left: -190px;
+}
+
+.f-9x16 .page {
+  height: 2600px;
+}
+
+/* Mobile nav: logo + Get a Quote. It sits a little down the hero so it clears the top UI band. */
+.f-9x16 .nav {
+  top: 190px;
+  padding: 0 60px;
+}
+.f-9x16 .nav .links,
+.f-9x16 .nav .right > span:not(.btn-white) {
+  display: none;
+}
+.f-9x16 .btn-white {
+  font-size: 21px;
+  padding: 15px 22px;
+  border-radius: 10px;
+}
+
+.f-9x16 .headline {
+  left: 60px;
+  width: 640px;
+  bottom: 607px;
+  line-height: 1.02;
+}
+
+.f-9x16 .intro {
+  left: 48px;
+  top: 1384px;
+  width: 640px;
+  font-size: 19px;
+}
+
+/* Pricing cards: a single column of wide cards — title, big price, two-line note. */
+.f-9x16 .pcard {
+  border-radius: 22px;
+  padding: 30px 36px;
+}
+.f-9x16 .pcard h3 {
+  font-size: 36px;
+}
+.f-9x16 .pcard .price {
+  left: 36px;
+  top: 84px;
+  font-size: 92px;
+}
+.f-9x16 .pcard p {
+  left: 36px;
+  right: 36px;
+  top: 190px;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.f-9x16 .scale-row {
+  left: 48px;
+  top: 2330px;
+  width: 664px;
+}
+.f-9x16 .scale-row h4 {
+  font-size: 44px;
+}
+.f-9x16 .scale-row p {
+  position: static;
+  width: auto;
+  margin-top: 14px;
+  font-size: 17px;
+}
+
+/* ---------- Enquiry flow: one-column form, info card, chip ---------- */
+
+.f-9x16 .form {
+  width: 860px;
+  height: auto;
+  padding: 46px 52px 52px;
+  border-radius: 28px;
+}
+.f-9x16 .form .meta {
+  font-size: 26px;
+}
+.f-9x16 .track {
+  margin-top: 20px;
+  height: 6px;
+  border-radius: 3px;
+}
+.f-9x16 .form h3 {
+  max-width: 700px; /* breaks as "What do you need / help with?" */
+  margin-top: 40px;
+  font-size: 80px;
+  line-height: 1.06;
+}
+.f-9x16 .opts {
+  margin-top: 36px;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+.f-9x16 .opt {
+  height: 82px;
+  border-radius: 16px;
+  gap: 20px;
+  padding: 0 30px;
+  font-size: 31px;
+}
+.f-9x16 .opt svg {
+  width: 34px;
+  height: 34px;
+}
+.f-9x16 .opt .tick {
+  right: 26px;
+  width: 40px;
+  height: 40px;
+  margin-top: -20px;
+}
+.f-9x16 .opt .tick svg {
+  width: 24px;
+  height: 24px;
+}
+
+.f-9x16 .info {
+  width: 520px;
+  height: auto;
+  padding: 36px 42px 20px;
+  border-radius: 24px;
+}
+.f-9x16 .info .row {
+  padding: 18px 0;
+}
+.f-9x16 .info label {
+  font-size: 20px;
+}
+.f-9x16 .info span {
+  margin-top: 12px;
+  font-size: 28px;
+}
+
+.f-9x16 .chip {
+  height: 96px;
+  padding: 0 40px 0 34px;
+  border-radius: 48px;
+  gap: 22px;
+  font-size: 34px;
+}
+.f-9x16 .chip .dot {
+  width: 16px;
+  height: 16px;
+}
+.f-9x16 .chip .dot i {
+  inset: -8px;
+}
+
+/* ---------- The promise: stacked lines, stacked proof points ---------- */
+
+.f-9x16 .statement {
+  left: 65px;
+  right: 65px;
+  top: 290px;
+  font-size: 148px;
+  line-height: 0.98;
+}
+
+.f-9x16 .proof {
+  top: 806px;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 40px;
+}
+.f-9x16 .proof .sep {
+  width: 44px;
+  height: 2px;
+}
+
+.f-9x16 .cta {
+  border-radius: 16px;
+  gap: 16px;
+  font-size: 40px;
+}
+.f-9x16 .cta svg {
+  width: 34px;
+  height: 34px;
+}
+
+/* ---------- End card: logo, line, URL pill, services — stacked ---------- */
+
+.f-9x16 .end-cta {
+  gap: 16px;
+  font-size: 40px;
+}
+.f-9x16 .end-cta svg {
+  width: 34px;
+  height: 34px;
+}
+.f-9x16 .end-line {
+  left: 150px;
+  right: 150px;
+  top: 676px;
+  font-size: 92px;
+  line-height: 1.1;
+}
+.f-9x16 .end-url {
+  top: 934px;
+  height: 96px;
+  padding: 0 46px;
+  border-radius: 48px;
+  gap: 16px;
+  font-size: 40px;
+}
+.f-9x16 .end-url svg {
+  width: 32px;
+  height: 32px;
+}
+.f-9x16 .end-services {
+  left: 60px;
+  right: 60px;
+  top: 1094px;
+  flex-wrap: wrap;
+  row-gap: 22px;
+  column-gap: 26px;
+  font-size: 30px;
+}
+.f-9x16 .end-services i {
+  width: 6px;
+  height: 6px;
+}
+/* The middle dot becomes a line break: two rows of two services. */
+.f-9x16 .end-services i:nth-of-type(2) {
+  flex-basis: 100%;
+  height: 0;
+  background: none;
+}
