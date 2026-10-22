@@ -1,0 +1,156 @@
+/* IAM pane: Active Roster. Measured against the intelli8.ai "Roster with data flags" screen
+   (reference frame scaled to 1440 × 900). Card-internal positions are in the card's padding box. */
+.pane-roster {
+  --rs-card: #171c22;
+  --rs-edge: rgba(255, 255, 255, 0.06);
+  --rs-row: rgba(255, 255, 255, 0.045);
+  --rs-head: #7f878d;
+  --rs-dim: #7d848a;
+  --rs-lime: #6fd056;
+  --rs-yellow: #e9db6e;
+  --rs-red: #c23548;
+  --rs-mint: #70d9a9;
+  --rs-stale: #e2d46a;
+}
+.pane-roster *,
+.pane-roster *::before,
+.pane-roster *::after { box-sizing: border-box; }
+.pane-roster svg { display: block; flex: none; }
+
+.pane-roster .rs { position: relative; width: 1140px; margin-left: 6px; }
+
+/* Title row */
+.pane-roster .head { position: relative; height: 98px; }
+.pane-roster .titles { padding-top: 12px; will-change: transform; }
+.pane-roster .h1 { font: 700 24px/27px "Inter"; letter-spacing: -0.012em; color: #fff; }
+.pane-roster .sub { margin-top: 7px; font: 400 14px/19px "Inter"; color: #858b90; }
+.pane-roster .btns { position: absolute; right: 0; top: 28px; display: flex; gap: 8px; }
+.pane-roster .btn {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-radius: 4px;
+  font: 700 13.5px/1 "Inter";
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.pane-roster .btn svg { width: 16px; height: 16px; }
+.pane-roster .btn.ghost { width: 135px; padding-left: 17px; gap: 15px; border: 1px solid rgba(115, 223, 174, 0.32); background: #101518; color: var(--rs-mint); }
+.pane-roster .btn.solid { width: 162px; padding-left: 17px; background: #6eeca6; color: #0b2614; }
+.pane-roster .btn.solid svg { stroke-width: 2.2; }
+
+/* Table card */
+.pane-roster .card {
+  position: relative;
+  height: 760px;
+  background: var(--rs-card);
+  border: 1px solid var(--rs-edge);
+  border-radius: 8px;
+  will-change: transform;
+}
+.pane-roster .search {
+  position: absolute;
+  left: 18px;
+  top: 14px;
+  width: 380px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 1px 0 0 10px;
+  background: #121518;
+  border: 1px solid rgba(255, 255, 255, 0.025);
+  border-radius: 5px;
+  font: 400 14px/1 "Inter";
+  color: #82878c;
+}
+.pane-roster .search svg { width: 16px; height: 16px; margin-top: -1px; color: #82898c; }
+
+/* Column header */
+.pane-roster .thead {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 70px;
+  height: 40px;
+  border-bottom: 1px solid var(--rs-row);
+  font: 500 14px/1 "Inter";
+  color: var(--rs-head);
+}
+.pane-roster .thead > span { position: absolute; top: 0; height: 39px; padding-bottom: 3px; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.pane-roster .thead svg { width: 13px; height: 13px; color: #42474e; stroke-width: 2.4; }
+.pane-roster .h-name { left: 8px; }
+.pane-roster .h-wear { left: 177px; font-size: 11.5px; color: #787f86; padding-bottom: 5px; }
+.pane-roster .h-group { left: 307px; }
+.pane-roster .h-rec { right: calc(100% - 558px); }
+.pane-roster .h-strain { right: calc(100% - 655px); }
+.pane-roster .h-risk { left: 671px; }
+.pane-roster .h-sync { right: calc(100% - 989px); }
+
+/* Rows */
+.pane-roster .rows { position: absolute; left: 0; right: 0; top: 110px; }
+.pane-roster .tr { position: relative; height: 49px; border-bottom: 1px solid var(--rs-row); will-change: transform; }
+.pane-roster .tr > span { position: absolute; top: 0; height: 48px; display: flex; align-items: center; white-space: nowrap; }
+
+.pane-roster .c-name { left: 9px; font: 500 14px/1 "Inter"; color: #f2f5f7; }
+
+.pane-roster .c-wear { left: 175px; }
+.pane-roster .badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 84px;
+  height: 24px;
+  padding-left: 9px;
+  border-radius: 4px;
+  background: #1f3b1e;
+  border: 1px solid rgba(111, 208, 86, 0.26);
+  font: 700 12px/1 "Inter";
+  letter-spacing: 0.04em;
+  color: var(--rs-lime);
+}
+.pane-roster .badge svg { width: 12px; height: 12px; }
+
+.pane-roster .c-group { left: 307px; }
+.pane-roster .chip { height: 22px; display: flex; align-items: center; padding: 0 9px; border-radius: 4px; background: #272d32; font: 500 12px/1 "Inter"; color: #ced4d7; }
+
+.pane-roster .c-rec { right: calc(100% - 559px); font: 700 19px/1 var(--mono); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.pane-roster .c-rec.green { color: var(--rs-lime); }
+.pane-roster .c-rec.yellow { color: var(--rs-yellow); }
+.pane-roster .c-rec.red { color: var(--rs-red); }
+
+.pane-roster .c-strain { right: calc(100% - 655px); gap: 3px; font: 400 13px/1 var(--mono); color: #5a6167; }
+.pane-roster .c-strain.past { color: #7c838a; }
+.pane-roster .c-strain svg { width: 12.5px; height: 12.5px; color: #4a5157; }
+
+.pane-roster .c-risk { left: 671px; gap: 4px; transform-origin: 0 50%; }
+.pane-roster .clear { display: flex; align-items: center; gap: 4px; padding-left: 2px; font: 600 11.5px/1 "Inter"; letter-spacing: 0.03em; color: #68ba57; }
+.pane-roster .clear svg { width: 7px; height: 8px; }
+.pane-roster .rflag { height: 24px; display: flex; align-items: center; padding: 0 10px; border-radius: 4px; font: 700 11.5px/1 "Inter"; letter-spacing: 0.05em; }
+.pane-roster .rflag.red { background: #351a24; color: #cb3a4f; box-shadow: inset 0 0 0 1px rgba(224, 66, 90, 0.14); }
+.pane-roster .rflag.mint { background: #1e3c33; color: #6bd0a3; box-shadow: inset 0 0 0 1px rgba(115, 223, 174, 0.13); }
+.pane-roster .asof { margin-top: -5px; font: 400 11.5px/1 "Inter"; color: #7a8187; }
+
+.pane-roster .c-sync { right: calc(100% - 989px); gap: 0; font: 400 11.4px/1 var(--mono); color: var(--rs-dim); white-space: pre; }
+.pane-roster .c-sync b { margin-right: 8px; font: 800 10.5px/1 "Inter"; letter-spacing: 0.02em; color: var(--rs-stale); }
+.pane-roster .tr[data-i="2"] .c-sync { font-weight: 500; color: #d2c96f; }
+
+.pane-roster .c-act { left: 1053px; color: #858d93; }
+.pane-roster .c-act svg { width: 15px; height: 15px; }
+.pane-roster .c-more { left: 1100px; color: #81878d; }
+.pane-roster .c-more svg { width: 17px; height: 17px; }
+
+/* Stale-data highlight (opts.stale) on the Pieter van Aken row */
+.pane-roster .stale-hl {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 98px;
+  height: 49px;
+  border-radius: 6px;
+  background: rgba(242, 207, 68, 0.075);
+  box-shadow: inset 0 0 0 1px rgba(242, 207, 68, 0.5), 0 0 18px rgba(242, 207, 68, 0.08);
+  opacity: 0;
+  pointer-events: none;
+}

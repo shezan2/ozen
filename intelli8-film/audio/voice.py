@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Narration for the intelli8 App film, placed on the picture's beats.
+"""Narration for the intelli8 films (--film app|scale|iam), placed on each picture's beats.
 
-Source: recorded takes in audio/takes/line1…line4 (currently ElevenLabs, voice "Kristen"), one per
-line of LINES. Each take is split at its sentence pauses, the pauses are tightened, and the smallest
+Source: recorded takes in audio/takes/<film>/ (e.g. ElevenLabs): one whole-script take (script.*) or one
+take per line of LINES (line1…lineN). Each take is split at its sentence pauses, the pauses are tightened, and the smallest
 uniform speed-up that fits every line in its window is applied. Without takes (or with --tts) it
 falls back to Kokoro TTS: each line spoken as one utterance, cut at its word boundaries.
 
     .venv/bin/pip install -r audio/requirements.txt   # needs ffmpeg on PATH for takes
-    .venv/bin/python audio/voice.py                 # → out/voiceover.wav (48 kHz stereo, 15.000 s)
+    .venv/bin/python audio/voice.py                 # App film → out/voiceover-app.wav (48 kHz stereo)
+    .venv/bin/python audio/voice.py --film scale    # Body Composition Scale film → out/voiceover-scale.wav
     .venv/bin/python audio/voice.py --tts           # Kokoro instead of the takes
     .venv/bin/python audio/voice.py --tts --voice af_kore  # another voice (or "af_heart*0.6+af_bella*0.4")
     .venv/bin/python audio/sound.py                 # mixes it over the sound design
@@ -27,8 +28,7 @@ from scipy import signal
 from scipy.ndimage import uniform_filter1d
 
 SR = 48_000
-DUR = 30.0
-N = int(SR * DUR)
+FILM = sys.argv[sys.argv.index("--film") + 1] if "--film" in sys.argv else "app"
 HERE = Path(__file__).resolve().parent
 MODELS = HERE / "models"
 OUT = HERE.parent / "out"
@@ -37,7 +37,10 @@ DEFAULT_VOICE = "af_heart*0.5+af_kore*0.5"  # warm blend; scored highest for nat
 # Each line is spoken as one utterance so it keeps natural intonation, then cut at its word
 # boundaries so each phrase lands on its own beat: (text, anchor seconds). A phrase starts at its
 # anchor, or just after the previous phrase if that runs long. Anchors are visual beats in ../film.js.
-LINES = [  # (speed, phrases): anchors are beats in ../film.js
+# Per film: duration, the lines, and HARD_LIMITS (phrase index across all lines → must end by, before the
+# next cut). Anchors are beats in ../film.js (app), ../scale-film.js and ../iam-film.js.
+SCRIPTS = {}
+SCRIPTS["app"] = (30.0, [  # (speed, phrases)
     (1.0, [("Your weight can stay the same,", 0.35), ("while what's underneath changes.", 1.95)]),  # hook
     (1.0, [("Meet intelli8.", 5.3), ("See what changed.", 6.75)]),  # the 8 draws; headline
     (1.0, [("Step on, and hold the bar.", 8.75), ("Eight contacts read your whole body.", 9.9)]),  # measure
@@ -46,7 +49,32 @@ LINES = [  # (speed, phrases): anchors are beats in ../film.js
     (1.0, [("Twenty-four measures, one clear report,", 19.5), ("ready to share with your coach.", 21.55)]),  # report → PDF
     (1.0, [("Set a goal, and follow the change.", 23.7)]),  # goals + history
     (1.0, [("intelli8. Know more than your weight.", 27.0)]),  # end card
-]
+], {1: 4.45, 3: 8.6, 5: 12.3, 6: 15.55, 7: 19.0, 9: 23.15, 10: 26.5, 11: 29.7})  # fade from 29.75
+SCRIPTS["scale"] = (34.0, [
+    (1.0, [("Your scale shows one number.", 0.35), ("But it can hide two different stories.", 1.95)]),  # hook: one number, two stories
+    (1.0, [("The intelli8 Body Composition Scale.", 4.6), ("In fat and muscle.", 7.25)]),  # the scale rises
+    (1.0, [("Four for your feet, four for your hands.", 9.35)]),  # contacts light
+    (1.0, [("Eight electrodes. Five body segments.", 12.1)]),  # segment card
+    (1.0, [("Weight alone can miss recomposition.", 15.95), ("Hand contacts add the detail.", 18.35)]),  # comparison
+    (1.0, [("Stand steady. Hold the bar. See more.", 20.45)]),  # the four steps
+    (1.0, [("Weight, plus six more readings, right on the display.", 24.4)]),  # built-in display
+    (1.0, [("Designed for a fuller picture.", 27.9)]),  # specifications
+    (1.0, [("intelli8. Know more than your weight.", 30.5)]),  # end
+], {1: 4.2, 3: 8.95, 4: 11.45, 5: 15.6, 7: 20.3, 8: 23.9, 9: 27.5, 10: 29.6, 11: 33.7})
+SCRIPTS["iam"] = (30.0, [
+    (1.0, [("Twenty athletes.", 0.4), ("Who needs a check-in today?", 1.75)]),  # hook
+    (1.0, [("IAM, from intelli8.", 4.45), ("See the whole team, support each person.", 5.75)]),  # intro
+    (1.0, [("Readiness and recovery, in one view.", 7.9)]),  # command center
+    (1.0, [("Match readiness, at a glance.", 11.35)]),  # readiness
+    (1.0, [("WHOOP and Polar ready, and built to scale to more.", 14.95)]),  # roster
+    (1.0, [("Each athlete, against their own HRV baseline.", 18.55)]),  # athlete
+    (1.0, [("Sleep need versus actual, with training load.", 22.15)]),  # sleep
+    (1.0, [("IAM. Context for a better-informed check-in.", 26.2)]),  # end
+], {1: 3.7, 3: 7.9, 4: 10.8, 5: 14.5, 6: 18.1, 7: 21.7, 8: 25.4, 9: 29.6})
+if FILM not in SCRIPTS:
+    sys.exit(f"--film must be one of {', '.join(SCRIPTS)}")
+DUR, LINES, HARD_LIMITS = SCRIPTS[FILM]
+N = int(SR * DUR)
 # The hook cut opens on a spoken worry before the first line (take: takes/hook.*; --hook). It gets
 # its own fit: inner pauses tightened, then the smallest speed-up that ends it by HOOK_END. A breath
 # follows before "Websites.", which may then land a little after its word appears (2.62–3.30 s).
@@ -54,11 +82,10 @@ HOOK_LINE = (1.0, [("Tired of quotes that keep growing?", 0.0)], 0.22)  # (speed
 HOOK_END = 2.70
 MAX_HOOK_STRETCH = 1.25
 GAP = 0.10  # minimum breath between lines (inside a line the take keeps its own pauses)
-TAKES = HERE / "takes"  # recorded takes (e.g. ElevenLabs): script.* or line1…line4, used instead of Kokoro when present
+TAKES = HERE / "takes" / FILM  # recorded takes (e.g. ElevenLabs): script.* or line1…lineN, used instead of Kokoro when present
 MIN_PAUSE = 0.12  # shortest gap in a recorded line that counts as a pause between phrases
 INNER_PAUSE = 0.12  # added between the phrases of a recorded line (each already keeps ~0.05–0.13 s of its own decay and lead-in)
 MAX_STRETCH = 1.2  # most a recorded take may be sped up to fit
-HARD_LIMITS = {1: 4.45, 3: 8.6, 5: 12.3, 6: 15.55, 7: 19.0, 9: 23.15, 10: 26.5, 11: 29.7}  # phrase index → must end by (before the next cut; fade from 29.75)
 
 
 def db(x):
@@ -389,13 +416,14 @@ def render(voice: str, takes=None, hook=False):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--film", default="app", choices=sorted(SCRIPTS), help="which film's script (read at import)")
     ap.add_argument("--voice", default=DEFAULT_VOICE, help="Kokoro voice (or blend) when there are no takes")
     ap.add_argument("--takes", default=str(TAKES), help="folder of recorded takes: script.* or line1…line4 (any audio format)")
     ap.add_argument("--tts", action="store_true", help="use Kokoro even if takes exist")
     ap.add_argument("--hook", action="store_true", help="open with the hook line (takes/hook.*) → voiceover-hook.wav")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
-    args.out = args.out or str(OUT / ("voiceover-hook.wav" if args.hook else "voiceover.wav"))
+    args.out = args.out or str(OUT / f"voiceover-{FILM}{'-hook' if args.hook else ''}.wav")
 
     takes = None if args.tts or not take_files(args.takes) else args.takes
     if not args.tts and not takes and Path(args.takes) != TAKES:  # asked for takes that aren't all there

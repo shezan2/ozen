@@ -1,0 +1,138 @@
+/* IAM pane: Athlete profile · SLEEP tab. Measured against the intelli8.ai "Sleep and load" screens
+   (reference frame scaled to 1440 × 900; the risk-flag banner of the demo is left out). */
+.pane-sleep {
+  --sl-card: #171c22;
+  --sl-cell: #181d23;
+  --sl-edge: rgba(255, 255, 255, 0.035);
+  --sl-dim: #8b9196;
+  --sl-red: #d8343c;
+  --sl-green: #6bdc48;
+  --sl-yellow: #f6e052;
+  --sl-slate: #7892a9;
+  --sl-need: #337156;
+}
+.pane-sleep *,
+.pane-sleep *::before,
+.pane-sleep *::after { box-sizing: border-box; }
+.pane-sleep svg { display: block; flex: none; }
+
+.pane-sleep .sl { position: relative; margin: 0 6px; will-change: transform; }
+
+/* Athlete header */
+.pane-sleep .hd { position: relative; height: 217px; }
+.pane-sleep .hd > * { position: absolute; left: 0; }
+.pane-sleep .back { top: 17px; display: flex; align-items: center; gap: 17px; padding-left: 2px; font: 500 12.2px/18px "Inter"; color: #8a9091; }
+.pane-sleep .back svg { width: 14px; height: 14px; }
+.pane-sleep .nm { top: 67px; display: flex; align-items: center; gap: 11px; }
+.pane-sleep .nm > span:first-child { font: 700 29.8px/34px "Inter"; letter-spacing: 0.004em; color: #fff; }
+.pane-sleep .badge {
+  height: 22px;
+  padding: 0 7px;
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  background: #173d0e;
+  box-shadow: 0 0 0 1px rgba(116, 203, 98, 0.35) inset;
+  font: 600 12px/1 "Inter";
+  letter-spacing: 0.08em;
+  color: #74cb62;
+}
+.pane-sleep .meta { display: flex; align-items: center; gap: 16px; font: 400 14px/18px "Inter"; color: var(--sl-dim); }
+.pane-sleep .meta .ic { display: flex; align-items: center; gap: 6px; }
+.pane-sleep .meta svg { width: 14px; height: 14px; }
+.pane-sleep .m1 { top: 111px; }
+.pane-sleep .m2 { top: 139px; gap: 18px; }
+.pane-sleep .m2 .ic { gap: 4px; }
+.pane-sleep .m2 .hr svg { color: #e5484d; }
+.pane-sleep .chip { top: 170px; height: 23px; padding: 0 8px; display: grid; place-items: center; border-radius: 4px; background: #272c30; font: 500 12px/1 "Inter"; color: #dbe1e6; }
+.pane-sleep .days {
+  top: 158px;
+  left: auto;
+  right: -1px;
+  width: 148px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(240, 242, 245, 0.78);
+  background: #14191d;
+  font: 600 12.5px/1 "Inter";
+  color: #f0f2f5;
+}
+.pane-sleep .days svg { width: 14px; height: 14px; }
+.pane-sleep .days svg:last-child { width: 12px; height: 12px; margin-left: 3px; color: var(--sl-dim); }
+.pane-sleep .rule { top: 216px; right: 0; height: 1px; background: rgba(255, 255, 255, 0.045); transform-origin: 0 0; }
+
+/* Tabs */
+.pane-sleep .tabs { position: relative; display: flex; gap: 24px; height: 71px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.pane-sleep .tabs span { position: relative; padding-top: 36px; font: 500 14px/18px "Inter"; letter-spacing: 0.05em; text-transform: uppercase; color: #8e979a; }
+.pane-sleep .tabs span.on { color: #fafcfc; }
+.pane-sleep .tabs span.on i { position: absolute; left: -2px; right: -2px; bottom: 0; height: 4px; background: #5fc59c; transform-origin: 0 50%; }
+
+/* Tiles */
+.pane-sleep .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 31px; }
+.pane-sleep .tile {
+  position: relative;
+  height: 136px;
+  padding: 19px 0 0 21px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--sl-card);
+  border: 1px solid var(--sl-edge);
+}
+.pane-sleep .tl { display: flex; align-items: center; gap: 5px; font: 500 13.3px/18px "Inter"; letter-spacing: 0.085em; text-transform: uppercase; color: #8c959d; }
+.pane-sleep .tl svg { width: 13px; height: 13px; color: #3f454c; }
+.pane-sleep .tv { margin-top: 13px; font: 700 31px/36px var(--mono); letter-spacing: -0.04em; color: #fff; font-variant-numeric: tabular-nums; }
+.pane-sleep .ts { margin-top: 8px; font: 400 12.2px/16px "Inter"; color: #898f94; }
+.pane-sleep .ul { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; transform-origin: 0 50%; }
+.pane-sleep .debt .tv { color: var(--sl-red); }
+.pane-sleep .debt .ul { background: var(--sl-red); }
+.pane-sleep .eff .tv { color: var(--sl-green); }
+.pane-sleep .eff .ul { background: var(--sl-green); }
+.pane-sleep .cons .tv { color: var(--sl-yellow); }
+.pane-sleep .cons .ul { background: var(--sl-yellow); }
+.pane-sleep .avg .ul { display: none; }
+
+/* Cards */
+.pane-sleep .card { position: relative; margin-top: 24px; border-radius: 10px; background: var(--sl-card); border: 1px solid var(--sl-edge); padding: 24px 24px 0; }
+.pane-sleep .ct { font: 600 15.5px/20px "Inter"; letter-spacing: -0.01em; color: #fff; }
+.pane-sleep .cc { margin-top: 7px; font: 400 13px/18px "Inter"; letter-spacing: 0.01em; color: var(--sl-dim); }
+
+/* Sleep need & recording context */
+.pane-sleep .ctx { height: 256px; padding-top: 26px; }
+.pane-sleep .ctx .cc { margin-top: 8px; }
+.pane-sleep .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px; }
+.pane-sleep .cell { height: 66px; padding: 14px 0 0 12px; border-radius: 4px; background: var(--sl-cell); border: 1px solid rgba(255, 255, 255, 0.05); }
+.pane-sleep .lb { font: 400 12px/16px "Inter"; color: #888c93; }
+.pane-sleep .vl { margin-top: 4px; font: 700 13.5px/18px var(--mono); color: #f8faf9; white-space: pre; }
+.pane-sleep .vl b { font-weight: 700; }
+
+/* Sleep Duration vs Required */
+.pane-sleep .dur { height: 412px; padding-top: 22px; }
+.pane-sleep .dur .cc { margin-top: 5px; font-size: 13.5px; letter-spacing: 0.64px; }
+.pane-sleep .plot { position: absolute; left: -1px; top: -1px; }
+.pane-sleep .axes line,
+.pane-sleep .axes .ax { stroke: #646b71; stroke-width: 1; fill: none; }
+.pane-sleep .axes .gr { stroke: rgba(255, 255, 255, 0.025); stroke-dasharray: 3 3; }
+.pane-sleep .axes text { font: 400 12px "Inter"; fill: #868d93; }
+.pane-sleep .yl { text-anchor: end; dominant-baseline: central; }
+.pane-sleep .xl { text-anchor: middle; dominant-baseline: central; }
+.pane-sleep .ba { fill: var(--sl-slate); }
+.pane-sleep .bn { fill: var(--sl-need); }
+.pane-sleep .legend { position: absolute; left: 474px; top: 366px; display: flex; gap: 12px; font: 400 15.5px/18px "Inter"; }
+.pane-sleep .legend span { display: flex; align-items: center; gap: 4px; }
+.pane-sleep .legend i { width: 14px; height: 11px; }
+.pane-sleep .la { color: #84a0bb; }
+.pane-sleep .la i { background: #84a0bb; }
+.pane-sleep .ln { color: #6eeca4; }
+.pane-sleep .ln i { background: #6eeca4; }
+
+/* Sleep Duration Trend (cut off) */
+.pane-sleep .trend { height: 200px; }
+.pane-sleep .trend .cc { margin-top: 16px; font-size: 13.5px; }
+.pane-sleep .range { position: absolute; right: 24px; top: 26px; display: flex; align-items: center; gap: 2px; font: 600 11px/1 "Inter"; color: #6c767c; }
+.pane-sleep .range .nr { margin-right: 16px; font: 400 13px/1 "Inter"; color: var(--sl-dim); }
+.pane-sleep .range span:not(.nr) { padding: 5px 8px; border-radius: 5px; }
+.pane-sleep .range span.on { background: #1f6b48; color: #e9eef0; }

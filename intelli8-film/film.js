@@ -80,7 +80,8 @@
     const p = E.glide(prog(t, t0, t0 + dur));
     const q = E.in(prog(t, exitAt, exitAt + exitDur));
     const hgt = el.offsetHeight || 100;
-    el.style.transform = `translateY(${((1 - p) * 1.15 - q * 1.15) * hgt}px)`;
+    // 1.45 line heights clears descenders and their blur from the mask (1.15 left a smudge after an exit)
+    el.style.transform = `translateY(${((1 - p) * 1.45 - q * 1.45) * hgt}px)`;
     blur(el, (1 - p) * 6 + q * 4);
   }
   // Fade + small lift.

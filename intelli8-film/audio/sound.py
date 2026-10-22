@@ -16,7 +16,7 @@ Deterministic: each sound draws from its own seeded noise stream.
 Each film has its own cue sheet and design function. App film cues follow film.js: air and texture for the hook, an airy draw for the 8 and a pop
 for its heart, a bloom as the dark Measure section opens, eight bright glints for the scale's
 contacts, then the app: taps, pushes, scroll detents, segment ticks, a PDF flight and the landing.
-Scale film cues follow scale-film.js (see SCALE below).
+Scale film cues follow scale-film.js (SCALE below), the IAM film iam-film.js (IAM below).
 """
 from __future__ import annotations
 
@@ -855,7 +855,152 @@ def design_scale():
     return buses, rev, events
 
 
-DESIGNS = {"app": design_app, "scale": design_scale}
+# IAM film picture events (seconds), from iam-film.js.
+IAM = {
+    "chips": (0.15, 1.3),  # twenty chips pop in as a diagonal wave
+    "l1": 0.3,  # "Twenty athletes."
+    "rings": (1.5, 2.45),  # readiness rings sweep across the squad
+    "l2": 1.7,  # "Who needs a check-in today?" — the question
+    "hugo": (2.7, 3.2),  # Hugo's chip lifts, the rest dim
+    "tip": 2.95,  # tooltip pops
+    "sheet": (3.55, 4.25),  # the dark IAM section rises
+    "in_head": 4.35,  # IAM. / See the whole team, support each person.
+    "window": (4.5, 5.6),  # the dashboard window rises
+    "to_work": (7.15, 8.05),  # the window glides to its working pose, intro copy leaves
+    "build": (7.6, 9.2),  # command center tiles count up
+    "zoom": (9.75, 10.4),  # closer look at the priority roster
+    "unzoom": (10.55, 11.0),
+    "clicks": [10.9, 14.5, 18.1],  # cursor clicks: Match Readiness, Roster, Sander Vos
+    "views": [11.15, 14.75, 18.35, 21.95],  # view copy changes
+    "readiness": (12.0, 13.4),  # athlete cards drop into their tiers
+    "rest": (13.5, 14.0),  # focus on Consider Resting
+    "roster": (15.2, 16.8),  # roster rows
+    "hrv": (18.9, 20.4),  # HRV chart draws
+    "sleep": (22.1, 23.6),  # sleep bars
+    "athlete_to_sleep": (21.8, 22.15),
+    "out": (25.35, 25.95),  # the window leaves
+    "end_hit": 26.12,
+    "ctas": 26.95,
+    "site": 27.25,
+}
+
+
+def design_iam():
+    buses = {k: Bus(k) for k in STEMS}
+    rev = {k: Bus("rev:" + k) for k in STEMS}
+    events = []
+    C = IAM
+
+    def put(stem, x, t, pan=0.0, gain=1.0, send=0.0):
+        buses[stem].add(x, t, pan=pan, gain=gain)
+        if send:
+            rev[stem].add(x, t, pan=pan, gain=gain * send)
+
+    def ev(t, what):
+        events.append({"t": round(float(t), 4), "event": what})
+
+    def swish(t, d=0.34, f0=1300, f1=4000, pan=-0.3, gain=0.3):
+        put("fx", whoosh(d, peak=0.28, f0=f0, f1=f1, pan0=pan, pan1=pan + 0.25, width_oct=1.3), t - 0.03, gain=gain, send=0.15)
+
+    def move(t0, t1, f0=260, f1=2000, pan0=-0.45, pan1=0.45, gain=0.7, peak=0.42, label=""):
+        d = t1 - t0 + 0.08
+        put("fx", whoosh(d, peak=peak, f0=f0, f1=f1, pan0=pan0, pan1=pan1, width_oct=1.6), t0, gain=gain, send=0.15)
+        if label:
+            ev(t0 + peak * d, label)
+
+    reseed("ambience")
+    put("amb", ambience(DUR, lambda u: np.clip(u / 0.02, 0, 1) * (1 - 0.6 * np.clip((u - 0.95) / 0.04, 0, 1))), 0.0)
+
+    # ---- hook: the squad appears, takes its colours, one athlete stands out
+    reseed("hook")
+    c0, c1 = C["chips"]
+    put("fx", filt(glint(c1 - c0, pan0=0.2, pan1=0.6, density=40.0), "bandpass", [1500, 6500]), c0, gain=0.26, send=0.2)
+    put("fx", whoosh(c1 - c0, peak=0.35, f0=700, f1=2200, pan0=0.25, pan1=0.6, width_oct=1.2), c0, gain=0.2, send=0.15)
+    ev(c0, "squad appears: one granular wave, no per-chip pops")
+    swish(C["l1"] + 0.1, pan=-0.45)
+    r0, r1 = C["rings"]
+    put("fx", filt(glint(r1 - r0, pan0=0.2, pan1=0.6, density=70.0), "highpass", 2600), r0, gain=0.2, send=0.4)
+    put("fx", pressure(0.6, peak=0.5), C["l2"] - 0.4, gain=0.35)
+    put("impact", impact(0.4), C["l2"] + 0.12, gain=0.42, send=0.45)
+    swish(C["l2"] + 0.1, f0=1100, f1=3600, pan=-0.4, gain=0.28)
+    ev(C["l2"] + 0.12, "the question lands")
+    h0, h1 = C["hugo"]
+    put("fx", reverse_swell(h1 - h0, hp=2200), h0, gain=0.22)
+    put("sig", thock(0.5), h1 - 0.12, gain=0.4, send=0.45)
+    put("ui", pop(0.09), C["tip"], gain=0.36, send=0.22)
+    ev(C["tip"], "Hugo's tooltip")
+
+    # ---- the dark section rises; IAM; the window
+    reseed("sheet")
+    s0, s1 = C["sheet"]
+    put("fx", riser(s1 - s0 + 0.35, f0=500, f1=6500, curve=2.4), s0 - 0.35, gain=0.32)
+    move(s0, s1, f0=180, f1=2200, pan0=0, pan1=0, gain=0.8, peak=0.4, label="dark section rises")
+    put("fx", pressure(s1 - s0 + 0.1, peak=0.45), s0, gain=0.45)
+    put("impact", impact(0.5), s1 - 0.02, gain=0.45, send=0.4)
+    swish(C["in_head"] + 0.1, d=0.42, pan=-0.5, gain=0.3)
+    swish(C["in_head"] + 0.5, d=0.32, f0=1500, f1=4600, pan=-0.45, gain=0.22)
+    w0, w1 = C["window"]
+    put("fx", pressure(w1 - w0, peak=0.45), w0, gain=0.45)
+    move(w0, w1 - 0.3, f0=200, f1=1400, pan0=0.35, pan1=0.3, gain=0.5, peak=0.45, label="the window rises")
+    put("sig", thock(0.5), w1 - 0.3, gain=0.4, send=0.4)
+
+    # ---- the working view: the window glides over, the command center fills, a closer look
+    reseed("command")
+    g0, g1 = C["to_work"]
+    move(g0, g1, f0=1600, f1=400, pan0=0.4, pan1=0.0, gain=0.55, peak=0.5, label="window to working pose")
+    b0, b1 = C["build"]
+    put("fx", filt(glint(b1 - b0, pan0=0.1, pan1=0.4, density=55.0), "bandpass", [2000, 8000]), b0, gain=0.2, send=0.35)
+    put("fx", whoosh(b1 - b0, peak=0.45, f0=1400, f1=4200, pan0=0.1, pan1=0.4, width_oct=0.9), b0, gain=0.12)
+    ev(b0, "tiles count up: data shimmer")
+    z0, z1 = C["zoom"]
+    put("fx", whoosh(z1 - z0 + 0.1, peak=0.5, f0=400, f1=1600, pan0=0.1, pan1=0.2, width_oct=1.3), z0, gain=0.3, send=0.15)
+    u0, u1 = C["unzoom"]
+    put("fx", whoosh(u1 - u0 + 0.1, peak=0.4, f0=1500, f1=500, pan0=0.2, pan1=0.1, width_oct=1.3), u0, gain=0.22)
+
+    # ---- clicks between views, each view's copy, and what each view builds
+    reseed("views")
+    for i, t in enumerate(C["clicks"]):
+        put("ui", ui_click(1.0), t, pan=0.1 + 0.05 * i, gain=0.7, send=0.12)
+        put("fx", whoosh(0.32, peak=0.3, f0=1800, f1=4200, pan0=0.1, pan1=0.35, width_oct=1.1), t + 0.03, gain=0.14, send=0.15)
+        ev(t, f"click {i + 1}")
+    for i, t in enumerate(C["views"]):
+        swish(t + 0.1, d=0.38, pan=-0.5, gain=0.24 - 0.01 * i)
+    q0, q1 = C["readiness"]
+    put("fx", filt(glint(q1 - q0, pan0=0.0, pan1=0.5, density=36.0), "lowpass", 7000), q0, gain=0.22, send=0.3)
+    put("fx", whoosh(q1 - q0, peak=0.4, f0=600, f1=1800, pan0=0.0, pan1=0.4, width_oct=1.2), q0, gain=0.14)
+    ev(q0, "athlete cards drop into tiers: soft rustle")
+    e0, e1 = C["rest"]
+    put("fx", reverse_swell(e1 - e0, hp=2000), e0, gain=0.2)
+    o0, o1 = C["roster"]
+    put("fx", whoosh(o1 - o0, peak=0.5, f0=1300, f1=420, pan0=0.2, pan1=0.1, width_oct=1.4), o0, gain=0.22)
+    for t in scroll_ticks(o0, o1, max_rate=11.0):
+        put("ui", filt(tick(0.7), "lowpass", 6000), t, pan=0.2, gain=0.13)
+    ev(o0, "roster rows: detents with the speed of the rows")
+    v0, v1 = C["hrv"]
+    put("fx", whoosh(v1 - v0, peak=0.55, f0=1500, f1=4800, pan0=-0.1, pan1=0.45, width_oct=1.0), v0, gain=0.22, send=0.2)
+    put("fx", glint(v1 - v0, pan0=-0.1, pan1=0.45, density=24.0), v0, gain=0.14, send=0.35)
+    ev(v0, "HRV chart draws")
+    a0, a1 = C["athlete_to_sleep"]
+    put("fx", whoosh(a1 - a0 + 0.2, peak=0.4, f0=1200, f1=500, pan0=0.3, pan1=-0.1, width_oct=1.3), a0, gain=0.3)
+    y0, y1 = C["sleep"]
+    put("fx", whoosh(y1 - y0, peak=0.45, f0=700, f1=2600, pan0=0.0, pan1=0.4, width_oct=0.9), y0, gain=0.2, send=0.15)
+    put("fx", filt(glint(y1 - y0, pan0=0.0, pan1=0.4, density=30.0), "lowpass", 7500), y0, gain=0.14, send=0.3)
+
+    # ---- end
+    reseed("end")
+    n0, n1 = C["out"]
+    move(n0, n1, f0=300, f1=2400, pan0=0.3, pan1=-0.1, gain=0.65, peak=0.45)
+    put("fx", reverse_swell(0.6), C["end_hit"] - 0.62, gain=0.42)
+    put("impact", impact(0.9), C["end_hit"], gain=0.95, send=0.4)
+    ev(C["end_hit"], "impact: end")
+    swish(C["end_hit"] + 0.05, d=0.42, pan=-0.5, gain=0.24)
+    put("ui", pop(0.1), C["ctas"], gain=0.4, send=0.25)
+    put("fx", glint(0.5, pan0=-0.5, pan1=0.0, density=100.0), C["site"], gain=0.18, send=0.4)
+    put("sig", thock(0.55), C["ctas"] + 0.05, gain=0.36, send=0.5)
+    return buses, rev, events
+
+
+DESIGNS = {"app": design_app, "scale": design_scale, "iam": design_iam}
 
 
 # Stem levelling: sparse effects are levelled by their loudest 400 ms; the room tone by gated

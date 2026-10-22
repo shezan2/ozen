@@ -1,0 +1,121 @@
+/* segments: "SEGMENTAL BODY MAPPING · Eight electrodes. Five body segments." The dark rounded card with
+   the front-view body figure, its five contact dots, leader lines and segment labels on the left, the
+   copy column on the right. Cream page, no page background. Every position is the site's own CSS px,
+   measured from the iPad capture (card origin = page 48, 102). */
+
+.card-segments { overflow: visible; }
+
+/* ---------- The dark card ---------- */
+.card-segments .sg-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 598px;
+  height: 520px;
+  border-radius: 28px;
+  background: var(--dark);
+  overflow: hidden;
+  isolation: isolate;
+}
+.card-segments .sg-content { position: absolute; inset: 0; }
+/* The soft light behind the figure: an ellipse, brightest at its centre, gone by ~156 × 197 px. */
+.card-segments .sg-glow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 598px;
+  height: 520px;
+  background: radial-gradient(
+    156px 197px at 299px 244px,
+    rgba(110, 170, 140, 0.197) 0%,
+    rgba(110, 170, 140, 0.169) 18%,
+    rgba(110, 170, 140, 0.109) 50%,
+    rgba(110, 170, 140, 0.051) 76%,
+    rgba(110, 170, 140, 0.0135) 92%,
+    rgba(110, 170, 140, 0) 100%
+  );
+}
+.card-segments .sg-svg { position: absolute; left: 0; top: 0; width: 598px; height: 520px; overflow: visible; }
+.card-segments .sg-floor { fill: none; stroke: rgba(174, 210, 192, 0.17); stroke-width: 1; }
+.card-segments .sg-line {
+  fill: none;
+  stroke: rgba(174, 210, 192, 0.48);
+  stroke-width: 1;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+}
+.card-segments .sg-head { fill: #596d62; }
+.card-segments .sg-limb { stroke: #c6e6d5; stroke-width: 1; stroke-linejoin: round; }
+.card-segments .sg-trunk { fill: #4d876d; stroke: #a0d1b7; stroke-width: 1; stroke-linejoin: round; }
+/* Dimming: a copy of each shape in the card's own colour laid over it (keeps the overlaps opaque). */
+.card-segments .sg-shade { fill: #2a3633; stroke: #2a3633; stroke-width: 1.2; }
+.card-segments .sg-flash { fill: #eaf7f0; }
+.card-segments .sg-halo { fill: #aed2c0; }
+.card-segments .sg-dot { fill: #dbf5e6; stroke: var(--dark); stroke-width: 2.4; }
+.card-segments .sg-ring { fill: none; stroke: #cfeadb; stroke-width: 1.2; }
+
+/* ---------- Segment labels ---------- */
+.card-segments .sg-lbl { position: absolute; width: 148.5px; white-space: nowrap; }
+.card-segments .sg-lbl b {
+  display: block;
+  font: 700 18px/24px var(--head);
+  letter-spacing: -0.025em;
+  color: #cde8d9;
+}
+.card-segments .sg-lbl span {
+  display: block;
+  font: 400 14px/21px var(--sans);
+  color: #b5c3ba;
+}
+.card-segments .sg-lbl b + span { margin-top: 6.3px; }
+.card-segments .sg-foot {
+  position: absolute;
+  left: 0;
+  width: 598px;
+  top: 461.5px;
+  text-align: center;
+  font: 400 12px/18px var(--sans);
+  color: #b5c3ba;
+  white-space: nowrap;
+}
+
+/* ---------- Copy column ---------- */
+.card-segments .sg-eye {
+  position: absolute;
+  left: 638px;
+  top: 102.75px;
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: 0.13em;
+  white-space: nowrap;
+}
+.card-segments .sg-hl {
+  position: absolute;
+  left: 638px;
+  top: 133.25px;
+  font-size: 48px;
+  line-height: 49.5px;
+  letter-spacing: -0.06em;
+  color: #212730;
+  white-space: nowrap;
+}
+/* Manrope's descenders reach below the line box; give them room inside each mask. */
+.card-segments .sg-hl .mask { padding-bottom: 0.16em; margin-bottom: -0.16em; }
+.card-segments .sg-para {
+  position: absolute;
+  left: 638px;
+  top: 252px;
+  font: 400 16px/28px var(--sans);
+  color: #6a716e;
+  white-space: nowrap;
+}
+.card-segments .sg-fine {
+  position: absolute;
+  left: 638px;
+  top: 379.5px;
+  font: 400 12px/20px var(--sans);
+  color: #7a817c;
+  white-space: nowrap;
+}
+.card-segments .sg-para > span,
+.card-segments .sg-fine > span { display: block; }

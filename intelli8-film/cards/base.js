@@ -50,7 +50,7 @@
   // A headline line rising out of its .mask, between local progress a and b.
   function rise(el, p, a, b) {
     const k = E.glide(prog(p, a, b));
-    el.style.transform = `translateY(${((1 - k) * 112).toFixed(2)}%)`;
+    el.style.transform = `translateY(${((1 - k) * 135).toFixed(2)}%)`; // 135% keeps ascenders and blur out of the mask at the start
     el.style.filter = blur((1 - k) * 5);
   }
   // Fade in with a small lift (dy px) between a and b.

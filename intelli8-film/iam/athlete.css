@@ -1,0 +1,118 @@
+/* IAM pane: Athlete profile (Sander Vos · RECOVERY & HRV). Measured against the intelli8.ai
+   "Sleep and load" (header) and "Individual · Personal HRV baseline" (charts) screens. */
+.pane-athlete {
+  --at-card: #171c22;
+  --at-edge: #1f252b;
+  --at-dim: #8a9194;
+  --at-mint: #6eeda8; /* 28d chip, out-of-band dots, tab underline */
+  --at-dot: #489874; /* in-band dots */
+  --at-band: #214139; /* personal normal range */
+  --at-axis: #646a72;
+  padding: 0;
+}
+.pane-athlete *,
+.pane-athlete *::before,
+.pane-athlete *::after { box-sizing: border-box; }
+.pane-athlete svg { display: block; flex: none; }
+
+/* The scrolling page: content column 1140 px wide, 40 px in from the pane edges. */
+.pane-athlete .ath { position: absolute; left: 40px; top: 0; width: 1140px; height: 1700px; will-change: transform; }
+.pane-athlete .ath > * { position: absolute; }
+
+/* Header */
+.pane-athlete .back { left: 1px; top: 47px; height: 18px; display: flex; align-items: center; gap: 17px; font: 500 12px/1 "Inter"; color: var(--at-dim); }
+.pane-athlete .back svg { width: 16px; height: 16px; stroke-width: 1.8; }
+
+.pane-athlete .who { left: 0; top: 0; }
+.pane-athlete .nm { position: absolute; left: 0; top: 96px; display: flex; align-items: center; gap: 11px; white-space: nowrap; }
+.pane-athlete .nm > span:first-child { font: 700 31px/36px "Inter"; letter-spacing: -0.012em; color: #fff; }
+.pane-athlete .badge {
+  height: 23px;
+  padding: 0 8.5px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  background: #1a3716;
+  box-shadow: 0 0 0 1px #2c5b26 inset;
+  font: 700 11.5px/1 "Inter";
+  letter-spacing: 0.1em;
+  color: #66cf52;
+}
+.pane-athlete .meta { position: absolute; left: 0; display: flex; align-items: center; gap: 19px; white-space: nowrap; font: 400 14px/20px "Inter"; color: var(--at-dim); }
+.pane-athlete .meta .ic { display: flex; align-items: center; gap: 6px; }
+.pane-athlete .meta svg { width: 14px; height: 14px; stroke-width: 1.8; }
+.pane-athlete .m1 { top: 140px; gap: 15px; }
+.pane-athlete .m2 { top: 168px; gap: 16px; color: #80878a; }
+.pane-athlete .m2 .ic { gap: 5px; }
+.pane-athlete .m2 .hr svg { color: #e0414f; }
+.pane-athlete .chip {
+  position: absolute;
+  left: 0;
+  top: 201px;
+  height: 20px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  background: #262b33;
+  font: 500 12.4px/1 "Inter";
+  color: #d4dbe1;
+}
+
+.pane-athlete .days {
+  right: 0;
+  top: 190px;
+  height: 32px;
+  padding: 0 13px 0 13px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1.5px solid #c3c9cb;
+  border-radius: 5px;
+  font: 600 12px/1 "Inter";
+  color: #f2f4f6;
+}
+.pane-athlete .days svg { width: 14px; height: 14px; stroke-width: 1.8; }
+.pane-athlete .days svg:last-child { width: 13px; height: 13px; margin-left: 2px; color: #9aa1a5; }
+
+.pane-athlete .tabs {
+  left: 0;
+  right: 0;
+  top: 263px;
+  height: 39px;
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid #1f2326;
+  font: 500 14px/20px "Inter";
+  letter-spacing: 0.047em;
+  text-transform: uppercase;
+  color: #89939a;
+}
+.pane-athlete .tabs span { position: relative; height: 38px; padding-top: 4px; white-space: nowrap; }
+.pane-athlete .tabs span.on { color: #f4fafd; }
+.pane-athlete .tabs i { position: absolute; left: 0; right: 0.06em; bottom: 0; height: 2px; border-radius: 1px; background: #62c89c; transform-origin: 0 50%; }
+
+/* Chart cards */
+.pane-athlete .card { left: 0; width: 1140px; height: 444px; border-radius: 8px; background: var(--at-card); box-shadow: 0 0 0 1px var(--at-edge) inset; }
+.pane-athlete .card.hrv { top: 334px; }
+.pane-athlete .card.rhr { top: 802px; }
+.pane-athlete .card > * { position: absolute; }
+.pane-athlete .ct { left: 25px; top: 23px; font: 600 15px/20px "Inter"; letter-spacing: -0.006em; color: #fff; white-space: nowrap; }
+.pane-athlete .cc { left: 25px; top: 60px; font: 400 14px/18px "Inter"; color: #878f94; white-space: nowrap; }
+.pane-athlete .range { right: 25px; top: 26px; height: 26px; display: flex; align-items: center; gap: 6px; font: 500 12px/1 "Inter"; color: #7b8187; }
+.pane-athlete .range span { height: 26px; padding: 0 9px; display: flex; align-items: center; border-radius: 4px; }
+.pane-athlete .range .nr { padding: 0; margin-right: 4px; color: #83898f; }
+.pane-athlete .range .on { padding: 0 8.5px; background: var(--at-mint); color: #1a4524; font-weight: 600; }
+.pane-athlete .plot { left: 0; top: 0; overflow: visible; }
+
+.pane-athlete .axes line,
+.pane-athlete .axes .ax { stroke: var(--at-axis); stroke-width: 1.5; fill: none; }
+.pane-athlete .axes text { font: 400 11.5px "Inter"; fill: #7b838a; dominant-baseline: central; }
+.pane-athlete .axes .yl { text-anchor: end; fill: #6f777c; }
+.pane-athlete .axes .xl { text-anchor: middle; fill: #838a93; }
+/* As on the real chart: the top value label sits a little low, the last date is kept inside the plot. */
+.pane-athlete .axes .yl:first-of-type { transform: translateY(4px); }
+.pane-athlete .axes .xl:last-of-type { text-anchor: end; transform: translateX(5px); }
+.pane-athlete .band { fill: var(--at-band); }
+.pane-athlete .dots .n { fill: var(--at-dot); }
+.pane-athlete .dots .o { fill: var(--at-mint); stroke: #d4f8e7; stroke-opacity: 0.85; stroke-width: 1.1; }

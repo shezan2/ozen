@@ -1,0 +1,114 @@
+/* compare: intelli8.ai "Why weight alone misses recomposition." The two-line headline, three cards
+   (weight-only, feet-only, and the forest-green intelli8 hand-and-foot card), the comparison table
+   and its footnote. Cream page, no background of its own.
+   Every position is the site's own CSS px, measured from the iPad capture (card origin = page 48, 60). */
+
+.card-compare {
+  overflow: visible;
+  --c-ink: #212630;
+  --c-body: #686f6b;
+  --c-green: #3f7460; /* the site's card fill and intelli8 column head */
+  --c-green-ink: #305a4c; /* intelli8 column cells */
+  --c-rule: #dfe1da;
+}
+.card-compare > * { position: absolute; }
+
+/* ---------- Headline ---------- */
+.card-compare .c-hl {
+  left: 0;
+  top: 7.6px;
+  font-size: 48px;
+  line-height: 48px;
+  letter-spacing: -0.06em;
+  color: var(--c-ink);
+  white-space: nowrap;
+}
+/* Manrope's descenders (y, g, p) reach below the base mask; give them room. */
+.card-compare .c-hl .mask { padding-bottom: 0.18em; margin-bottom: -0.18em; }
+/* No pre-promoted layers: a cached raster would make a frame depend on the frames seeked before it. */
+.card-compare .c-hl .mask > .line { will-change: auto; }
+
+/* ---------- Cards ---------- */
+.card-compare .c-card { top: 142px; height: 266px; }
+.card-compare .c-card > *,
+.card-compare .c-in > * { position: absolute; }
+.card-compare .c-face {
+  inset: 0;
+  border-radius: 16px;
+  background: #faf9f4;
+  box-shadow: inset 0 0 0 1px var(--c-rule);
+}
+.card-compare .c-fill {
+  inset: 0;
+  border-radius: 16px;
+  background: var(--c-green);
+}
+.card-compare .c-in { position: absolute; inset: 0; }
+.card-compare .c-eb {
+  left: 29px;
+  top: 31.1px;
+  font: 500 9px/12px var(--mono);
+  letter-spacing: 0.13em;
+  color: #8b918d;
+  text-transform: none;
+  white-space: nowrap;
+}
+.card-compare .c-ti {
+  left: 29px;
+  top: 55.7px;
+  font: 700 20px/28px var(--head);
+  letter-spacing: -0.025em;
+  color: var(--c-ink);
+  white-space: nowrap;
+}
+.card-compare .c-tx {
+  left: 29px;
+  top: 95.4px;
+  font: 400 14px/24px var(--sans);
+  color: var(--c-body);
+  white-space: nowrap;
+}
+.card-compare .c-tx > span { display: block; }
+/* The intelli8 card has no hairline, so its copy sits 1 px up and left of its neighbours'. */
+.card-compare .c-c2 .c-eb { left: 28px; top: 30.1px; color: #c6e2d3; }
+.card-compare .c-c2 .c-ti { left: 28px; top: 54.7px; color: #fff; }
+.card-compare .c-c2 .c-tx { left: 28px; top: 94.4px; color: rgba(255, 255, 255, 0.8); }
+
+/* ---------- Table ---------- */
+.card-compare .c-band {
+  border-radius: 14px;
+  background: rgba(63, 116, 96, 0.075);
+}
+.card-compare .c-th {
+  font: 600 12px/20px var(--sans);
+  letter-spacing: 0.01em;
+  color: #66726a;
+  white-space: nowrap;
+  transform-origin: 0 50%;
+}
+.card-compare .c-th.g { color: var(--c-green); }
+.card-compare .c-td {
+  font: 400 14px/24px var(--sans);
+  color: #616a66;
+  white-space: nowrap;
+  transform-origin: 0 50%;
+}
+.card-compare .c-td.lab { font-weight: 600; color: var(--c-ink); }
+.card-compare .c-td.g { font-weight: 500; color: var(--c-green-ink); }
+.card-compare .c-rule {
+  height: 1px;
+  background: var(--c-rule);
+  transform-origin: 0 50%;
+}
+.card-compare .c-rule.hd { background: #d0d8d0; }
+
+/* ---------- Footnote ---------- */
+.card-compare .c-fn {
+  left: 0;
+  top: 717.3px;
+  font: 400 12px/20px var(--sans);
+  letter-spacing: -0.002em;
+  color: #7a817b;
+  white-space: nowrap;
+}
+.card-compare .c-fn > span { display: block; }

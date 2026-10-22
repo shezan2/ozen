@@ -1,9 +1,10 @@
 {
   "file": "intelli8-app-sound.wav",
+  "film": "app",
   "content": "sound design only \u2014 no music, no instruments, no tuned tones",
   "sample_rate": 48000,
   "duration": 30.0,
-  "integrated_lufs": -15.04,
+  "integrated_lufs": -15.09,
   "true_peak_dbtp": -1.6,
   "stem_gain_db": {
     "amb": -26.83,
@@ -58,7 +59,7 @@
       "event": "Measure slides away"
     },
     {
-      "t": 12.95,
+      "t": 12.75,
       "event": "segments fill: five soft taps with callouts"
     },
     {
@@ -94,11 +95,11 @@
       "event": "Goals + History rise"
     },
     {
-      "t": 24.0,
+      "t": 23.89,
       "event": "goal slider travels"
     },
     {
-      "t": 24.55,
+      "t": 24.06,
       "event": "history line draws"
     },
     {

@@ -1,0 +1,106 @@
+{
+  "file": "intelli8-scale-sound.wav",
+  "film": "scale",
+  "content": "sound design only \u2014 no music, no instruments, no tuned tones",
+  "sample_rate": 48000,
+  "duration": 34.0,
+  "integrated_lufs": -15.06,
+  "true_peak_dbtp": -1.6,
+  "stem_gain_db": {
+    "amb": -27.1,
+    "sig": 10.31,
+    "fx": -1.81,
+    "ui": -0.96,
+    "impact": -2.49
+  },
+  "events": [
+    {
+      "t": 0.1,
+      "event": "LCD wakes: digits roll as a soft electric rustle (no per-digit ticks)"
+    },
+    {
+      "t": 1.42,
+      "event": "two soft lock clicks as the reading settles"
+    },
+    {
+      "t": 1.7,
+      "event": "the stories split: two whooshes, left and right"
+    },
+    {
+      "t": 2.02,
+      "event": "reveal: Two stories."
+    },
+    {
+      "t": 4.532,
+      "event": "sheet whoosh crest"
+    },
+    {
+      "t": 5.1496,
+      "event": "the scale rises"
+    },
+    {
+      "t": 5.6885,
+      "event": "display wakes: bright shimmer"
+    },
+    {
+      "t": 8.926,
+      "event": "dive through the glass"
+    },
+    {
+      "t": 9.08,
+      "event": "impact: into the contacts"
+    },
+    {
+      "t": 9.42,
+      "event": "six contact glints: four foot plates (uneven), then both hand pads"
+    },
+    {
+      "t": 10.6,
+      "event": "measurement sweep"
+    },
+    {
+      "t": 11.7015,
+      "event": "dark frame folds into the card"
+    },
+    {
+      "t": 12.631,
+      "event": "five segments light: soft airy fills with glints"
+    },
+    {
+      "t": 15.651,
+      "event": "page scroll"
+    },
+    {
+      "t": 17.0,
+      "event": "table scroll: detents follow the scroll speed"
+    },
+    {
+      "t": 19.912,
+      "event": "dark section rises"
+    },
+    {
+      "t": 24.24,
+      "event": "across to the display"
+    },
+    {
+      "t": 24.826,
+      "event": "display flickers on"
+    },
+    {
+      "t": 25.354,
+      "event": "six readings: one continuous shimmer, no per-reading ticks"
+    },
+    {
+      "t": 27.512,
+      "event": "specifications rise"
+    },
+    {
+      "t": 30.12,
+      "event": "impact: end"
+    },
+    {
+      "t": 31.65,
+      "event": "price lands"
+    }
+  ]
+}

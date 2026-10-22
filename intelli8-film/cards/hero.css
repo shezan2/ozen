@@ -1,0 +1,147 @@
+/* hero: the top of intelli8.ai. "See your progress. In fat and muscle." on the left, the front-view
+   scale render on the right with its "8 contacts · 5 body segments" chip. Sage page, no background.
+   Every position is the site's own CSS px, measured from the iPad capture (card origin = page 48, 100). */
+
+.card-hero { overflow: visible; }
+
+/* ---------- Left column ---------- */
+.card-hero .h-eye {
+  position: absolute;
+  left: 0;
+  top: 11px;
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: 0.13em;
+  white-space: nowrap;
+}
+.card-hero .h-hl {
+  position: absolute;
+  left: 0;
+  top: 45.5px;
+  font-size: 72.3px;
+  line-height: 71.5px;
+  white-space: nowrap;
+}
+/* Manrope's descenders reach below the base mask; give them room (the next line stays hidden below). */
+.card-hero .h-hl .mask { padding-bottom: 0.16em; margin-bottom: -0.16em; }
+/* No pre-promoted layers: a cached raster would make a frame depend on the frames seeked before it. */
+.card-hero .h-hl .mask > .line { will-change: auto; }
+.card-hero .h-para {
+  position: absolute;
+  left: 0;
+  top: 354.5px;
+  font: 400 18px/32px var(--sans);
+  color: #5c6862;
+  white-space: nowrap;
+}
+.card-hero .h-para > span { display: block; }
+
+/* ---------- Calls to action ---------- */
+.card-hero .h-btn {
+  position: absolute;
+  top: 514.5px;
+  height: 48px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10.5px;
+  font: 600 14px/1 var(--sans);
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+}
+.card-hero .h-btn svg { width: 11px; height: 11px; flex: none; overflow: visible; }
+.card-hero .h-btn svg path { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.card-hero .h-buy { left: 0; width: 129px; padding-left: 24px; background: var(--green); color: #fff; }
+.card-hero .h-how {
+  left: 140px;
+  width: 186px;
+  padding-left: 25.5px;
+  color: #384a40;
+  box-shadow: inset 0 0 0 1px rgba(56, 74, 64, 0.19);
+}
+
+/* Store links: text pills in place of the official badges and QR codes (as in the App film's end card). */
+.card-hero .h-store {
+  position: absolute;
+  top: 586px;
+  height: 62px;
+  padding: 0 24px;
+  border-radius: 16px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.card-hero .h-store span { font: 400 11.5px/1 var(--sans); opacity: 0.8; }
+.card-hero .h-store b { font: 600 20px/1 var(--sans); letter-spacing: -0.01em; }
+.card-hero .h-gp { left: 0; background: #121516; color: #fff; }
+.card-hero .h-tf { color: var(--ink); box-shadow: inset 0 0 0 1px rgba(30, 36, 48, 0.25); }
+.card-hero .h-cap {
+  position: absolute;
+  left: 0;
+  top: 660.5px;
+  font: 400 12px/20px var(--sans);
+  color: #6a756f;
+  white-space: nowrap;
+}
+
+/* ---------- The scale ---------- */
+.card-hero .h-shadow {
+  position: absolute;
+  border-radius: 40px;
+  background: rgb(40, 84, 62);
+}
+.card-hero .h-scale {
+  position: absolute;
+  left: 605px;
+  top: 156px;
+  width: 391.5px;
+  height: 490px;
+  transform-origin: 50% 88%;
+}
+.card-hero .h-scale img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.card-hero .h-scale svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.card-hero .h-bloom {
+  position: absolute;
+  border-radius: 12px;
+  background: radial-gradient(closest-side, rgba(214, 255, 238, 0.9), rgba(174, 210, 192, 0.35) 60%, rgba(174, 210, 192, 0) 100%);
+  mix-blend-mode: screen;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+/* ---------- The chip ---------- */
+.card-hero .h-chip {
+  position: absolute;
+  left: 850.5px;
+  top: 610.5px;
+  width: 215.5px;
+  height: 58px;
+  border-radius: 14px;
+  background: rgba(247, 247, 242, 0.9);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  backdrop-filter: blur(14px) saturate(1.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85),
+    0 2px 4px rgba(30, 40, 36, 0.05),
+    0 16px 32px -10px rgba(30, 48, 40, 0.22);
+  transform-origin: 30% 60%;
+}
+.card-hero .h-chip i {
+  position: absolute;
+  left: 17px;
+  top: 17.5px;
+  font: 400 7px/1 var(--mono);
+  font-style: normal;
+  letter-spacing: 0.237em;
+  color: #79807c;
+  white-space: nowrap;
+}
+.card-hero .h-chip b {
+  position: absolute;
+  left: 17px;
+  top: 32px;
+  font: 600 12px/1 var(--sans);
+  color: #36403a;
+  white-space: nowrap;
+}
