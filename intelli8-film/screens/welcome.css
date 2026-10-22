@@ -1,0 +1,34 @@
+/* Welcome: the 8, "Intelli8", the promise line and Get started. */
+.scr-welcome .mark {
+  position: absolute;
+  left: 50%;
+  top: 282px;
+  transform: translateX(-50%);
+}
+.scr-welcome .name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 446px;
+  text-align: center;
+  font: 700 34px/1 "Inter";
+  letter-spacing: -0.035em;
+}
+.scr-welcome .promise {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 498px;
+  text-align: center;
+  font: 400 15px/1.35 "Inter";
+  color: var(--app-ink-3);
+}
+.scr-welcome .btn {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 72px;
+  height: 56px;
+  border-radius: 14px;
+  font-size: 17px;
+}

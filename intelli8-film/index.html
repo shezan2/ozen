@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>intelli8 App Film</title>
+    <link rel="stylesheet" href="screens/app.css" />
+    <link rel="stylesheet" href="screens/welcome.css" />
+    <link rel="stylesheet" href="screens/dashboard.css" />
+    <link rel="stylesheet" href="screens/results.css" />
+    <link rel="stylesheet" href="screens/report.css" />
+    <link rel="stylesheet" href="screens/goals.css" />
+    <link rel="stylesheet" href="screens/history.css" />
+    <link rel="stylesheet" href="film.css" />
+  </head>
+  <body>
+    <div id="viewport">
+      <div id="stage">
+        <!-- 1 · Hook: same weight, different story -->
+        <section class="scene cream" id="s-hook">
+          <div class="glow"></div>
+          <div class="eyebrow" id="hk-eye">Know more than your weight</div>
+          <div class="headline" id="hk-head">
+            <span class="mask"><span id="hk-l1">Same weight.</span></span>
+            <span class="mask"><span id="hk-l2" class="green">Different story.</span></span>
+          </div>
+          <div class="wcard" id="hk-card">
+            <div class="wtop"><span class="mono" id="hk-week">Week 1</span><span class="mono dim">Weight</span></div>
+            <div class="wnum"><b id="hk-weight">72.40</b><span>kg</span></div>
+            <div class="wrows">
+              <div class="wrow" id="hk-fat"><span>Body fat</span><b id="hk-fatv">19.1%</b><i class="down">▼</i></div>
+              <div class="wrow" id="hk-mus"><span>Muscle</span><b id="hk-musv">57.4 kg</b><i class="up">▲</i></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2 · Brand: the 8 draws, becomes the app -->
+        <section class="scene sage" id="s-brand">
+          <div class="glow"></div>
+          <div class="bigmark" id="br-mark"></div>
+          <div class="wordmark" id="br-word">intelli<span>8</span></div>
+          <div class="copy" id="br-copy">
+            <div class="eyebrow">For individual progress · <span class="lc">intelli8</span> app</div>
+            <div class="headline sm">
+              <span class="mask"><span id="br-l1">See what changed.</span></span>
+            </div>
+            <p class="body" id="br-body">Your full body-composition picture, every time you step on.</p>
+          </div>
+        </section>
+
+        <!-- 3 · Measure: stand steady, hold the bar -->
+        <section class="scene dark" id="s-measure">
+          <div class="copy" id="ms-copy">
+            <div class="headline">
+              <span class="mask"><span id="ms-l1">Stand steady.</span></span>
+              <span class="mask"><span id="ms-l2">Hold the bar.</span></span>
+              <span class="mask"><span id="ms-l3" class="mint">See more.</span></span>
+            </div>
+            <p class="body" id="ms-body">Four foot contacts and four hand contacts read through both arms, both legs and your trunk.</p>
+          </div>
+          <div class="scalewrap" id="ms-scale">
+            <img src="assets/scale.png" alt="" />
+            <div class="contacts" id="ms-contacts"></div>
+          </div>
+          <div class="chip dark" id="ms-chip"><span class="mono">intelli8 body composition scale</span><b>8 contacts · 5 body segments</b></div>
+        </section>
+
+        <!-- 4–7 · The app: dashboard, segments, report, goals + history -->
+        <section class="scene sage" id="s-app">
+          <div class="glow"></div>
+          <div class="copy" id="ap-copy">
+            <div class="eyebrow" id="ap-eye"></div>
+            <div class="headline sm" id="ap-head"></div>
+            <p class="body" id="ap-body"></p>
+          </div>
+          <div class="counter" id="ap-count"><b id="ap-countn">0</b><span>measures</span></div>
+          <div class="callouts" id="ap-callouts"></div>
+          <div class="coach" id="ap-coach">
+            <div class="pdf" id="ap-pdf"><i></i><i></i><i></i><i></i><span>PDF</span></div>
+            <div class="avatar">C</div>
+            <div><b>Shared with your coach</b><span>Full Report · Sep 24, 2026</span></div>
+          </div>
+          <div class="pair" id="ap-pair">
+            <div class="cap" id="ap-cap1"><span class="mono">02 · Goals</span><b>Choose a goal to work toward.</b></div>
+            <div class="cap" id="ap-cap2"><span class="mono">03 · History</span><b>Follow change over time.</b></div>
+          </div>
+        </section>
+
+        <!-- 8 · End card -->
+        <section class="scene sage" id="s-end">
+          <div class="glow"></div>
+          <div class="copy" id="en-copy">
+            <div class="lockup" id="en-lock"><div class="badge8"></div><span class="eyebrow">Powered by Waaha Labs</span></div>
+            <div class="headline">
+              <span class="mask"><span id="en-l1">See what changed.</span></span>
+              <span class="mask"><span id="en-l2" class="green">Fat, muscle,</span></span>
+              <span class="mask"><span id="en-l3" class="green">every segment.</span></span>
+            </div>
+            <div class="stores" id="en-stores">
+              <div class="store"><span>Get it on</span><b>Google Play</b></div>
+              <div class="store ghost"><span>iOS beta on</span><b>TestFlight</b></div>
+            </div>
+            <div class="price mono" id="en-price">intelli8 Body Composition Scale · S$98 · intelli8.ai</div>
+          </div>
+          <img class="endscale" id="en-scale" src="assets/scale.png" alt="" />
+          <div class="fine" id="en-fine">Readings are BIA estimates for general wellness, not a diagnosis. App screens show demo data.</div>
+        </section>
+
+        <!-- Phones live above the scenes so they can travel between them -->
+        <div class="phone" id="ph-main"><div class="screen" id="ph-main-screen"></div></div>
+        <div class="phone" id="ph-goals"><div class="screen" id="ph-goals-screen"></div></div>
+        <div class="phone" id="ph-hist"><div class="screen" id="ph-hist-screen"></div></div>
+        <div class="phone" id="ph-end"><div class="screen" id="ph-end-screen"></div></div>
+
+        <div id="wipe"></div>
+        <div id="tap"></div>
+      </div>
+    </div>
+
+    <div id="controls">
+      <button id="play" aria-label="Play or pause">❚❚</button>
+      <input id="scrub" type="range" min="0" max="1800" step="1" value="0" aria-label="Timeline" />
+      <output id="clock">0.00</output>
+    </div>
+
+    <script src="screens/app.js"></script>
+    <script src="assets/logo8.js"></script>
+    <script src="screens/welcome.js"></script>
+    <script src="screens/dashboard.js"></script>
+    <script src="screens/results.js"></script>
+    <script src="screens/report.js"></script>
+    <script src="screens/goals.js"></script>
+    <script src="screens/history.js"></script>
+    <script src="formats/16x9.js"></script>
+    <script src="film.js"></script>
+  </body>
+</html>

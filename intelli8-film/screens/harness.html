@@ -1,0 +1,43 @@
+<!doctype html>
+<!-- Preview one rebuilt app screen at its 390 × 844 pt size.
+     harness.html?screen=dashboard&p=1   (p = the screen's seek() progress, default 1)
+     Extra query params are passed to seek() as a second argument (numbers parsed). -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>intelli8 screen harness</title>
+    <link rel="stylesheet" href="app.css" />
+    <style>
+      html, body { margin: 0; background: #e0e7e1; }
+      #phone { position: relative; width: 390px; height: 844px; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <div id="phone"><div class="app" id="root"></div></div>
+    <script src="app.js"></script>
+    <script src="../assets/logo8.js"></script>
+    <script>
+      const q = new URLSearchParams(location.search);
+      const name = q.get("screen");
+      const css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = `${name}.css`;
+      document.head.appendChild(css);
+      const js = document.createElement("script");
+      js.src = `${name}.js`;
+      window.harnessReady = new Promise((res) => {
+        js.onload = async () => {
+          await new Promise((r) => (css.sheet ? r() : (css.onload = r)));
+          await document.fonts.load('400 16px "Inter"');
+          await document.fonts.ready;
+          const api = I8.screens[name](document.getElementById("root"), I8.h);
+          const extra = {};
+          for (const [k, v] of q) if (k !== "screen" && k !== "p") extra[k] = isNaN(+v) ? v : +v;
+          api.seek(q.has("p") ? +q.get("p") : 1, extra);
+          res();
+        };
+      });
+      document.head.appendChild(js);
+    </script>
+  </body>
+</html>

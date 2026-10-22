@@ -1,0 +1,109 @@
+{
+  "file": "intelli8-app-sound.wav",
+  "content": "sound design only \u2014 no music, no instruments, no tuned tones",
+  "sample_rate": 48000,
+  "duration": 30.0,
+  "integrated_lufs": -15.04,
+  "true_peak_dbtp": -1.6,
+  "stem_gain_db": {
+    "amb": -26.83,
+    "sig": -0.59,
+    "fx": -0.79,
+    "ui": -6.4,
+    "impact": 0.17
+  },
+  "events": [
+    {
+      "t": 1.05,
+      "event": "week ticker: soft granular rustle (no per-week ticks, so no pulse)"
+    },
+    {
+      "t": 1.95,
+      "event": "reveal: Different story."
+    },
+    {
+      "t": 4.422,
+      "event": "sheet whoosh crest"
+    },
+    {
+      "t": 4.75,
+      "event": "the 8 draws: airy sweep"
+    },
+    {
+      "t": 5.65,
+      "event": "heart pop"
+    },
+    {
+      "t": 6.4565,
+      "event": "mark flies into the phone"
+    },
+    {
+      "t": 7.86,
+      "event": "tap: Get started"
+    },
+    {
+      "t": 8.326,
+      "event": "bloom into Measure"
+    },
+    {
+      "t": 8.57,
+      "event": "impact: Measure"
+    },
+    {
+      "t": 9.55,
+      "event": "eight contact glints (feet, then hands, uneven), each brighter"
+    },
+    {
+      "t": 12.022,
+      "event": "Measure slides away"
+    },
+    {
+      "t": 12.95,
+      "event": "segments fill: five soft taps with callouts"
+    },
+    {
+      "t": 15.32,
+      "event": "tap: Save my results"
+    },
+    {
+      "t": 15.692,
+      "event": "push \u2192 Dashboard"
+    },
+    {
+      "t": 18.82,
+      "event": "tap: View full report"
+    },
+    {
+      "t": 19.192,
+      "event": "push \u2192 Full Report"
+    },
+    {
+      "t": 19.9,
+      "event": "report scroll: detents follow the scroll speed"
+    },
+    {
+      "t": 22.27,
+      "event": "tap: Save as PDF"
+    },
+    {
+      "t": 22.706,
+      "event": "PDF flight to the coach"
+    },
+    {
+      "t": 23.836,
+      "event": "Goals + History rise"
+    },
+    {
+      "t": 24.0,
+      "event": "goal slider travels"
+    },
+    {
+      "t": 24.55,
+      "event": "history line draws"
+    },
+    {
+      "t": 26.85,
+      "event": "impact: end card"
+    }
+  ]
+}

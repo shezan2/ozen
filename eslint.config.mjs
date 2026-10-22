@@ -12,8 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Standalone launch-film composition + renderer, not part of the Next app.
+    // Standalone film compositions + renderers, not part of the Next app.
     "launch-film/**",
+    "intelli8-film/**",
   ]),
 ]);
 

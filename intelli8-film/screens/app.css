@@ -1,0 +1,195 @@
+/* intelli8 App — shared UI for the rebuilt app screens (390 × 844 pt iPhone canvas).
+   Sampled from the real app screens on intelli8.ai. Each screen file (screens/<name>.css) is
+   scoped under .scr-<name> and builds on these tokens and components. */
+
+@font-face {
+  font-family: "Inter";
+  src: url(../assets/fonts/Inter.woff2) format("woff2");
+  font-weight: 100 900;
+  font-display: block;
+}
+
+:root {
+  --app-bg: #f3f2f7; /* iOS grouped background */
+  --app-card: #ffffff;
+  --app-ink: #111318;
+  --app-ink-2: #3c3f45;
+  --app-ink-3: #8a8d93; /* secondary labels */
+  --app-ink-4: #b4b6bb; /* tertiary / ranges */
+  --app-hair: rgba(17, 19, 24, 0.07);
+  --app-navy: #295976; /* primary buttons, active tab */
+  --app-navy-soft: #e3e9ef; /* active tab pill */
+  --app-good: #3e955c; /* "Normal", positive deltas */
+  --app-fat: #c4874b; /* fat % text, history line */
+  --app-fat-fill: #f6e7d6; /* segment fill (fat-led) */
+  --app-fat-stroke: #cf9a63;
+  --app-lean-fill: #dcefe2; /* trunk / muscle-led segment */
+  --app-lean-stroke: #58a274;
+  --app-bar: #3f8f5c; /* report bars */
+  --app-bar-track: #ececf0;
+}
+
+.app {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--app-bg);
+  font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-feature-settings: "cv11", "ss01";
+  color: var(--app-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Status bar: 9:41, signal, wifi, charging battery */
+.app .status {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 30px 0 46px;
+  font: 600 17px/1 "Inter";
+  letter-spacing: -0.01em;
+  z-index: 5;
+}
+.app .status .icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.app .status svg {
+  display: block;
+}
+
+/* Large iOS title ("Your Results", "History") */
+.app .title {
+  font: 700 28px/1.1 "Inter";
+  letter-spacing: -0.025em;
+}
+
+/* Grouped card */
+.app .card {
+  background: var(--app-card);
+  border-radius: 14px;
+}
+.app .card-title {
+  font: 600 13px/1.2 "Inter";
+  color: var(--app-ink-2);
+}
+.app .caps {
+  font: 500 10px/1 "Inter";
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--app-ink-3);
+}
+
+/* Metric tile: label, big light number, unit */
+.app .tile {
+  background: var(--app-card);
+  border-radius: 14px;
+  padding: 12px 12px 10px;
+}
+.app .tile .num {
+  font: 300 30px/1 "Inter";
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.app .tile .unit {
+  font: 400 12px/1 "Inter";
+  color: var(--app-ink-3);
+  margin-left: 2px;
+}
+
+/* List rows (All Metrics, Other Measurements) */
+.app .row {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 14px;
+  border-top: 1px solid var(--app-hair);
+  font: 400 14px/1 "Inter";
+}
+.app .row:first-child {
+  border-top: 0;
+}
+.app .row .v {
+  margin-left: auto;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.app .row .tag {
+  width: 62px;
+  text-align: right;
+  font-size: 13px;
+  color: var(--app-good);
+}
+
+/* Buttons */
+.app .btn {
+  height: 50px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font: 500 16px/1 "Inter";
+}
+.app .btn.primary {
+  background: var(--app-navy);
+  color: #fff;
+}
+.app .btn.ghost {
+  background: #f7f7fa;
+  border: 1px solid var(--app-hair);
+  color: var(--app-ink);
+}
+
+/* Floating tab bar: Dashboard · Goals · History · Profile */
+.app .tabs {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 26px;
+  height: 64px;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 6px 24px -10px rgba(17, 19, 24, 0.18), 0 0 0 1px rgba(17, 19, 24, 0.04);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  padding: 0 6px;
+  z-index: 6;
+}
+.app .tabs .tab {
+  height: 52px;
+  border-radius: 26px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 3px;
+  font: 500 10px/1 "Inter";
+  color: var(--app-ink);
+}
+.app .tabs .tab svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.app .tabs .tab.on {
+  background: var(--app-navy-soft);
+  color: var(--app-navy);
+}
+
+/* Home indicator */
+.app .home {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: 134px;
+  height: 5px;
+  margin-left: -67px;
+  border-radius: 3px;
+  background: #111;
+  z-index: 7;
+}

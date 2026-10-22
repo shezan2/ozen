@@ -1,0 +1,263 @@
+/* Your Results: title, three tiles, Segmental Analysis (body diagram + list), All Metrics, and the
+   frosted footer with Save my results. Positions in points, measured from the app screenshot. */
+
+/* The app's title is ~21.5pt here (app.css .title is 28px); Inter needs tighter tracking than SF. */
+.scr-results .title {
+  position: absolute;
+  left: 20px;
+  top: 70.2px;
+  font-size: 21.5px;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+/* Tiles — the weight tile is shorter: the app shrinks "72.40kg" to fit and centres the row. */
+.scr-results .tiles {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 106px;
+  height: 90px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 11px;
+  align-items: center;
+}
+.scr-results .tile {
+  position: relative;
+  height: 90px;
+  padding: 0;
+}
+.scr-results .tile.w {
+  height: 80px;
+}
+.scr-results .tile .caps {
+  position: absolute;
+  left: 15px;
+  top: 17px;
+  font-size: 10.5px;
+  line-height: 1;
+}
+.scr-results .tile .val {
+  position: absolute;
+  left: 15px;
+  top: 37.6px;
+  white-space: nowrap;
+  line-height: 1;
+  font-size: 34px;
+}
+.scr-results .tile .num {
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 200;
+  letter-spacing: -0.06em;
+}
+.scr-results .tile .unit {
+  font-size: 14.5px;
+  margin-left: 2px;
+}
+.scr-results .tile.m .unit {
+  margin-left: 3.5px;
+}
+.scr-results .tile.w .val {
+  top: 36.6px;
+  font-size: 26.2px;
+}
+.scr-results .tile.w .num {
+  font-size: 26.2px;
+}
+.scr-results .tile.w .unit {
+  font-size: 13.4px;
+  margin-left: 1px;
+}
+
+/* Segmental Analysis */
+.scr-results .card.seg {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 209px;
+  height: 308.5px;
+}
+.scr-results .card.seg .card-title {
+  position: absolute;
+  left: 15px;
+  top: 16px;
+  line-height: 1;
+}
+.scr-results .card-title {
+  color: var(--app-ink-2);
+  letter-spacing: -0.018em;
+}
+.scr-results .body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+.scr-results .body .neutral {
+  fill: var(--app-bg);
+  stroke: rgba(17, 19, 24, 0.07);
+  stroke-width: 1;
+}
+.scr-results .body .part .fill {
+  stroke: none;
+}
+.scr-results .body .part .back {
+  fill: var(--app-card);
+  stroke: none;
+  opacity: 0;
+}
+.scr-results .body .part .edge,
+.scr-results .body .part .halo {
+  fill: none;
+  stroke-width: 1.5;
+}
+.scr-results .body .part .halo {
+  stroke-width: 7;
+  opacity: 0;
+}
+.scr-results .body .part.fat .fill {
+  fill: var(--app-fat-fill);
+}
+/* Outline colours sampled from the screenshot: a touch deeper than --app-fat-stroke / --app-lean-stroke. */
+.scr-results .body .part.fat .edge,
+.scr-results .body .part.fat .halo {
+  stroke: #be8c55;
+}
+.scr-results .body .part.lean .fill {
+  fill: var(--app-lean-fill);
+}
+.scr-results .body .part.lean .edge,
+.scr-results .body .part.lean .halo {
+  stroke: #4a9160;
+}
+.scr-results .body text {
+  font-family: "Inter";
+  text-anchor: middle;
+}
+.scr-results .body .lab .m {
+  font-size: 7px;
+  font-weight: 600;
+}
+.scr-results .body .lab .f {
+  font-size: 6.5px;
+  font-weight: 400;
+  fill: var(--app-ink-3);
+}
+.scr-results .body .lab.fat .m {
+  fill: var(--app-fat);
+}
+.scr-results .body .lab.lean .m {
+  fill: var(--app-good);
+}
+.scr-results .body .lr {
+  font-size: 6px;
+  fill: var(--app-ink-4);
+}
+
+.scr-results .seglist {
+  position: absolute;
+  left: 182px;
+  top: 77px;
+}
+.scr-results .sl {
+  height: 37.875px;
+}
+.scr-results .sl-lab {
+  padding-top: 1px;
+  font: 400 11px/1 "Inter";
+  color: var(--app-ink-3);
+}
+.scr-results .sl-val {
+  margin-top: 5.2px;
+  white-space: nowrap;
+  font: 400 11px/1 "Inter";
+}
+.scr-results .sl-val b {
+  font-size: 12.75px;
+  font-weight: 600;
+  color: var(--app-ink);
+  font-variant-numeric: tabular-nums;
+}
+.scr-results .sl-val span {
+  margin-left: 8px;
+  color: var(--app-fat);
+}
+.scr-results .sl.lean .sl-val span {
+  color: var(--app-good);
+}
+
+/* All Metrics */
+.scr-results .am-cap {
+  position: absolute;
+  left: 20px;
+  top: 531px;
+  line-height: 1;
+}
+.scr-results .card.am {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 553px;
+  height: 220px;
+}
+.scr-results .card.am .row {
+  position: relative;
+  height: 41px;
+  box-sizing: border-box;
+  padding: 1px 15px 0 15px;
+  border-top: 0;
+  font-size: 14.5px;
+  letter-spacing: -0.01em;
+}
+.scr-results .card.am .row + .row::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  right: 0;
+  top: 0;
+  border-top: 0.5px solid rgba(17, 19, 24, 0.1);
+}
+.scr-results .card.am .row .v {
+  font-weight: 500;
+}
+.scr-results .card.am .row .tag {
+  width: 76.5px;
+  font-size: 12.5px;
+  letter-spacing: 0;
+}
+
+/* Frosted footer (fixed over the scrolling list; the list card runs on underneath it) */
+.scr-results .foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 715px;
+  bottom: 0;
+  background: rgba(234, 234, 238, 0.72);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-top: 0.5px solid rgba(17, 19, 24, 0.08);
+  z-index: 4;
+}
+.scr-results .foot .btn {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 12.5px;
+  height: 50px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15.5px;
+  letter-spacing: -0.01em;
+}
+.scr-results .foot .note {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 74.1px;
+  text-align: center;
+  font: 400 12px/1 "Inter";
+  color: var(--app-ink-3);
+}
