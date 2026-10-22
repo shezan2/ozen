@@ -45,12 +45,12 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 0;
+  top: -9.5px;
   height: 54px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 30px 0 46px;
+  padding: 14px 33.5px 0 54.5px; /* measured from the app's screens */
   font: 600 17px/1 "Inter";
   letter-spacing: -0.01em;
   z-index: 5;
@@ -58,7 +58,7 @@
 .app .status .icons {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 .app .status svg {
   display: block;
@@ -148,17 +148,17 @@
 /* Floating tab bar: Dashboard · Goals · History · Profile */
 .app .tabs {
   position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 26px;
-  height: 64px;
+  left: 21px;
+  right: 21px;
+  bottom: 21px;
+  height: 60px;
   border-radius: 32px;
   background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 6px 24px -10px rgba(17, 19, 24, 0.18), 0 0 0 1px rgba(17, 19, 24, 0.04);
+  box-shadow: 0 10px 30px -8px rgba(17, 19, 24, 0.12), 0 0 0 1px rgba(17, 19, 24, 0.03);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: center;
-  padding: 0 6px;
+  padding: 0 8px;
   z-index: 6;
 }
 .app .tabs .tab {
@@ -167,17 +167,19 @@
   display: grid;
   place-items: center;
   align-content: center;
-  gap: 3px;
-  font: 500 10px/1 "Inter";
+  gap: 4px;
+  font: 600 10.5px/1 "Inter";
+  letter-spacing: -0.01em;
   color: var(--app-ink);
 }
 .app .tabs .tab svg {
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   display: block;
 }
 .app .tabs .tab.on {
-  background: var(--app-navy-soft);
+  margin: 0 -3.5px;
+  background: #e9e8ed;
   color: var(--app-navy);
 }
 

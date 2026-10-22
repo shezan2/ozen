@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""intelli8 App film: sound design (no music), synthesised in code.
+"""intelli8 films: sound design (no music), synthesised in code.
 
 Brief: no musical instruments. So there are no melodies, chords, drums, beats or tuned tones.
 Every sound here is built from filtered noise and short transients (no oscillators): air,
@@ -7,14 +7,16 @@ whooshes, glints, clicks, ticks, pops and impacts, plus a quiet room-tone bed. E
 placed on a visual event, so the motion itself sets the rhythm.
 
     python3 -m venv .venv && .venv/bin/pip install -r ../launch-film/audio/requirements.txt
-    .venv/bin/python audio/sound.py      # → out/intelli8-app-sound.wav + out/sound-cues.json
-    node render.mjs --mux                # attach it to the film
+    .venv/bin/python audio/sound.py                 # App film → out/intelli8-app-sound.wav + out/sound-cues-app.json
+    .venv/bin/python audio/sound.py --film scale    # Body Composition Scale film → out/intelli8-scale-sound.wav
+    node render.mjs --film scale --mux              # attach it to the film
 
 Deterministic: each sound draws from its own seeded noise stream.
 
-Cues follow the picture (film.js): air and texture for the hook, an airy draw for the 8 and a pop
+Each film has its own cue sheet and design function. App film cues follow film.js: air and texture for the hook, an airy draw for the 8 and a pop
 for its heart, a bloom as the dark Measure section opens, eight bright glints for the scale's
 contacts, then the app: taps, pushes, scroll detents, segment ticks, a PDF flight and the landing.
+Scale film cues follow scale-film.js (see SCALE below).
 """
 from __future__ import annotations
 
@@ -29,7 +31,11 @@ from scipy import signal
 from scipy.ndimage import minimum_filter1d, uniform_filter1d
 
 SR = 48_000
-DUR = 30.0
+FILMS = {"app": 30.0, "scale": 34.0, "iam": 30.0}  # film → duration (s)
+FILM = sys.argv[sys.argv.index("--film") + 1] if "--film" in sys.argv else "app"
+if FILM not in FILMS:
+    sys.exit(f"--film must be one of {', '.join(FILMS)}")
+DUR = FILMS[FILM]
 N = int(SR * DUR)
 SEED = 20261013
 
@@ -40,7 +46,7 @@ OUT = HERE.parent / "out"
 # Times in seconds from ../film.js: tween starts, and where motion visibly lands or peaks
 # (derived from its easing curves and checked against frame differences of the render).
 
-# Picture events (seconds), from film.js.
+# App film picture events (seconds), from film.js.
 CUE = {
     "card": 0.0,  # weight card on screen
     "same": 0.4,  # "Same weight."
@@ -60,7 +66,7 @@ CUE = {
     "chip": 10.75,  # "8 contacts · 5 body segments"
     "measure_out": (11.75, 12.35),  # dark section slides up
     "phone_in": (11.95, 12.75),  # phone rises with Your Results
-    "segments": (12.95, 0.216),  # body parts fill: first time, spacing (5 parts)
+    "segments": (12.75, 0.216),  # body parts fill: first time, spacing (5 parts); film.js RESULTS
     "tap2": 15.32,  # tap: Save my results
     "push1": (15.5, 15.9),  # → Dashboard
     "sparks": (16.35, 17.15),  # sparklines draw
@@ -71,8 +77,8 @@ CUE = {
     "pdf": (22.4, 23.0),  # PDF flies to the coach
     "coach": 22.85,  # "Shared with your coach"
     "pair": (23.15, 24.35),  # main phone out, Goals + History phones rise
-    "slider": (24.0, 24.9),  # goal slider travels
-    "line": (24.55, 25.4),  # history line draws
+    "slider": (23.89, 24.68),  # goal slider travels
+    "line": (24.06, 25.09),  # history line draws
     "to_end": (26.4, 26.85),  # cut to the end card
     "end_hit": 26.85,  # end card lands
     "stores": 27.6,  # where to get it
@@ -459,7 +465,7 @@ def limiter(x: np.ndarray, ceiling_db=-1.0, lookahead=0.004, release=0.09) -> np
 STEMS = ("amb", "sig", "fx", "ui", "impact")
 
 
-def design():
+def design_app():
     buses = {k: Bus(k) for k in STEMS}
     rev = {k: Bus("rev:" + k) for k in STEMS}
     events = []
@@ -613,6 +619,245 @@ def design():
     return buses, rev, events
 
 
+# Scale film picture events (seconds), from scale-film.js: card progress p maps to time linearly over
+# each card's window, so card-relative timings are converted here.
+def _card(t0, t1):
+    return lambda p: t0 + (t1 - t0) * p
+
+
+_HOOK = _card(0.1, 4.1)
+_HERO = _card(4.55, 8.0)
+_SEG = _card(11.85, 15.4)
+_CMP = _card(15.75, 19.4)
+_STEPS = _card(19.95, 23.1)
+_DISP = _card(24.1, 27.4)
+_SPECS = _card(27.45, 29.35)
+_END = _card(29.65, 32.0)
+SCALE = {
+    "lcd": (_HOOK(0.0), _HOOK(0.30)),  # the weight-only LCD wakes and its digits roll to 72.4
+    "lock": (_HOOK(0.33), _HOOK(0.39)),  # it blinks twice to lock
+    "one": _HOOK(0.04),  # "One number."
+    "split": (_HOOK(0.40), _HOOK(0.62)),  # the two story cards slide out, left and right
+    "bars": (_HOOK(0.55), _HOOK(0.80)),  # their bars grow
+    "two": _HOOK(0.46),  # "Two stories." — the insight
+    "sheet": (4.2, 4.95),  # the sage hero section rises over the hook
+    "rise": (_HERO(0.0), _HERO(0.45)),  # the scale rises and settles
+    "hero_head": _HERO(0.12),  # four headline lines
+    "wake": _HERO(0.33),  # the scale's display wakes
+    "chip": _HERO(0.62),  # "8 contacts · 5 body segments"
+    "dive": (8.45, 9.05),  # the camera falls into the black plate
+    "arrive": 9.08,  # out of the glass into the dark contacts section
+    "ct_head": (9.3, 10.05),  # "Four for your feet." / "Four for your hands."
+    "contacts": [9.42, 9.53, 9.68, 9.76, 10.22, 10.36],  # foot plates, then the hand pads
+    "scan": (10.6, 11.15),  # the measurement sweeps up the plate
+    "fold": (11.3, 11.95),  # the dark frame folds into the segment card
+    "seg_head": _SEG(0.02),
+    "segments": [_SEG(0.22 + i * 0.126) for i in range(5)],  # five segments light up
+    "page": (15.3, 16.0),  # scroll down to the comparison
+    "cmp_head": _CMP(0.02),
+    "cards": [_CMP(0.12), _CMP(0.21), _CMP(0.30)],  # three cards rise
+    "scroll": (17.0, 19.2),  # the camera scrolls down the table
+    "focus": (19.2, 19.9),  # intelli8 column emphasised
+    "dark": (19.6, 20.3),  # the dark section rises
+    "photo": (_STEPS(0.0), _STEPS(0.35)),
+    "steps_head": _STEPS(0.08),
+    "steps": [_STEPS(0.45 + i * 0.12) for i in range(4)],
+    "step_hi": (22.2, 23.9),  # the active step travels 01 → 04
+    "slide": (23.9, 24.5),  # across to the display
+    "disp_head": _DISP(0.08),
+    "digits": (_DISP(0.22), _DISP(0.38)),  # the status row and weight digits flicker on
+    "readings": (_DISP(0.38), _DISP(0.84)),  # six readings light one at a time
+    "sage": (27.2, 27.9),  # the specifications rise
+    "rows": (_SPECS(0.10), _SPECS(0.90)),
+    "to_end": (29.4, 30.1),  # the end section scrolls up
+    "end_hit": 30.12,
+    "cta": _END(0.0) + 1.35,  # buttons and store pills (cta 31.0 → 32.2)
+    "price": 31.65,
+}
+
+
+def design_scale():
+    buses = {k: Bus(k) for k in STEMS}
+    rev = {k: Bus("rev:" + k) for k in STEMS}
+    events = []
+    C = SCALE
+
+    def put(stem, x, t, pan=0.0, gain=1.0, send=0.0):
+        buses[stem].add(x, t, pan=pan, gain=gain)
+        if send:
+            rev[stem].add(x, t, pan=pan, gain=gain * send)
+
+    def ev(t, what):
+        events.append({"t": round(float(t), 4), "event": what})
+
+    def swish(t, d=0.34, f0=1300, f1=4000, pan=-0.3, gain=0.3):
+        put("fx", whoosh(d, peak=0.28, f0=f0, f1=f1, pan0=pan, pan1=pan + 0.25, width_oct=1.3), t - 0.03, gain=gain, send=0.15)
+
+    def move(t0, t1, f0=260, f1=2000, pan0=-0.45, pan1=0.45, gain=0.7, peak=0.42, label=""):
+        d = t1 - t0 + 0.08
+        put("fx", whoosh(d, peak=peak, f0=f0, f1=f1, pan0=pan0, pan1=pan1, width_oct=1.6), t0, gain=gain, send=0.15)
+        if label:
+            ev(t0 + peak * d, label)
+
+    def land(t, size=0.5, gain=0.5, label=""):
+        put("fx", reverse_swell(0.4), t - 0.4, gain=0.25)
+        put("impact", impact(size), t, gain=gain, send=0.4)
+        if label:
+            ev(t, label)
+
+    # ---- room tone: a touch more air in the dark sections
+    reseed("ambience")
+    put("amb", ambience(DUR, lambda u: np.clip(u / 0.02, 0, 1) * (1 - 0.6 * np.clip((u - 0.95) / 0.04, 0, 1))), 0.0)
+
+    # ---- hook: a weight-only LCD settles, then the one number splits into two stories
+    reseed("hook")
+    l0, l1 = C["lcd"]
+    put("fx", filt(glint(l1 - l0, pan0=0.25, pan1=0.4, density=46.0), "bandpass", [1800, 7000]), l0, gain=0.22, send=0.2)
+    put("fx", whoosh(0.5, peak=0.2, f0=600, f1=2600, pan0=0.35, pan1=0.45, width_oct=1.4), l0, gain=0.24, send=0.2)
+    ev(l0, "LCD wakes: digits roll as a soft electric rustle (no per-digit ticks)")
+    k0, k1 = C["lock"]
+    put("ui", filt(tick(0.9), "lowpass", 6000), k0, pan=0.35, gain=0.32, send=0.2)
+    put("ui", filt(tick(0.75), "lowpass", 5200), k1 + 0.012, pan=0.35, gain=0.24, send=0.2)
+    ev(k0, "two soft lock clicks as the reading settles")
+    swish(C["one"] + 0.12, pan=-0.45)
+    s0, s1 = C["split"]
+    put("fx", pressure(0.6, peak=0.5), s0 - 0.35, gain=0.35)
+    put("fx", whoosh(s1 - s0 + 0.1, peak=0.35, f0=900, f1=2400, pan0=0.3, pan1=-0.05, width_oct=1.3), s0, gain=0.34, send=0.2)
+    put("fx", whoosh(s1 - s0 + 0.16, peak=0.4, f0=800, f1=2200, pan0=0.4, pan1=0.75, width_oct=1.3), s0 + 0.06, gain=0.3, send=0.2)
+    ev(s0, "the stories split: two whooshes, left and right")
+    put("impact", impact(0.4), C["two"] + 0.08, gain=0.45, send=0.45)
+    swish(C["two"] + 0.08, f0=1100, f1=3600, pan=-0.4, gain=0.28)
+    ev(C["two"] + 0.08, "reveal: Two stories.")
+    b0, b1 = C["bars"]
+    put("fx", whoosh(b1 - b0, peak=0.45, f0=1600, f1=4400, pan0=0.2, pan1=0.55, width_oct=0.9), b0, gain=0.16, send=0.2)
+
+    # ---- the sage hero section rises; the scale arrives; its display wakes
+    reseed("sheet")
+    h0, h1 = C["sheet"]
+    put("fx", riser(h1 - h0 + 0.35, f0=500, f1=6500, curve=2.4), h0 - 0.35, gain=0.32)
+    move(h0, h1, f0=180, f1=2200, pan0=0, pan1=0, gain=0.8, peak=0.4, label="sheet whoosh crest")
+    put("fx", pressure(h1 - h0 + 0.1, peak=0.45), h0, gain=0.45)
+    land(h1 - 0.03, size=0.45, gain=0.42)
+    reseed("hero")
+    r0, r1 = C["rise"]
+    put("fx", pressure(r1 - r0, peak=0.45), r0, gain=0.5)
+    move(r0, r1 - 0.3, f0=200, f1=1300, pan0=0.4, pan1=0.35, gain=0.5, peak=0.45, label="the scale rises")
+    put("sig", thock(0.55), r1 - 0.28, gain=0.42, send=0.45)
+    swish(C["hero_head"] + 0.1, d=0.42, pan=-0.5, gain=0.3)
+    swish(C["hero_head"] + 0.55, d=0.32, f0=1500, f1=4600, pan=-0.45, gain=0.22)
+    put("fx", filt(glint(0.55, pan0=0.3, pan1=0.45, density=150.0), "highpass", 2600), C["wake"], gain=0.22, send=0.45)
+    put("fx", reverse_swell(0.3, hp=3500), C["wake"] - 0.28, gain=0.18)
+    ev(C["wake"], "display wakes: bright shimmer")
+    put("ui", pop(0.09), C["chip"], gain=0.36, send=0.22)
+
+    # ---- the dive into the black plate, out into the contacts
+    reseed("dive")
+    d0, d1 = C["dive"]
+    put("fx", riser(d1 - d0 + 0.2, f0=300, f1=7000, curve=3.0), d0 - 0.2, gain=0.36)
+    move(d0, d1, f0=2400, f1=200, pan0=0.3, pan1=0.0, gain=0.85, peak=0.7, label="dive through the glass")
+    put("fx", pressure(d1 - d0 + 0.25, peak=0.75), d0, gain=0.6)
+    land(C["arrive"], size=0.7, gain=0.62, label="impact: into the contacts")
+
+    # ---- contacts: feet, then hands; the measurement sweeps up
+    reseed("contacts")
+    swish(C["ct_head"][0] + 0.1, d=0.38, pan=0.35, gain=0.28)
+    swish(C["ct_head"][1] + 0.1, d=0.32, f0=1500, f1=4600, pan=0.4, gain=0.24)
+    for i, t in enumerate(C["contacts"]):
+        hand = i >= 4
+        put("ui", filt(tick(1.05 + 0.08 * i), "highpass", 1700 + 300 * i), t, pan=-0.25 + 0.08 * i, gain=0.3 + 0.025 * i, send=0.45)
+        put("fx", glint(0.2 if not hand else 0.32, pan0=-0.3, pan1=0.0, density=130.0), t, gain=0.12 + 0.05 * hand, send=0.4)
+    ev(C["contacts"][0], "six contact glints: four foot plates (uneven), then both hand pads")
+    c0, c1 = C["scan"]
+    put("fx", whoosh(c1 - c0 + 0.1, peak=0.55, f0=900, f1=5200, pan0=-0.25, pan1=-0.2, width_oct=0.8), c0, gain=0.26, send=0.3)
+    put("fx", filt(glint(c1 - c0, pan0=-0.3, pan1=-0.15, density=70.0), "highpass", 3000), c0, gain=0.14, send=0.4)
+    ev(c0, "measurement sweep")
+    f0_, f1_ = C["fold"]
+    move(f0_, f1_, f0=2200, f1=500, pan0=0.0, pan1=-0.3, gain=0.6, peak=0.55, label="dark frame folds into the card")
+    put("sig", thock(0.6), f1_ - 0.02, gain=0.45, send=0.4)
+
+    # ---- segments: five soft fills, uneven, no ticks (they would pulse)
+    reseed("segments")
+    swish(C["seg_head"] + 0.1, d=0.42, pan=0.45, gain=0.28)
+    for i, (t, j) in enumerate(zip(C["segments"], (0, 0.05, -0.04, 0.03, -0.02))):
+        put("fx", whoosh(0.42, peak=0.35, f0=1400, f1=3600, pan0=-0.35 + 0.12 * i, pan1=-0.2 + 0.12 * i, width_oct=1.0), t + j, gain=0.16 + 0.02 * (i == 2), send=0.3)
+        put("fx", glint(0.22, pan0=-0.4 + 0.12 * i, pan1=-0.25 + 0.12 * i, density=90.0), t + j + 0.04, gain=0.1, send=0.45)
+    ev(C["segments"][0], "five segments light: soft airy fills with glints")
+
+    # ---- page scroll to the comparison; cards; the camera scrolls the table
+    reseed("compare")
+    p0, p1 = C["page"]
+    move(p0, p1, f0=1500, f1=300, pan0=0.0, pan1=0.0, gain=0.62, peak=0.45, label="page scroll")
+    swish(C["cmp_head"] + 0.12, d=0.42, pan=-0.45, gain=0.26)
+    for i, t in enumerate(C["cards"]):
+        put("fx", whoosh(0.4, peak=0.35, f0=500, f1=1600, pan0=-0.4 + 0.4 * i, pan1=-0.35 + 0.4 * i, width_oct=1.2), t + (0, 0.03, -0.02)[i], gain=0.2, send=0.15)
+    put("fx", whoosh(0.5, peak=0.5, f0=1200, f1=3800, pan0=0.3, pan1=0.5, width_oct=1.0), C["cards"][2] + 0.15, gain=0.16, send=0.25)
+    q0, q1 = C["scroll"]
+    put("fx", whoosh(q1 - q0, peak=0.5, f0=1400, f1=420, pan0=0.1, pan1=0.0, width_oct=1.4), q0, gain=0.28)
+    for t in scroll_ticks(q0, q1, max_rate=12.0):
+        put("ui", filt(tick(0.7), "lowpass", 6200), t, pan=0.2, gain=0.15)
+    ev(q0, "table scroll: detents follow the scroll speed")
+    z0, z1 = C["focus"]
+    put("fx", reverse_swell(z1 - z0, hp=1800), z0, gain=0.2)
+
+    # ---- the dark section: photo, headline, four steps
+    reseed("steps")
+    k0, k1 = C["dark"]
+    put("fx", riser(k1 - k0 + 0.3, f0=500, f1=6000, curve=2.4), k0 - 0.3, gain=0.28)
+    move(k0, k1, f0=180, f1=2000, pan0=0, pan1=0, gain=0.78, peak=0.4, label="dark section rises")
+    put("fx", pressure(k1 - k0 + 0.1, peak=0.45), k0, gain=0.45)
+    land(k1 + 0.02, size=0.55, gain=0.48)
+    put("fx", whoosh(C["photo"][1] - C["photo"][0], peak=0.4, f0=300, f1=1500, pan0=-0.45, pan1=-0.4, width_oct=1.3), C["photo"][0], gain=0.3, send=0.2)
+    swish(C["steps_head"] + 0.15, d=0.42, pan=0.4, gain=0.26)
+    swish(C["steps_head"] + 0.62, d=0.3, f0=1500, f1=4600, pan=0.45, gain=0.22)
+    for i, (t, j) in enumerate(zip(C["steps"], (0, 0.04, -0.03, 0.02))):
+        put("ui", filt(tick(0.7), "lowpass", 5000 + 400 * i), t + j, pan=0.4, gain=0.15, send=0.25)
+    a0, a1 = C["step_hi"]
+    put("fx", whoosh(a1 - a0, peak=0.5, f0=900, f1=2800, pan0=0.35, pan1=0.45, width_oct=0.9), a0, gain=0.15, send=0.2)
+    m0, m1 = C["slide"]
+    move(m0, m1, f0=1600, f1=500, pan0=0.4, pan1=-0.5, gain=0.5, peak=0.5, label="across to the display")
+
+    # ---- the built-in display: flicker on, then six readings shimmer in
+    reseed("display")
+    swish(C["disp_head"] + 0.12, d=0.42, pan=0.4, gain=0.26)
+    g0, g1 = C["digits"]
+    for j, (dt, gn) in enumerate(((0.0, 0.2), (0.07, 0.12), (0.16, 0.24))):  # three uneven flickers
+        put("fx", filt(glint(0.08, pan0=-0.3, pan1=-0.25, density=400.0), "highpass", 3500), g0 + dt, gain=gn, send=0.3)
+    put("fx", filt(glint(g1 - g0, pan0=-0.3, pan1=-0.2, density=160.0), "highpass", 2500), g0 + 0.18, gain=0.16, send=0.4)
+    ev(g0, "display flickers on")
+    e0, e1 = C["readings"]
+    put("fx", filt(glint(e1 - e0, pan0=-0.35, pan1=0.35, density=60.0), "bandpass", [2200, 9000]), e0, gain=0.22, send=0.45)
+    put("fx", whoosh(e1 - e0, peak=0.55, f0=1600, f1=4800, pan0=-0.3, pan1=0.35, width_oct=0.8), e0, gain=0.13, send=0.25)
+    ev(e0, "six readings: one continuous shimmer, no per-reading ticks")
+
+    # ---- specifications
+    reseed("specs")
+    y0, y1 = C["sage"]
+    put("fx", riser(y1 - y0 + 0.3, f0=500, f1=6000, curve=2.4), y0 - 0.3, gain=0.26)
+    move(y0, y1, f0=180, f1=2000, pan0=0, pan1=0, gain=0.72, peak=0.4, label="specifications rise")
+    land(y1 + 0.02, size=0.45, gain=0.4)
+    w0, w1 = C["rows"]
+    put("fx", filt(glint(w1 - w0, pan0=0.15, pan1=0.4, density=30.0), "lowpass", 6500), w0, gain=0.2, send=0.25)
+    put("fx", whoosh(w1 - w0, peak=0.4, f0=1200, f1=2800, pan0=0.2, pan1=0.4, width_oct=1.2), w0, gain=0.12)
+
+    # ---- end
+    reseed("end")
+    n0, n1 = C["to_end"]
+    move(n0, n1, f0=300, f1=2400, pan0=0.0, pan1=0.0, gain=0.7, peak=0.45)
+    put("fx", reverse_swell(0.6), C["end_hit"] - 0.62, gain=0.42)
+    put("impact", impact(0.95), C["end_hit"], gain=1.0, send=0.4)
+    ev(C["end_hit"], "impact: end")
+    swish(C["end_hit"] + 0.25, d=0.42, pan=-0.5, gain=0.24)
+    swish(C["end_hit"] + 0.95, d=0.32, f0=1500, f1=4600, pan=-0.45, gain=0.2)
+    put("ui", pop(0.1), C["cta"], gain=0.4, send=0.25)
+    put("fx", glint(0.5, pan0=-0.5, pan1=0.0, density=100.0), C["cta"] + 0.15, gain=0.18, send=0.4)
+    put("sig", thock(0.6), C["price"], gain=0.42, send=0.5)
+    ev(C["price"], "price lands")
+    return buses, rev, events
+
+
+DESIGNS = {"app": design_app, "scale": design_scale}
+
+
 # Stem levelling: sparse effects are levelled by their loudest 400 ms; the room tone by gated
 # loudness; clicks by peak. Only the differences matter: the mix is normalised afterwards.
 STEM_MOMENTARY = {"impact": -14.0, "fx": -17.5, "sig": -18.0}
@@ -623,7 +868,7 @@ REVERB_LUFS = -26.0
 TARGET_LUFS = -15.0
 VO_LUFS = -16.0  # narration level relative to the effects before normalisation
 VO_DUCK_DB = -8.0  # effects dip this much while the narrator speaks
-VOICEOVER = OUT / "voiceover.wav"  # narration on the same timing, when there is one
+VOICEOVER = OUT / f"voiceover-{FILM}.wav"  # narration on the same timing, when there is one (audio/voice.py)
 CEILING_DBTP = -1.5
 
 
@@ -719,12 +964,13 @@ def write_wav24(path: Path, x: np.ndarray):
 
 
 def main():
-    buses, rev, events = design()
+    buses, rev, events = DESIGNS[FILM]()
     out, gains = master(buses, rev)
-    wav = OUT / "intelli8-app-sound.wav"
+    wav = OUT / f"intelli8-{FILM}-sound.wav"
     write_wav24(wav, out)
     report = {
         "file": wav.name,
+        "film": FILM,
         "content": "sound design only — no music, no instruments, no tuned tones",
         "sample_rate": SR,
         "duration": DUR,
@@ -733,7 +979,7 @@ def main():
         "stem_gain_db": {k: round(20 * np.log10(v), 2) for k, v in gains.items()},
         "events": sorted(events, key=lambda e: e["t"]),
     }
-    (OUT / "sound-cues.json").write_text(json.dumps(report, indent=2))
+    (OUT / f"sound-cues-{FILM}.json").write_text(json.dumps(report, indent=2))
     print(f"{wav}  {report['integrated_lufs']} LUFS  {report['true_peak_dbtp']} dBTP")
     return 0
 

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>intelli8 Scale Film</title>
+    <link rel="stylesheet" href="cards/base.css" />
+    <link rel="stylesheet" href="cards/hook.css" />
+    <link rel="stylesheet" href="cards/hero.css" />
+    <link rel="stylesheet" href="cards/segments.css" />
+    <link rel="stylesheet" href="cards/compare.css" />
+    <link rel="stylesheet" href="cards/steps.css" />
+    <link rel="stylesheet" href="cards/display.css" />
+    <link rel="stylesheet" href="cards/specs.css" />
+    <link rel="stylesheet" href="scale-film.css" />
+  </head>
+  <body>
+    <div id="viewport">
+      <div id="stage">
+        <!-- Each scene holds a camera; site cards are mounted into the cameras by scale-film.js -->
+        <section class="scene cream" id="s-hook"><div class="glow"></div><div class="cam" id="c-hook"></div></section>
+        <section class="scene sage" id="s-reveal"><div class="glow"></div><div class="cam" id="c-reveal"></div></section>
+
+        <!-- Contacts: the eight electrodes light, feet then hands -->
+        <section class="scene dark" id="s-contacts">
+          <div class="glow dark"></div>
+          <div class="cam" id="c-contacts">
+            <div class="front" id="ct-scale">
+              <div class="shadow"></div>
+              <img src="assets/scale-front.png" alt="" />
+              <div class="contacts" id="ct-contacts"></div>
+              <div class="scan" id="ct-scan"></div>
+            </div>
+            <div class="copy" id="ct-copy">
+              <div class="eyebrow">8 contacts · multi-frequency BIA</div>
+              <div class="headline">
+                <span class="mask"><span id="ct-l1">Four for your feet.</span></span>
+                <span class="mask"><span id="ct-l2" class="mint">Four for your hands.</span></span>
+              </div>
+              <p class="body" id="ct-body">Eight contacts measure through both arms, both legs and the trunk.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="scene cream" id="s-segments"><div class="cam" id="c-segments"></div></section>
+        <section class="scene cream" id="s-compare"><div class="cam" id="c-compare"></div></section>
+        <section class="scene dark" id="s-steps"><div class="glow dark"></div><div class="cam" id="c-steps"></div></section>
+        <section class="scene dark" id="s-display"><div class="glow dark"></div><div class="cam" id="c-display"></div></section>
+        <section class="scene sage" id="s-specs"><div class="glow"></div><div class="cam" id="c-specs"></div></section>
+
+        <!-- End: the hero again, now with where to buy, the price and the safety line -->
+        <section class="scene sage" id="s-end">
+          <div class="glow"></div>
+          <div class="cam" id="c-end"></div>
+          <div class="price" id="en-price"><b>S$98</b><span>intelli8 Body Composition Scale</span><em>intelli8.ai</em></div>
+          <p class="fine" id="en-fine">
+            Wellness information, not a diagnosis: BIA readings are estimates. Not a medical device. Do not use if you have an
+            implanted electronic medical device such as a pacemaker or defibrillator.
+          </p>
+        </section>
+      </div>
+    </div>
+
+    <div id="controls">
+      <button id="play" aria-label="Play or pause">❚❚</button>
+      <input id="scrub" type="range" min="0" max="2040" step="1" value="0" aria-label="Timeline" />
+      <output id="clock">0.00</output>
+    </div>
+
+    <script src="cards/base.js"></script>
+    <script src="assets/logo8.js"></script>
+    <script src="cards/hook.js"></script>
+    <script src="cards/hero.js"></script>
+    <script src="cards/segments.js"></script>
+    <script src="cards/compare.js"></script>
+    <script src="cards/steps.js"></script>
+    <script src="cards/display.js"></script>
+    <script src="cards/specs.js"></script>
+    <script src="scale-film.js"></script>
+  </body>
+</html>

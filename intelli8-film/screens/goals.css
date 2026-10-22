@@ -1,0 +1,272 @@
+/* Goals tab: "Lose Weight" + Change goal, the weight-progress slider card, the target date /
+   projection card with its pace note, the muscle-mass row, Edit target and the tab bar.
+   Positions are measured from the real app screen (390 pt wide, 1 pt = 1 px). */
+
+/* Header */
+.scr-goals .title {
+  position: absolute;
+  left: 16.5px;
+  top: 67.8px;
+  font: 700 21.05px/26px "Inter";
+  letter-spacing: -0.033em;
+  white-space: nowrap;
+}
+.scr-goals .change {
+  position: absolute;
+  left: 273.5px;
+  top: 64.5px;
+  width: 101px;
+  height: 31.5px;
+  box-sizing: border-box;
+  border: 1px solid #e6e5eb;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  padding-top: 1.5px;
+  font: 600 12.9px/1 "Inter";
+  letter-spacing: -0.01em;
+  color: #2a2930;
+  white-space: nowrap;
+}
+
+/* Cards */
+.scr-goals .card {
+  position: absolute;
+  left: 16px;
+  width: 358px;
+  border-radius: 14px;
+}
+.scr-goals .c-weight {
+  top: 106.5px;
+  height: 105px;
+}
+.scr-goals .c-plan {
+  top: 224.5px;
+  height: 126px;
+}
+.scr-goals .c-muscle {
+  top: 364px;
+  height: 60.5px;
+}
+.scr-goals .caps {
+  position: absolute;
+  font: 600 10.6px/1 "Inter";
+  letter-spacing: 0.075em;
+  color: #828185;
+  white-space: nowrap;
+}
+
+/* Weight card */
+.scr-goals .c-weight .caps {
+  left: 16.5px;
+  top: 18.3px;
+}
+.scr-goals .now {
+  position: absolute;
+  right: 17.5px;
+  top: 18.5px;
+  font: 400 12.1px/1 "Inter";
+  color: #858488;
+  white-space: nowrap;
+}
+.scr-goals .now b {
+  font-size: 12.7px;
+  font-weight: 600;
+  color: #2b2a31;
+  font-variant-numeric: tabular-nums;
+}
+.scr-goals .slider {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 358px;
+  height: 105px;
+}
+.scr-goals .track,
+.scr-goals .fill {
+  position: absolute;
+  top: 59.5px;
+  height: 6px;
+  border-radius: 3px;
+}
+.scr-goals .track {
+  left: 16px;
+  width: 324.5px;
+  background: #e5e5ea;
+}
+.scr-goals .fill {
+  left: 16px;
+  width: 70px;
+  background: var(--app-navy);
+}
+.scr-goals .dot {
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+.scr-goals .d-start {
+  left: 9.25px;
+  top: 55.75px;
+  width: 13.5px;
+  height: 13.5px;
+  background: #fff;
+  border: 2px solid #cbcacf;
+}
+.scr-goals .d-knob {
+  left: -8.25px;
+  top: 54.25px;
+  width: 16.5px;
+  height: 16.5px;
+  background: var(--app-navy);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 0.8px rgba(41, 89, 118, 0.5), 0 1px 3px rgba(17, 19, 24, 0.12);
+}
+.scr-goals .d-target {
+  left: 333.5px;
+  top: 55px;
+  width: 14px;
+  height: 14px;
+  overflow: visible;
+}
+.scr-goals .lab {
+  position: absolute;
+  top: 76.5px;
+  font: 400 10.4px/1 "Inter";
+  color: #939297;
+  white-space: nowrap;
+}
+.scr-goals .l-start {
+  left: 16.5px;
+}
+.scr-goals .l-target {
+  right: 17.5px;
+}
+
+/* Target date / projection card */
+.scr-goals .col {
+  position: absolute;
+  top: 0;
+  height: 60px;
+}
+.scr-goals .col-a {
+  left: 0;
+  width: 179px;
+}
+.scr-goals .col-b {
+  left: 179px;
+  width: 179px;
+}
+.scr-goals .col .caps {
+  left: 14.5px;
+  top: 17.8px;
+}
+.scr-goals .col-b .caps {
+  left: 12px;
+}
+.scr-goals .col .v {
+  position: absolute;
+  left: 15px;
+  top: 34.5px;
+  font: 600 15px/1 "Inter";
+  letter-spacing: -0.01em;
+  color: #111;
+  white-space: nowrap;
+}
+.scr-goals .col-b .v {
+  left: 10px;
+  font-weight: 460;
+  font-style: italic;
+  font-size: 14.8px;
+  letter-spacing: -0.01em;
+  color: #26252b;
+}
+.scr-goals .vsep {
+  position: absolute;
+  left: 178.5px;
+  top: 16.5px;
+  width: 1px;
+  height: 34px;
+  background: #ececef;
+}
+.scr-goals .note {
+  position: absolute;
+  left: 16.5px;
+  top: 62px;
+  width: 325px;
+  height: 49px;
+  border-radius: 10px;
+  background: #f2f2f7;
+}
+.scr-goals .note p {
+  position: absolute;
+  left: 8px;
+  top: 10.3px;
+  width: 200px;
+  margin: 0;
+  font: 400 12px/14.7px "Inter";
+  color: #3a393f;
+}
+.scr-goals .adjust {
+  position: absolute;
+  left: 259px;
+  top: 10px;
+  width: 55.5px;
+  height: 27px;
+  box-sizing: border-box;
+  border: 1.3px solid rgba(41, 89, 118, 0.82);
+  border-radius: 7px;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  font: 650 12.2px/1 "Inter";
+  padding-top: 1.5px;
+  color: var(--app-navy);
+}
+
+/* Muscle row */
+.scr-goals .arrow {
+  position: absolute;
+  left: 15px;
+  top: 15.5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f2f2f7;
+  display: grid;
+  place-items: center;
+  color: #2d2c33;
+}
+.scr-goals .arrow svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+.scr-goals .mtext {
+  position: absolute;
+  left: 55.5px;
+  top: 24px;
+  font: 400 12.8px/1 "Inter";
+  color: #3b3b40;
+  white-space: nowrap;
+}
+.scr-goals .mtext b {
+  font-weight: 600;
+  color: #111;
+  font-variant-numeric: tabular-nums;
+}
+.scr-goals .mtext i {
+  font-style: normal;
+  color: #a2a1a6;
+}
+
+/* Edit target (anchored to the bottom like the tab bar) */
+.scr-goals .edit {
+  position: absolute;
+  left: 15.5px;
+  right: 15.5px;
+  bottom: 92.5px;
+  height: 50.5px;
+  border-radius: 13px;
+  font: 600 16px/1 "Inter";
+  letter-spacing: -0.005em;
+}

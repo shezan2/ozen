@@ -1,0 +1,55 @@
+<!doctype html>
+<!-- Preview one site card at its native size on the page colour it is designed for.
+     harness.html?card=compare&p=1   (p = the card's seek() progress, default 1)
+     Extra query params are passed to seek() as a second argument (numbers parsed). -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>intelli8 card harness</title>
+    <link rel="stylesheet" href="base.css" />
+    <style>
+      html, body { margin: 0; }
+      #page { position: relative; overflow: hidden; }
+      #page.cream { background: #f5f4ee; }
+      #page.sage { background: #e0e7e1; }
+      #page.dark { background: #232c2b; }
+    </style>
+  </head>
+  <body>
+    <div id="page"><div class="i8c" id="root"></div></div>
+    <script src="base.js"></script>
+    <script src="../assets/logo8.js"></script>
+    <script>
+      const q = new URLSearchParams(location.search);
+      const name = q.get("card");
+      const css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = `${name}.css`;
+      document.head.appendChild(css);
+      const js = document.createElement("script");
+      js.src = `${name}.js`;
+      window.harnessReady = new Promise((res) => {
+        js.onload = async () => {
+          await new Promise((r) => (css.sheet ? r() : (css.onload = r)));
+          for (const f of ['700 40px "Manrope"', '400 16px "DM Sans"', '500 11px "JetBrains Mono"', '400 16px "Inter"'])
+            await document.fonts.load(f);
+          await document.fonts.ready;
+          const card = I8.cards[name];
+          const [w, h] = card.size;
+          const page = document.getElementById("page");
+          const root = document.getElementById("root");
+          page.className = q.get("bg") || card.bg || "cream";
+          Object.assign(page.style, { width: `${w}px`, height: `${h}px` });
+          Object.assign(root.style, { width: `${w}px`, height: `${h}px` });
+          const api = card.build(root, I8.c);
+          const extra = {};
+          for (const [k, v] of q) if (!["card", "p", "bg"].includes(k)) extra[k] = isNaN(+v) ? v : +v;
+          api.seek(q.has("p") ? +q.get("p") : 1, extra);
+          window.cardSize = [w, h];
+          res();
+        };
+      });
+      document.head.appendChild(js);
+    </script>
+  </body>
+</html>

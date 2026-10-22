@@ -1,8 +1,8 @@
 out/*
-!out/intelli8-app.mp4
-!out/intelli8-app-sound.wav
-!out/sound-cues.json
-!out/voiceover.wav
+!out/intelli8-*.mp4
+!out/intelli8-*-sound.wav
+!out/sound-cues-*.json
+!out/voiceover-*.wav
 .venv/
 __pycache__/
 audio/models

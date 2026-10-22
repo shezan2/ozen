@@ -1,0 +1,178 @@
+/* IAM pane: Command Center (Dashboard home). Measured against the intelli8.ai "Readiness at a glance"
+   and "One command center" screens (reference frame scaled to 1440 × 900). */
+.pane-command {
+  --cc-card: #181c23;
+  --cc-edge: rgba(255, 255, 255, 0.06);
+  --cc-row: rgba(255, 255, 255, 0.05);
+  --cc-label: #8a9198;
+  --cc-dim: #7c8389;
+  --cc-yellow: #f4dc52;
+  --cc-lime: #6ee04a;
+  --cc-red: #e8394f;
+  --cc-mint: #6fd9ad;
+  --cc-blue: #4b8fdc;
+}
+.pane-command *,
+.pane-command *::before,
+.pane-command *::after { box-sizing: border-box; }
+.pane-command svg { display: block; flex: none; }
+
+.pane-command .cc { position: relative; margin: 0 6px; will-change: transform; }
+
+/* Title row */
+.pane-command .head { height: 122px; display: flex; align-items: flex-start; justify-content: space-between; }
+.pane-command .titles { padding-top: 12px; }
+.pane-command .h1 { font: 700 24.5px/27px "Inter"; letter-spacing: -0.015em; color: #fff; }
+.pane-command .sub { margin-top: 6.5px; font: 400 13.8px/1.4 "Inter"; color: #858c90; }
+.pane-command .tools { display: flex; gap: 7px; margin-top: 9.5px; }
+.pane-command .range-pill,
+.pane-command .grid-btn {
+  height: 33px;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+  background: #151b1e;
+  color: #eceff1;
+}
+.pane-command .range-pill { gap: 8px; padding: 0 11px 0 12px; font: 600 12.2px/1 "Inter"; }
+.pane-command .range-pill svg:first-child { width: 15px; height: 15px; }
+.pane-command .range-pill svg:last-child { width: 13px; height: 13px; margin-left: 2px; color: #b8bec2; }
+.pane-command .grid-btn { width: 33px; justify-content: center; }
+.pane-command .grid-btn svg { width: 16px; height: 16px; }
+
+/* KPI tiles */
+.pane-command .kpis { display: grid; grid-template-columns: repeat(4, 1fr); column-gap: 16px; row-gap: 24px; }
+.pane-command .tile {
+  position: relative;
+  height: 135px;
+  background: var(--cc-card);
+  border: 1px solid var(--cc-edge);
+  border-radius: 6px;
+}
+.pane-command .t-top { position: absolute; left: 20px; right: 20px; top: 22px; height: 14px; display: flex; align-items: center; }
+.pane-command .t-k { font: 500 13.5px/1 "Inter"; letter-spacing: 0.075em; text-transform: uppercase; color: var(--cc-label); white-space: nowrap; }
+.pane-command .t-top > svg { width: 16px; height: 16px; margin-left: 2px; color: rgba(255, 255, 255, 0.2); }
+.pane-command .t-ic { margin-left: auto; color: #5f666e; }
+.pane-command .t-ic svg { width: 17px; height: 17px; }
+.pane-command .t-ic.bright { color: #93a7b2; }
+.pane-command .t-ic.blue { color: var(--cc-blue); }
+.pane-command .t-val { position: absolute; left: 20px; top: 54px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.pane-command .v { position: relative; color: #fff; }
+.pane-command .v.mono { font-variant-numeric: tabular-nums; }
+.pane-command .v.sans { font: 700 30px/1 "Inter"; letter-spacing: -0.02em; font-variant-numeric: proportional-nums; }
+.pane-command .v.mono { font: 600 30px/1 var(--mono); letter-spacing: -0.02em; }
+.pane-command .v.yellow { color: var(--cc-yellow); }
+.pane-command .v.lime { color: var(--cc-lime); }
+.pane-command .v .ghost { visibility: hidden; }
+.pane-command .v .cur { position: absolute; left: 0; top: 0; }
+.pane-command .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 21px;
+  padding: 0 7px;
+  border-radius: 4px;
+  background: #1f242b;
+  font: 400 12.3px/1 "Inter";
+  color: #8a9298;
+}
+.pane-command .chip.red { background: #2a1b23; color: var(--cc-red); font-size: 11.8px; font-weight: 500; }
+.pane-command .chip svg { width: 10px; height: 10px; }
+.pane-command .tile:nth-child(n + 5) > div { margin-top: -1.5px; }
+.pane-command .t-sub { position: absolute; left: 20px; top: 95px; font: 400 12px/1.2 "Inter"; color: var(--cc-dim); }
+.pane-command .bar {
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  height: 4px;
+  border-radius: 3px;
+  transform-origin: 0 50%;
+}
+.pane-command .bar.yellow { background: var(--cc-yellow); }
+.pane-command .bar.lime { background: var(--cc-lime); }
+
+/* Panels */
+.pane-command .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+.pane-command .panel { position: relative; background: var(--cc-card); border: 1px solid var(--cc-edge); border-radius: 8px; overflow: hidden; }
+.pane-command .p-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 21px 24px 0 24px; }
+.pane-command .p-title { font: 600 15.6px/20px "Inter"; letter-spacing: -0.01em; color: #fff; }
+.pane-command .p-sub { font: 400 14px/18.5px "Inter"; color: #898f95; }
+.pane-command .roster .p-txt { max-width: 380px; }
+.pane-command .btn {
+  margin-top: 17px;
+  height: 33px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 13px;
+  border: 1.5px solid rgba(255, 255, 255, 0.72);
+  border-radius: 4px;
+  font: 500 12.5px/1 "Inter";
+  color: #eef1f3;
+}
+.pane-command .btn svg { width: 13px; height: 13px; }
+
+.pane-command .tbl .th,
+.pane-command .tbl .tr { display: grid; align-items: center; padding: 0 8px; border-bottom: 1px solid var(--cc-row); }
+.pane-command .tbl .th { border-top: 1px solid rgba(255, 255, 255, 0.022); font: 400 14px/1 "Inter"; color: #858c93; }
+.pane-command .tbl .tr { position: relative; }
+.pane-command .tbl .tr.focus { background: rgba(255, 255, 255, calc(0.035 * var(--fp))); }
+.pane-command .who b { display: flex; align-items: center; gap: 8px; font: 500 14px/17px "Inter"; color: #f1f4f5; }
+.pane-command .who b svg { width: 16px; height: 16px; color: #8a9198; }
+.pane-command .who i { display: block; margin-top: 2px; font: 400 12px/15px "Inter"; font-style: normal; color: #858b91; }
+.pane-command .rec { font: 700 14px/1 var(--mono); }
+.pane-command .rec.red { color: var(--cc-red); }
+.pane-command .rec.yellow { color: var(--cc-yellow); }
+.pane-command .acwr,
+.pane-command .num-c { font: 400 14px/1 var(--mono); color: #868d94; }
+.pane-command .flags .flag { font: 700 11.5px/1 var(--mono); letter-spacing: 0.08em; padding: 5px 8px; }
+.pane-command .flags .flag.red { color: var(--cc-red); background: #391a21; box-shadow: 0 0 0 1px rgba(232, 57, 79, 0.35) inset; }
+.pane-command .flags .flag.green { color: var(--cc-mint); background: #1c3a33; box-shadow: 0 0 0 1px rgba(111, 217, 173, 0.35) inset; }
+
+.pane-command .roster .tbl { margin-top: 14.5px; }
+.pane-command .roster .th,
+.pane-command .roster .tr { grid-template-columns: 176px 120px 89px 1fr; }
+.pane-command .roster .th { height: 42px; }
+.pane-command .roster .tr { height: 53px; }
+
+.pane-command .groups .tbl { margin-top: 8px; }
+.pane-command .groups .who i { margin-top: 3px; }
+.pane-command .groups .th,
+.pane-command .groups .tr { grid-template-columns: 1fr 130px 124px 92px; }
+.pane-command .groups .th { height: 40px; }
+.pane-command .groups .tr { height: 55px; }
+.pane-command .tbl .tr:last-child { border-bottom: 0; }
+.pane-command .groups .th span:not(:first-child),
+.pane-command .groups .tr span:not(:first-child) { text-align: right; }
+
+/* Trend charts (below the fold) */
+.pane-command .trends { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+.pane-command .trend { height: 360px; }
+.pane-command .tr-head { display: flex; align-items: center; justify-content: space-between; padding: 25px 25px 0 24px; }
+.pane-command .range { display: flex; align-items: center; gap: 5px; }
+.pane-command .range .nr { margin-right: 4px; font: 400 13px/1 "Inter"; color: #7f868c; }
+.pane-command .range .sg {
+  height: 26px;
+  min-width: 30px;
+  padding: 0 8px;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  background: #1a1f25;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.035) inset;
+  font: 500 12.5px/1 "Inter";
+  color: #9aa1a7;
+}
+.pane-command .range .sg.on { background: #6deaa5; color: #10231a; box-shadow: none; font-weight: 600; }
+.pane-command .chart { position: absolute; left: 28px; top: 81px; }
+.pane-command .bandchart { display: block; overflow: visible; }
+.pane-command .bandchart .gl { stroke: rgba(255, 255, 255, 0.07); stroke-dasharray: 3 4; }
+.pane-command .bandchart .tk { stroke: rgba(255, 255, 255, 0.3); }
+.pane-command .bandchart text { font: 400 12px "Inter"; fill: #7b8187; }
+.pane-command .bandchart .yl { text-anchor: end; dominant-baseline: middle; }
+.pane-command .bandchart .xl { text-anchor: middle; dominant-baseline: hanging; }
+.pane-command .bandchart .xl.end { text-anchor: end; }
+.pane-command .bandchart .dot { transform-box: fill-box; transform-origin: center; }
+.pane-command .bandchart .dot[r="4.2"] { stroke: #c4f3df; stroke-width: 1.2; }

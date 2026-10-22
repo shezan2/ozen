@@ -240,36 +240,3 @@
   display: block;
   margin-right: 1px;
 }
-
-/* Foundation workarounds. The shared .status and .tabs sit ~9 pt low / ~7 pt high against the
-   real app screen; these values are measured from it. Lift into app.css if the other screens agree. */
-.scr-dashboard .status {
-  top: -9.5px;
-  padding-left: 54.5px;
-  padding-right: 33.5px;
-}
-.scr-dashboard .status .icons {
-  gap: 8px;
-}
-.scr-dashboard .tabs {
-  left: 21px;
-  right: 21px;
-  bottom: 21px;
-  height: 60px;
-  padding: 0 8px;
-  box-shadow: 0 10px 30px -8px rgba(17, 19, 24, 0.12), 0 0 0 1px rgba(17, 19, 24, 0.03);
-}
-.scr-dashboard .tabs .tab {
-  height: 52px;
-  gap: 4px;
-  font: 600 10.5px/1 "Inter";
-  letter-spacing: -0.01em;
-}
-.scr-dashboard .tabs .tab svg {
-  width: 26px;
-  height: 26px;
-}
-.scr-dashboard .tabs .tab.on {
-  margin: 0 -3.5px;
-  background: #e9e8ed;
-}

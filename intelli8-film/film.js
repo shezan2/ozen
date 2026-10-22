@@ -151,6 +151,8 @@
     [0.622, 0.078], [0.662, 0.093], [0.736, 0.114], [0.776, 0.128],
   ];
   const CONTACT_AT = [0, 0.1, 0.22, 0.3, 0.52, 0.59, 0.71, 0.77]; // seconds after the first (audio/sound.py)
+  // Your Results builds over this window (s); its five segments light at 0.25 + 0.09 i of it (audio/sound.py).
+  const RESULTS = [12.15, 14.55];
   const dots = CONTACTS.map(([fx, fy]) => {
     const i = document.createElement("i");
     i.style.left = `${fx * 100}%`;
@@ -365,14 +367,14 @@
       x: pose.x - out * 900,
       y: pose.y + (1 - pin) * 260,
       s: pose.s * lerp(0.94, 1, pin),
-      o: pin,
+      o: E.out(prog(t, 11.95, 12.25)), // opaque early: a phone slides in, it doesn't ghost in
       r: lerp(-2.5, 0, pin) - out * 6,
     });
     if (t < 15.5) {
       show(S.results.root, true);
       S.results.root.style.transform = "none";
       S.results.root.style.filter = "none";
-      S.results.api.seek(prog(t, 12.35, 14.75), { seg: -1, press: prog(t, 15.2, 15.45) });
+      S.results.api.seek(prog(t, RESULTS[0], RESULTS[1]), { seg: -1, press: prog(t, 15.2, 15.45) });
     } else if (t < 15.9) {
       show(S.results.root, true);
       show(S.dashboard.root, true);
@@ -420,7 +422,7 @@
 
     // Results: one callout per segment, in the order the diagram fills.
     callouts.forEach((c, i) => {
-      const t0 = lerp(12.35, 14.75, 0.25 + i * 0.09);
+      const t0 = lerp(RESULTS[0], RESULTS[1], 0.25 + i * 0.09);
       const p = E.glide(prog(t, t0, t0 + 0.6));
       const q = E.in(prog(t, 15.3 + i * 0.04, 15.65 + i * 0.04));
       c.style.transform = `translateX(${((1 - p) * -60 + q * 60).toFixed(2)}px)`;
@@ -449,10 +451,11 @@
     const pg = E.glide(prog(t, 23.35, 24.15));
     const ph = E.glide(prog(t, 23.55, 24.35));
     const gp = F.pair.goals, hp = F.pair.hist;
-    placePhone(el.phGoals, { x: gp.x, y: gp.y + (1 - pg) * 320 + exit * 40, s: gp.s, o: pg * (1 - exit), r: lerp(4, 0, pg) });
-    placePhone(el.phHist, { x: hp.x, y: hp.y + (1 - ph) * 320 + exit * 40, s: hp.s, o: ph * (1 - exit), r: lerp(-4, 0, ph) });
-    if (pg > 0) goals.api.seek(prog(t, 23.7, 25.4), {});
-    if (ph > 0) hist.api.seek(prog(t, 23.95, 25.9), {});
+    const og = E.out(prog(t, 23.35, 23.62)), oh = E.out(prog(t, 23.55, 23.82));
+    placePhone(el.phGoals, { x: gp.x, y: gp.y + (1 - pg) * 320 + exit * 40, s: gp.s, o: og * (1 - exit), r: lerp(4, 0, pg) });
+    placePhone(el.phHist, { x: hp.x, y: hp.y + (1 - ph) * 320 + exit * 40, s: hp.s, o: oh * (1 - exit), r: lerp(-4, 0, ph) });
+    if (pg > 0) goals.api.seek(prog(t, 23.45, 25.2), {});
+    if (ph > 0) hist.api.seek(prog(t, 23.65, 25.7), {});
     enter(el.apCap1, t, 23.75, 0.7, 20, 26.3, 0.3);
     enter(el.apCap2, t, 23.95, 0.7, 20, 26.3, 0.3);
   }

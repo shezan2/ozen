@@ -1,0 +1,90 @@
+/* IAM (intelli8 Athlete Management) — the dark web dashboard, rebuilt from the illustrative screens on
+   intelli8.ai. Canvas 1440 × 900 px: a 56 px top bar, a 220 px sidebar and a 1220 × 844 content pane.
+   Each pane (iam/<name>.css) is scoped under .pane-<name> and builds on these tokens. */
+
+@font-face { font-family: "Inter"; src: url(../assets/fonts/Inter.woff2) format("woff2"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url(../assets/fonts/JetBrainsMono.woff2) format("woff2"); font-weight: 100 800; font-display: block; }
+
+.iam {
+  --bg: #101418;
+  --side: #0c1014;
+  --panel: #161c20;
+  --panel-2: #1a2125;
+  --line: rgba(255, 255, 255, 0.07);
+  --text: #e9eef0;
+  --text-2: #a7b0b5;
+  --text-3: #6c767c;
+  --green: #3ddc84; /* active nav, positive, CTA */
+  --green-ink: #5ee0a8; /* chart dots */
+  --green-bg: #17302a;
+  --band: #1d4a3a; /* personal normal-range band */
+  --yellow: #f2c544;
+  --red: #ff5a64;
+  --red-bg: #3a1a22;
+  --blue: #5b8def;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Top bar: intelli8 · powered by Waaha Labs, Head Coach badge */
+.iam .top {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 26px;
+  border-bottom: 1px solid var(--line);
+  background: var(--side);
+}
+.iam .brand { display: flex; align-items: center; gap: 4px; font: 600 22px/1 "Inter"; letter-spacing: -0.02em; }
+.iam .brand .logo8 { display: block; }
+.iam .powered { margin-left: 16px; font: 600 9px/1.15 "Inter"; letter-spacing: 0.14em; color: var(--text-2); text-transform: uppercase; }
+.iam .powered b { display: block; font-size: 11px; color: var(--text); letter-spacing: 0.06em; }
+.iam .user { margin-left: auto; display: flex; align-items: center; gap: 12px; text-align: right; }
+.iam .user b { display: block; font: 600 14px/1.2 "Inter"; }
+.iam .user span { display: block; font: 500 10px/1.2 var(--mono); color: var(--text-3); letter-spacing: 0.06em; }
+.iam .user i { width: 34px; height: 34px; border-radius: 50%; background: var(--green-bg); color: var(--green); display: grid; place-items: center; font: 700 12px/1 "Inter"; font-style: normal; }
+
+/* Sidebar */
+.iam .side {
+  position: absolute;
+  left: 0;
+  top: 56px;
+  bottom: 0;
+  width: 220px;
+  box-sizing: border-box;
+  background: var(--side);
+  border-right: 1px solid var(--line);
+  padding: 22px 12px;
+}
+.iam .side .caps { padding: 0 12px 12px; font: 600 10px/1 "Inter"; letter-spacing: 0.14em; color: var(--text-3); text-transform: uppercase; }
+.iam .nav { display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 12px; border-radius: 8px; font: 500 14px/1 "Inter"; color: var(--text-2); }
+.iam .nav svg { width: 16px; height: 16px; flex: none; }
+.iam .nav.on { background: var(--green-bg); color: var(--green); }
+.iam .side .foot { position: absolute; left: 24px; bottom: 18px; font: 600 9px/1 "Inter"; letter-spacing: 0.12em; color: #3a4348; text-transform: uppercase; }
+
+/* Content pane */
+.iam .pane { position: absolute; left: 220px; top: 56px; right: 0; bottom: 0; overflow: hidden; padding: 30px 34px; }
+
+/* Shared building blocks for panes */
+.iam .h1 { font: 800 26px/1.1 "Inter"; letter-spacing: -0.01em; text-transform: uppercase; }
+.iam .sub { margin-top: 8px; font: 400 13px/1.4 "Inter"; color: var(--text-2); }
+.iam .box { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+.iam .k { font: 600 11px/1 "Inter"; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); }
+.iam .num { font: 600 30px/1 var(--mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.iam .flag { display: inline-block; padding: 4px 8px; border-radius: 4px; font: 700 10px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.iam .flag.red { background: var(--red-bg); color: var(--red); box-shadow: 0 0 0 1px rgba(255, 90, 100, 0.3) inset; }
+.iam .flag.green { background: var(--green-bg); color: var(--green); box-shadow: 0 0 0 1px rgba(61, 220, 132, 0.3) inset; }
+.iam .pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.25); font: 500 12px/1 "Inter"; color: var(--text); }
+.iam .seg { display: inline-flex; gap: 2px; font: 600 11px/1 "Inter"; color: var(--text-3); }
+.iam .seg span { padding: 5px 8px; border-radius: 5px; }
+.iam .seg span.on { background: var(--green); color: #0c1014; }

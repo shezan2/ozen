@@ -1,0 +1,50 @@
+/* intelli8 site "cards": designed blocks rebuilt from intelli8.ai for the Body Composition Scale film.
+   A card is drawn at the site's own CSS size (the iPad screenshots are 2388 px wide = 1194 CSS px, so
+   1 px in a half-size screenshot = 1 CSS px here); the film places and scales it. Each card's CSS lives
+   in cards/<name>.css, scoped under .card-<name>, and builds on these tokens. */
+
+@font-face { font-family: "Manrope"; src: url(../assets/fonts/Manrope.woff2) format("woff2"); font-weight: 200 800; font-display: block; }
+@font-face { font-family: "DM Sans"; src: url(../assets/fonts/DMSans.woff2) format("woff2"); font-weight: 100 1000; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url(../assets/fonts/JetBrainsMono.woff2) format("woff2"); font-weight: 100 800; font-display: block; }
+@font-face { font-family: "Inter"; src: url(../assets/fonts/Inter.woff2) format("woff2"); font-weight: 100 900; font-display: block; }
+
+.i8c {
+  --cream: #f5f4ee;
+  --paper: #faf9f5; /* card faces on cream */
+  --sage: #e0e7e1;
+  --sage-2: #e8ede7;
+  --dark: #232c2b; /* green-charcoal sections */
+  --dark-2: #2a3534;
+  --ink: #1e2430; /* headlines on light */
+  --body: #606666; /* body copy on light */
+  --muted: #8a8f8c;
+  --line: rgba(30, 36, 48, 0.12);
+  --green: #3c7260; /* forest green: accents, intelli8 column, CTA */
+  --green-2: #487e6c; /* eyebrows */
+  --mint: #aed2c0; /* accents on dark */
+  --on-dark: #f2f1ea;
+  --on-dark-2: rgba(242, 241, 234, 0.66);
+  --head: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --sans: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+.i8c *,
+.i8c *::before,
+.i8c *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* The site's type system */
+.i8c .eyebrow { font: 500 11px/1.2 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--green-2); }
+.i8c .hl { font: 700 52px/0.98 var(--head); letter-spacing: -0.055em; color: var(--ink); }
+.i8c .hl .accent { color: var(--green); }
+.i8c .lede { font: 400 18px/1.55 var(--sans); color: var(--body); }
+.i8c .fine { font: 400 13px/1.5 var(--sans); color: var(--muted); }
+/* A line of a headline that rises out of a mask: <span class="mask"><span class="line">…</span></span> */
+.i8c .mask { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.i8c .mask > .line { display: block; will-change: transform; }

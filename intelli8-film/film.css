@@ -106,6 +106,7 @@ body {
   color: var(--ink);
 }
 .headline.sm { --hsize: 96px; }
+#en-copy .headline { --hsize: 118px; } /* clears the end phone */
 .dark .headline { color: var(--cream); }
 .headline .green { color: var(--green); }
 .headline .mint { color: var(--mint); }

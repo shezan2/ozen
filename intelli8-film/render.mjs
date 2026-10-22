@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 /*
- * Renders the intelli8 App film frame by frame with headless Chromium and encodes it with ffmpeg.
+ * Renders an intelli8 film frame by frame with headless Chromium and encodes it with ffmpeg.
  *
- *   node render.mjs                      # 1920×1080 · 60fps · motion blur → out/intelli8-app.mp4
- *   node render.mjs --stills 1.2,3.4     # review stills → out/stills/
+ *   node render.mjs                      # the App film: 1920×1080 · 60fps · motion blur → out/intelli8-app.mp4
+ *   node render.mjs --film iam           # the IAM team platform film (iam.html) → out/intelli8-iam.mp4
+ *   node render.mjs --film scale         # the Body Composition Scale film (scale.html) → out/intelli8-scale.mp4
+ *   node render.mjs --stills 1.2,3.4     # review stills → out/stills-app/
  *   node render.mjs --sub 1              # no motion blur (fast draft)
  *   node render.mjs --mux                # re-attach the sound to the existing film (no re-render)
  *   node render.mjs --format 9x16        # vertical cut → out/intelli8-app-9x16.mp4 (also 4x5)
  *
- * The sound design comes from audio/sound.py (→ out/intelli8-app-sound.wav). When that WAV exists
+ * The sound design comes from audio/sound.py --film <film> (→ out/intelli8-<film>-sound.wav). When that WAV exists
  * it is muxed in as 320 kbps AAC; otherwise the film is written silent.
  *
- * Options: --format 16x9|9x16|4x5 (layouts in formats/)  --fps 60  --sub 4 (motion-blur samples per
+ * Options: --film app|iam|scale  --format 16x9|9x16|4x5 (layouts in formats/)  --fps 60  --sub 4 (motion-blur samples per
  *          frame)  --shutter 0.5 (180°)  --scale 1 (device scale; 2 = supersampled)  --workers 4
  *          --crf 16  --grain 4  --out <file>
  *
@@ -49,15 +51,19 @@ const SHUTTER = Number(args.shutter ?? 0.5);
 const SCALE = Number(args.scale ?? 1);
 const WORKERS = Math.max(1, Number(args.workers ?? Math.min(4, cpus().length)));
 const CRF = String(args.crf ?? 16);
+const FILMS = { app: "index.html", iam: "iam.html", scale: "scale.html" };
+const FILM = String(args.film ?? "app");
+if (!FILMS[FILM]) throw new Error(`--film must be one of ${Object.keys(FILMS).join(", ")}`);
+const PAGE = join(here, FILMS[FILM]);
 const FORMAT = String(args.format ?? "16x9");
 const SUFFIX = FORMAT === "16x9" ? "" : `-${FORMAT}`; // other formats get their own files
-const OUT = resolve(here, args.out ?? `out/intelli8-app${SUFFIX}.mp4`);
+const OUT = resolve(here, args.out ?? `out/intelli8-${FILM}${SUFFIX}.mp4`);
 const URL =
-  pathToFileURL(join(here, "index.html")).href +
+  pathToFileURL(PAGE).href +
   `?render&format=${encodeURIComponent(FORMAT)}` +
   (args.debug ? `&debug=${encodeURIComponent(args.debug)}` : "");
 const GRAIN = Number(args.grain ?? 4); // temporal luma grain added at encode (0 = off)
-const SOUND = resolve(here, args.sound ?? "out/intelli8-app-sound.wav");
+const SOUND = resolve(here, args.sound ?? `out/intelli8-${FILM}-sound.wav`);
 
 let SIZE = null; // the format's frame size, read from the page
 let DURATION = null; // seconds, read from the page
@@ -87,7 +93,7 @@ function launch() {
 }
 
 async function stills(times) {
-  const dir = resolve(here, `out/stills${SUFFIX}`);
+  const dir = resolve(here, `out/stills-${FILM}${SUFFIX}`);
   mkdirSync(dir, { recursive: true });
   const browser = await launch();
   const page = await openPage(browser);
@@ -139,7 +145,7 @@ async function film() {
   await openPage(probe); // reads the film's size and duration
   await probe.close();
   const total = Math.round(DURATION * FPS);
-  const tmp = resolve(here, `out/.chunks${SUFFIX}`);
+  const tmp = resolve(here, `out/.chunks-${FILM}${SUFFIX}`);
   rmSync(tmp, { recursive: true, force: true });
   mkdirSync(tmp, { recursive: true });
   mkdirSync(dirname(OUT), { recursive: true });
@@ -217,6 +223,6 @@ if (args.stills) {
   await mux(OUT, OUT);
   console.log(`${OUT} · sound muxed from ${SOUND}`);
 } else {
-  if (!existsSync(join(here, "index.html"))) throw new Error("index.html missing");
+  if (!existsSync(PAGE)) throw new Error(`${FILMS[FILM]} missing`);
   await film();
 }

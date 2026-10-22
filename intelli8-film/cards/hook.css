@@ -1,0 +1,147 @@
+/* hook: "One number. Two stories." The film's opening. A weight-only scale display settles on one
+   reading, then two story cards slide out from behind it: the same 72.4 kg, two different changes. */
+
+.card-hook { overflow: visible; }
+
+/* ---------- Left column: eyebrow, headline, lede ---------- */
+.card-hook .hk-copy { position: absolute; left: 0; top: 168px; width: 500px; }
+.card-hook .hk-eye { display: block; }
+.card-hook .hk-hl { margin-top: 22px; font-size: 66px; width: max-content; }
+.card-hook .hk-hl .line { white-space: nowrap; }
+.card-hook .hk-lede { margin-top: 24px; max-width: 410px; }
+
+/* ---------- Right column: the weight-only display ---------- */
+.card-hook .hk-lcd {
+  position: absolute;
+  left: 640px;
+  top: 108px;
+  width: 440px;
+  height: 170px;
+  padding: 14px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #2c3230 0%, #262b2a 46%, #222726 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    0 1px 2px rgba(35, 44, 43, 0.12),
+    0 26px 48px -26px rgba(35, 44, 43, 0.42);
+  z-index: 3;
+}
+.card-hook .hk-face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 11px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #d4ddd1 0%, #cfd8cc 55%, #c9d2c6 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(18, 24, 22, 0.28),
+    inset 0 0 0 1px rgba(18, 24, 22, 0.32);
+}
+.card-hook .hk-face svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.card-hook .hk-face .seg { fill: #1f2523; }
+.card-hook .hk-face .unit { font: 600 19px/1 "Inter", sans-serif; letter-spacing: 0.01em; fill: #1f2523; }
+/* The display while asleep: unlit and greyer. */
+.card-hook .hk-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(92, 102, 94, 0.2) 0%, rgba(84, 94, 86, 0.24) 100%);
+}
+/* A soft glass sheen over the face. */
+.card-hook .hk-glass {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(162deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.06) 34%, rgba(255, 255, 255, 0) 52%);
+  pointer-events: none;
+}
+
+/* ---------- Story cards ---------- */
+.card-hook .hk-story {
+  position: absolute;
+  top: 300px;
+  width: 210px;
+  height: 176px;
+  padding: 16px 18px 0;
+  border-radius: 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 34px -26px rgba(35, 44, 43, 0.28);
+  z-index: 1;
+  transform-origin: 50% 0;
+}
+.card-hook .hk-story.a { left: 640px; --c: var(--green); }
+.card-hook .hk-story.b { left: 870px; --c: #c4874b; }
+.card-hook .hk-tag {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font: 500 10px/12px var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.card-hook .hk-tag i { width: 6px; height: 6px; border-radius: 50%; background: var(--c); }
+.card-hook .hk-title {
+  margin-top: 8px;
+  font: 700 16.5px/20px var(--head);
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.card-hook .hk-rows { margin-top: 12px; }
+.card-hook .hk-row + .hk-row { margin-top: 10px; }
+.card-hook .hk-rl {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font: 400 12.5px/15px var(--sans);
+  color: var(--body);
+}
+.card-hook .hk-rl b {
+  font-weight: 600;
+  color: var(--c);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.005em;
+}
+.card-hook .hk-rl .hk-ar { display: inline-block; margin-right: 5px; fill: currentColor; vertical-align: 0.5px; }
+.card-hook .hk-track {
+  position: relative;
+  margin-top: 5px;
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(30, 36, 48, 0.07);
+  overflow: hidden;
+}
+.card-hook .hk-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--c);
+  transform-origin: 0 50%;
+}
+.card-hook .hk-rule {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 138px;
+  height: 1px;
+  background: var(--line);
+  transform-origin: 0 50%;
+}
+.card-hook .hk-foot {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 148px;
+  display: flex;
+  justify-content: space-between;
+  font: 500 10.5px/13px var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.card-hook .hk-foot b { font-weight: 500; color: var(--ink); }
+
+/* ---------- Fine print ---------- */
+.card-hook .hk-fine { position: absolute; right: 20px; top: 490px; text-align: right; white-space: nowrap; }

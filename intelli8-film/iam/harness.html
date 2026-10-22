@@ -1,0 +1,45 @@
+<!doctype html>
+<!-- Preview one IAM pane inside the dashboard shell at 1440 × 900.
+     harness.html?pane=command&p=1&active=Dashboard   (extra params are passed to seek as opts) -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>IAM pane harness</title>
+    <link rel="stylesheet" href="shell.css" />
+    <style>
+      html, body { margin: 0; background: #000; }
+      #frame { position: relative; width: 1440px; height: 900px; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <div id="frame"><div id="root"></div></div>
+    <script src="../screens/app.js"></script>
+    <script src="../assets/logo8.js"></script>
+    <script src="shell.js"></script>
+    <script>
+      const q = new URLSearchParams(location.search);
+      const name = q.get("pane");
+      const css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = `${name}.css`;
+      document.head.appendChild(css);
+      const js = document.createElement("script");
+      js.src = `${name}.js`;
+      window.harnessReady = new Promise((res) => {
+        js.onload = async () => {
+          await new Promise((r) => (css.sheet ? r() : (css.onload = r)));
+          await document.fonts.load('400 16px "Inter"');
+          await document.fonts.load('400 16px "JetBrains Mono"');
+          await document.fonts.ready;
+          const pane = I8.iam.shell(document.getElementById("root"), { active: q.get("active") || "Dashboard" });
+          const api = I8.iam.panes[name](pane, I8.h);
+          const extra = {};
+          for (const [k, v] of q) if (!["pane", "p", "active"].includes(k)) extra[k] = isNaN(+v) ? v : +v;
+          api.seek(q.has("p") ? +q.get("p") : 1, extra);
+          res();
+        };
+      });
+      document.head.appendChild(js);
+    </script>
+  </body>
+</html>
