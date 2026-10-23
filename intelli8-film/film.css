@@ -129,58 +129,56 @@ body {
 
 #hk-eye { position: absolute; }
 #hk-head { position: absolute; }
-.wcard {
+.hcards { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; }
+.hcard {
   position: absolute;
-  width: 640px;
-  border-radius: 36px;
+  top: 0;
+  border-radius: 34px;
   background: #fbfaf6;
-  padding: 44px 50px 40px;
+  padding: 34px 36px 26px;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.9) inset,
     0 50px 100px -40px rgba(35, 44, 43, 0.28),
     0 0 0 1px rgba(30, 36, 48, 0.05);
 }
-.wtop {
-  display: flex;
-  justify-content: space-between;
-  font-size: 18px;
-  color: var(--green-2);
-}
+.hcard .ring { position: absolute; inset: -1px; border-radius: 35px; box-shadow: 0 0 0 2.5px var(--green); opacity: 0; }
+.wtop { display: flex; justify-content: space-between; font-size: 17px; color: var(--green-2); }
 .wtop .dim { color: #8b918c; }
-.wnum {
-  margin-top: 26px;
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  font-family: var(--head);
-  color: var(--ink);
-}
-.wnum b {
-  font-weight: 700;
-  font-size: 168px;
-  line-height: 0.9;
-  letter-spacing: -0.06em;
-  font-variant-numeric: tabular-nums;
-}
-.wnum span { font-weight: 600; font-size: 44px; color: #8b918c; letter-spacing: -0.02em; }
-.wrows { margin-top: 34px; border-top: 1px solid rgba(30, 36, 48, 0.08); }
+.wnum { margin-top: 18px; display: flex; align-items: baseline; gap: 10px; font-family: var(--head); color: var(--ink); }
+.wnum b { font-weight: 700; font-size: 112px; line-height: 0.9; letter-spacing: -0.06em; font-variant-numeric: tabular-nums; }
+.wnum span { font-weight: 600; font-size: 36px; color: #8b918c; letter-spacing: -0.02em; }
+.hfig { display: block; margin: 22px auto 10px; }
+.hfig .neutral { fill: #ecebe5; stroke: #d9d7cf; stroke-width: 1; }
+.hfig .seg { stroke-width: 1.4; transform-box: fill-box; transform-origin: 50% 50%; }
+.wrows { border-top: 1px solid rgba(30, 36, 48, 0.08); }
 .wrow {
   display: flex;
   align-items: center;
-  height: 78px;
+  height: 58px;
   border-bottom: 1px solid rgba(30, 36, 48, 0.08);
-  font: 400 28px/1 var(--sans);
+  font: 400 24px/1 var(--sans);
   color: var(--body);
 }
-.wrow b {
-  margin-left: auto;
-  font: 600 34px/1 var(--head);
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
+.wrow:last-child { border-bottom: 0; }
+.wrow b { margin-left: auto; font: 600 28px/1 var(--head); letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.wrow i { font-style: normal; width: 34px; text-align: right; font-size: 18px; color: var(--green); }
+.hkey { position: absolute; left: 0; display: flex; justify-content: center; gap: 34px; font: 400 19px/1 var(--sans); color: var(--body); }
+.hkey span { display: inline-flex; align-items: center; gap: 10px; }
+.hkey i { width: 16px; height: 16px; border-radius: 5px; border: 1.5px solid; }
+.hkey i.fat { background: rgb(244, 214, 180); border-color: rgb(196, 135, 75); }
+.hkey i.lean { background: rgb(196, 230, 207); border-color: rgb(62, 149, 92); }
+.hsame {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: #fbfaf6;
+  font: 600 38px/1 var(--head);
+  box-shadow: 0 16px 30px -14px rgba(30, 36, 48, 0.5);
 }
-.wrow i { font-style: normal; width: 44px; text-align: right; font-size: 22px; }
-.wrow i.down, .wrow i.up { color: var(--green); }
 
 /* ---------- 2 · Brand ---------- */
 

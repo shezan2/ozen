@@ -1,1 +1,152 @@
-/* 9x16 layout CSS, scoped under html.f-9x16 (written by the format pass) */
+/* 9:16 vertical (Reels, Stories, TikTok, Shorts): format styles, scoped under html.f-9x16.
+   Static layout only; film.js drives transform / opacity / filter / display every frame and reads
+   positions from formats/9x16.js. Type keeps the film's styles, a step larger where a phone screen
+   would otherwise make it small (eyebrows, body copy, chips, callouts). Readable copy stays inside
+   x 65–1015, y 270–1250. */
+
+.f-9x16 {
+  --eye: 23px;
+  --bsize: 32px;
+}
+
+/* ---------- 1 · Hook: Week 1 | Week 6 cards under the headline (layout in 9x16.js) ---------- */
+
+.f-9x16 .wtop { font-size: 19px; }
+.f-9x16 .wnum b { font-size: 118px; }
+.f-9x16 .wrow { font-size: 26px; }
+.f-9x16 .wrow b { font-size: 30px; }
+.f-9x16 .hkey { font-size: 22px; }
+
+/* ---------- 2 · Brand ---------- */
+
+.f-9x16 #br-copy .headline.sm {
+  --hsize: 104px;
+}
+
+/* ---------- 3 · Measure: the headline down the left, the body in a narrow measure beside the
+   scale's handle bar ---------- */
+
+.f-9x16 #ms-copy {
+  left: 90px;
+  top: 300px;
+  width: 900px;
+}
+.f-9x16 #ms-copy .body {
+  margin-top: 36px;
+  max-width: 540px;
+}
+.f-9x16 .chip {
+  border-radius: 26px;
+  padding: 22px 30px 24px;
+}
+.f-9x16 .chip .mono {
+  font-size: 17px;
+}
+.f-9x16 .chip b {
+  margin-top: 12px;
+  font-size: 29px;
+}
+
+/* ---------- 4–6 · App: headline on top, body copy in the column right of the phone ---------- */
+
+.f-9x16 #ap-copy .headline.sm {
+  --hsize: 104px;
+}
+/* Each beat's box sits at the copy origin (90, 300); its body moves to the right column (x 470). */
+.f-9x16 #ap-copy .body {
+  position: absolute;
+  left: 389px;
+  top: 300px;
+  width: 500px;
+  margin-top: 0;
+}
+
+.f-9x16 .callout {
+  height: 78px;
+  gap: 16px;
+  padding: 0 30px 0 22px;
+  border-radius: 39px;
+  font-size: 27px;
+}
+.f-9x16 .callout b {
+  font-size: 30px;
+}
+.f-9x16 .callout .dot {
+  width: 16px;
+  height: 16px;
+}
+
+.f-9x16 .counter b {
+  font-size: 200px;
+}
+.f-9x16 .counter span {
+  font-size: 44px;
+}
+
+.f-9x16 .coach {
+  gap: 22px;
+  padding: 24px 38px 24px 26px;
+  border-radius: 34px;
+}
+.f-9x16 .coach .avatar {
+  width: 74px;
+  height: 74px;
+  font-size: 32px;
+}
+.f-9x16 .coach b {
+  font-size: 31px;
+}
+.f-9x16 .coach span {
+  font-size: 24px;
+}
+
+/* ---------- 7 · Goals + History: a caption over each phone ---------- */
+
+.f-9x16 .pair .cap {
+  width: 400px;
+}
+.f-9x16 .pair .cap .mono {
+  font-size: 21px;
+}
+.f-9x16 .pair .cap b {
+  margin-top: 14px;
+  font-size: 46px;
+}
+
+/* ---------- 8 · End: lockup, headline, stacked store pills and price down the left ---------- */
+
+.f-9x16 .lockup {
+  margin-bottom: 52px;
+}
+.f-9x16 .lockup .eyebrow {
+  font-size: 19px;
+}
+.f-9x16 #en-copy .headline {
+  --hsize: 100px;
+}
+.f-9x16 .stores {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 56px;
+}
+.f-9x16 .store {
+  height: 96px;
+  padding: 0 38px;
+}
+.f-9x16 .store span {
+  font-size: 19px;
+}
+.f-9x16 .store b {
+  font-size: 34px;
+}
+.f-9x16 .price {
+  margin-top: 32px;
+  width: 470px;
+  font-size: 21px;
+  line-height: 1.5;
+}
+.f-9x16 .fine {
+  width: 860px;
+  font-size: 20px;
+}

@@ -48,10 +48,13 @@ OUT = HERE.parent / "out"
 
 # App film picture events (seconds), from film.js.
 CUE = {
-    "card": 0.0,  # weight card on screen
+    "card": 0.0,  # Week 1 card on screen, centred
+    "glide": (0.15, 0.95),  # it glides right as the headline arrives
     "same": 0.4,  # "Same weight."
-    "weeks": (1.05, 3.1),  # week ticker running
+    "week6": (0.75, 1.45),  # Week 6 card slides in beside it
+    "equals": 1.3,  # "=" between the two 72.4 kg
     "different": 1.9,  # "Different story." — the insight
+    "flips": [1.98, 2.17, 2.31, 2.52],  # Week 6 segments turn muscle-led (film.js FLIP_AT)
     "sheet": (4.15, 4.75),  # sage sheet rises over the hook
     "draw": (4.75, 5.85),  # the 8 draws itself
     "heart": 5.65,  # heart pops in the top loop
@@ -495,13 +498,21 @@ def design_app():
     reseed("ambience")
     put("amb", ambience(DUR, lambda u: np.clip(u / 0.02, 0, 1) * (1 - 0.6 * np.clip((u - 0.95) / 0.04, 0, 1))), 0.0)
 
-    # ---- hook: the card arrives, the weeks rustle by, the insight lands
+    # ---- hook: Week 1, then Week 6 beside it at the same weight; its segments turn, the insight lands
     reseed("hook")
-    put("fx", whoosh(0.5, peak=0.2, f0=600, f1=2600, pan0=0.3, pan1=0.45, width_oct=1.4), CUE["card"], gain=0.3, send=0.2)
+    put("fx", whoosh(0.5, peak=0.2, f0=600, f1=2600, pan0=0.0, pan1=0.2, width_oct=1.4), CUE["card"], gain=0.28, send=0.2)
+    g0, g1 = CUE["glide"]
+    put("fx", whoosh(g1 - g0 + 0.1, peak=0.45, f0=400, f1=1500, pan0=0.0, pan1=0.3, width_oct=1.3), g0, gain=0.3, send=0.15)
     swish(CUE["same"] + 0.1, pan=-0.45)
-    w0, w1 = CUE["weeks"]
-    put("fx", filt(glint(w1 - w0, pan0=0.25, pan1=0.45, density=34.0), "lowpass", 6500), w0, gain=0.22, send=0.25)
-    ev(w0, "week ticker: soft granular rustle (no per-week ticks, so no pulse)")
+    k0, k1 = CUE["week6"]
+    put("fx", whoosh(k1 - k0 + 0.1, peak=0.35, f0=700, f1=2200, pan0=0.75, pan1=0.45, width_oct=1.3), k0, gain=0.34, send=0.2)
+    ev(k0, "Week 6 card slides in")
+    put("ui", pop(0.09), CUE["equals"] + 0.06, pan=0.3, gain=0.4, send=0.25)
+    ev(CUE["equals"], "= pop")
+    for i, t in enumerate(CUE["flips"]):
+        put("fx", whoosh(0.34, peak=0.3, f0=1500, f1=3800, pan0=0.45, pan1=0.6, width_oct=1.1), t, gain=0.15, send=0.25)
+        put("fx", glint(0.2, pan0=0.45, pan1=0.6, density=110.0), t + 0.05, gain=0.1 + 0.015 * i, send=0.4)
+    ev(CUE["flips"][0], "Week 6 segments turn: four soft glints, uneven")
     put("fx", pressure(0.7, peak=0.5), CUE["different"] - 0.45, gain=0.4)
     put("fx", reverse_swell(0.45), CUE["different"] - 0.42, gain=0.28)
     put("impact", impact(0.45), CUE["different"] + 0.05, gain=0.55, send=0.45)

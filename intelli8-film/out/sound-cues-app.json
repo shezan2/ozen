@@ -4,7 +4,7 @@
   "content": "sound design only \u2014 no music, no instruments, no tuned tones",
   "sample_rate": 48000,
   "duration": 30.0,
-  "integrated_lufs": -15.09,
+  "integrated_lufs": -15.07,
   "true_peak_dbtp": -1.6,
   "stem_gain_db": {
     "amb": -26.83,
@@ -15,12 +15,20 @@
   },
   "events": [
     {
-      "t": 1.05,
-      "event": "week ticker: soft granular rustle (no per-week ticks, so no pulse)"
+      "t": 0.75,
+      "event": "Week 6 card slides in"
+    },
+    {
+      "t": 1.3,
+      "event": "= pop"
     },
     {
       "t": 1.95,
       "event": "reveal: Different story."
+    },
+    {
+      "t": 1.98,
+      "event": "Week 6 segments turn: four soft glints, uneven"
     },
     {
       "t": 4.422,

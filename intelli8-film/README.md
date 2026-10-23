@@ -4,14 +4,19 @@ A 30-second product film for the **intelli8 App** ([intelli8.ai](https://intelli
 Ozen launch film next door, it is built as code: one HTML composition where every frame is a pure
 function of time, rendered frame by frame to video.
 
-**Output:** `out/intelli8-app.mp4`: 1920×1080, 60 fps, H.264 + AAC, 30.000 s, with sound design
-(no music, no instruments) at −15 LUFS / −1.5 dBTP.
+**Output:** `out/intelli8-app.mp4` (1920×1080), `out/intelli8-app-9x16.mp4` (1080×1920, Reels/Stories) and
+`out/intelli8-app-4x5.mp4` (1080×1350, feed): 60 fps, H.264 + AAC, 30.000 s, with sound design (no music, no
+instruments) at −15 LUFS / −1.5 dBTP.
+
+The same folder holds two more films built the same way: the **Body Composition Scale** film
+(`scale.html`, site sections rebuilt as cards in `cards/`) and the **IAM** team-platform film (`iam.html`, the
+dashboard rebuilt in `iam/`). Render them with `node render.mjs --film scale` / `--film iam`.
 
 ## The cut
 
 | Time | Beat |
 | --- | --- |
-| 0.0 – 4.6 | **Hook.** "Same weight. *Different story.*" A weight card holds 72.40 kg for six weeks while body fat falls (19.1 → 18.2%) and muscle rises (57.4 → 58.1 kg). |
+| 0.0 – 4.6 | **Hook.** "Same weight. *Different story.*" Week 1 and Week 6 side by side, both 72.4 kg; Week 6's body, drawn like the app's Segmental Analysis, turns from fat-led (orange) to muscle-led (green) segment by segment while body fat falls (19.1 → 18.2%) and muscle rises (57.4 → 58.1 kg). |
 | 4.6 – 8.4 | **Brand.** The ribbon 8 draws itself and its heart pops in, then the mark flies into the app's welcome screen. "See what changed." Get started is tapped. |
 | 8.4 – 12.0 | **Measure.** The button opens into the dark section: "Stand steady. Hold the bar. *See more.*" The scale's eight contacts light, feet and then hands. |
 | 12.0 – 15.6 | **Results.** "Fat, muscle, *every segment.*" Your Results fills its body diagram part by part, with a callout for each segment. Save my results is tapped. |
@@ -43,21 +48,24 @@ diagnosis. The iOS app is in TestFlight beta (Google Play is live), as the site 
 or instruments. A tonality check finds 0% tonal frames and no periodic beat. Evenly spaced runs were
 broken up on purpose: for example, the eight contacts light in two uneven groups.
 
-`audio/voice.py` holds the narration script, timed to the picture (see `LINES`). To add a voiceover, put
-an ElevenLabs take of the whole script in `audio/takes/script.mp3` (or `line1…line8`) and run:
+`audio/voice.py` holds each film's narration script, timed to the picture (`SCRIPTS`); the ElevenLabs prompts
+are in `audio/ELEVENLABS.md`. To add a voiceover, put the take of the whole script in
+`audio/takes/<film>/script.mp3` and run:
 
 ```bash
-.venv/bin/python audio/voice.py   # → out/voiceover.wav, fitted to the beats
-.venv/bin/python audio/sound.py   # mixes it over the sound design
-node render.mjs --mux             # re-attach the sound, no re-render
+.venv/bin/python audio/voice.py --film app   # → out/voiceover-app.wav, fitted to the beats
+.venv/bin/python audio/sound.py --film app   # mixes it over the sound design
+node render.mjs --film app --mux             # re-attach the sound, no re-render (add --format 9x16 / 4x5)
 ```
 
 ## Render
 
 ```bash
 node render.mjs                    # 1920×1080 · 60 fps · motion blur → out/intelli8-app.mp4
-node render.mjs --stills 3.2,14.0  # review stills → out/stills/
+node render.mjs --format 9x16      # vertical → out/intelli8-app-9x16.mp4 (also 4x5)
+node render.mjs --stills 3.2,14.0  # review stills → out/stills-app/
 ```
 
 Options are the same as `../launch-film/render.mjs` (`--sub`, `--shutter`, `--grain`, `--crf`, `--mux`,
-`--format`).
+`--format`), plus `--film app|scale|iam`. Layouts per shape live in `formats/` (positions in `<id>.js`, CSS
+scoped under `html.f-<id>`); 9:16 keeps everything readable inside Instagram's safe area.

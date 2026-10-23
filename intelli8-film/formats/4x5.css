@@ -1,1 +1,69 @@
-/* 4x5 layout CSS, scoped under html.f-4x5 (written by the format pass) */
+/* 4:5 feed (Instagram, Facebook): format-specific styles, scoped under html.f-4x5.
+   film.js sets transform / opacity / filter / display (and the positions in formats/4x5.js) inline
+   every frame; this file only sets static layout and type. The frame is seen at ~380 px wide, so
+   body copy is at least 30 px, headlines at least 100 px, and small labels at least 20 px. */
+
+/* ---------- Type ---------- */
+
+.f-4x5 .eyebrow { --eye: 26px; }
+.f-4x5 .body { --bsize: 32px; }
+.f-4x5 .headline.sm { --hsize: 108px; } /* "The detail behind" ≈ 805 px */
+
+/* ---------- 1 · Hook: Week 1 | Week 6 cards under the headline (layout in 4x5.js) ---------- */
+
+.f-4x5 .wtop { font-size: 20px; }
+.f-4x5 .wnum b { font-size: 124px; }
+.f-4x5 .wrow { font-size: 27px; }
+.f-4x5 .wrow b { font-size: 31px; }
+.f-4x5 .hkey { font-size: 22px; }
+
+/* ---------- 2 · Brand ---------- */
+
+.f-4x5 .wordmark { font-size: 108px; }
+
+/* ---------- 3 · Measure: the headline across the top, the body copy beside the scale's handle ---------- */
+
+.f-4x5 #ms-copy { left: 80px; top: 80px; width: 920px; }
+.f-4x5 #ms-copy .headline { --hsize: 140px; } /* "Stand steady." ≈ 826 px */
+.f-4x5 #ms-copy .body { margin-top: 36px; max-width: 520px; }
+.f-4x5 .chip { padding: 22px 32px 24px; border-radius: 26px; }
+.f-4x5 .chip .mono { font-size: 20px; }
+.f-4x5 .chip b { margin-top: 12px; font-size: 32px; }
+
+/* ---------- 4–7 · App: body copy, callouts, counter and coach in the column left of the phone ---------- */
+
+.f-4x5 #ap-copy .body { max-width: 470px; }
+.f-4x5 .callout {
+  height: 88px;
+  gap: 16px;
+  padding: 0 30px 0 24px;
+  border-radius: 44px;
+  font-size: 29px;
+}
+.f-4x5 .callout b { font-size: 31px; }
+.f-4x5 .callout .dot { width: 18px; height: 18px; box-shadow: 0 0 0 6px rgba(207, 154, 99, 0.18); }
+.f-4x5 .callout .dot.lean { box-shadow: 0 0 0 6px rgba(88, 162, 116, 0.18); }
+.f-4x5 .counter { gap: 18px; }
+.f-4x5 .counter b { font-size: 210px; }
+.f-4x5 .counter span { font-size: 46px; }
+.f-4x5 .coach { gap: 18px; padding: 22px 30px 22px 22px; border-radius: 32px; }
+.f-4x5 .coach .avatar { width: 68px; height: 68px; font-size: 30px; }
+.f-4x5 .coach b { font-size: 31px; }
+.f-4x5 .coach span { font-size: 24px; }
+
+/* Goals + History captions, one over each phone */
+.f-4x5 .pair .cap { width: 440px; }
+.f-4x5 .pair .cap .mono { font-size: 24px; }
+.f-4x5 .pair .cap b { margin-top: 16px; font-size: 50px; }
+
+/* ---------- 8 · End ---------- */
+
+.f-4x5 #en-copy .headline { --hsize: 104px; } /* "See what changed." ≈ 865 px */
+.f-4x5 .lockup { gap: 24px; margin-bottom: 44px; }
+.f-4x5 .lockup .eyebrow { font-size: 22px; max-width: 260px; }
+.f-4x5 .stores { gap: 16px; margin-top: 48px; }
+.f-4x5 .store { height: 96px; padding: 0 34px; border-radius: 22px; }
+.f-4x5 .store span { font-size: 20px; }
+.f-4x5 .store b { font-size: 34px; }
+.f-4x5 .price { margin-top: 30px; max-width: 470px; font-size: 22px; line-height: 1.5; text-wrap: balance; }
+.f-4x5 .fine { width: 480px; font-size: 22px; line-height: 1.35; }

@@ -99,9 +99,7 @@
 
   const el = {
     hook: $("s-hook"), brand: $("s-brand"), measure: $("s-measure"), app: $("s-app"), end: $("s-end"),
-    hkEye: $("hk-eye"), hkHead: $("hk-head"), hkL1: $("hk-l1"), hkL2: $("hk-l2"), hkCard: $("hk-card"),
-    hkWeek: $("hk-week"), hkWeight: $("hk-weight"), hkFat: $("hk-fatv"), hkMus: $("hk-musv"),
-    hkArrows: Array.from(document.querySelectorAll("#hk-card .wrow i")),
+    hkEye: $("hk-eye"), hkHead: $("hk-head"), hkL1: $("hk-l1"), hkL2: $("hk-l2"), hkCards: $("hk-cards"),
     brMark: $("br-mark"), brWord: $("br-word"), brCopy: $("br-copy"), brL1: $("br-l1"), brBody: $("br-body"),
     brEye: document.querySelector("#br-copy .eyebrow"),
     msCopy: $("ms-copy"), msL: [$("ms-l1"), $("ms-l2"), $("ms-l3")], msBody: $("ms-body"),
@@ -118,7 +116,61 @@
   at(el.hkEye, F.hook.eyebrow);
   at(el.hkHead, F.hook.head);
   el.hkHead.style.setProperty("--hsize", `${F.hook.headSize}px`);
-  at(el.hkCard, F.hook.card);
+  // Hook: Week 1 and Week 6 cards, each with the app's segment figure (geometry from screens/results.js,
+  // in screen points). Orange = fat-led segment, green = muscle-led, as in the app's Segmental Analysis.
+  const HSEGS = [
+    { x: 84.5, y: 291.5, w: 48, h: 65.25, rx: 7 }, // trunk
+    { x: 55.75, y: 293.75, w: 24, h: 53.5, rx: 10 }, // left arm
+    { x: 137.25, y: 293.75, w: 24, h: 53.5, rx: 10 }, // right arm
+    { x: 83.75, y: 370, w: 20.5, h: 83.5, rx: 9.5 }, // left leg
+    { x: 112.75, y: 370, w: 20.5, h: 83.5, rx: 9.5 }, // right leg
+  ];
+  const FIG_S = F.hook.cards.fig || 1.85; // figure scale (pt → px)
+  const hcard = (week, fat, mus, arrows) => {
+    const c = document.createElement("div");
+    c.className = "hcard";
+    c.style.width = `${F.hook.cards.w}px`;
+    c.innerHTML =
+      `<i class="ring"></i>` +
+      `<div class="wtop"><span class="mono">Week ${week}</span><span class="mono dim">Weight</span></div>` +
+      `<div class="wnum"><b>72.4</b><span>kg</span></div>` +
+      `<svg class="hfig" width="${(117 * FIG_S).toFixed(1)}" height="${(210 * FIG_S).toFixed(1)}" viewBox="50 248 117 210">` +
+      `<rect class="neutral" x="103.5" y="278" width="10" height="16" rx="2"/>` +
+      `<rect class="neutral" x="84.5" y="345" width="48" height="25.5" rx="5"/>` +
+      `<ellipse class="neutral" cx="108.75" cy="266.5" rx="13.75" ry="14"/>` +
+      HSEGS.map((g) => `<rect class="seg" x="${g.x}" y="${g.y}" width="${g.w}" height="${g.h}" rx="${g.rx}"/>`).join("") +
+      `</svg>` +
+      `<div class="wrows">` +
+      `<div class="wrow"><span>Body fat</span><b>${fat}</b><i>${arrows ? "▼" : ""}</i></div>` +
+      `<div class="wrow"><span>Muscle</span><b>${mus}</b><i>${arrows ? "▲" : ""}</i></div>` +
+      `</div>`;
+    el.hkCards.appendChild(c);
+    return {
+      c, ring: c.querySelector(".ring"), segs: Array.from(c.querySelectorAll(".seg")),
+      vals: Array.from(c.querySelectorAll(".wrow b")), arrows: Array.from(c.querySelectorAll(".wrow i")),
+    };
+  };
+  const hkA = hcard(1, "19.1%", "57.4 kg", false);
+  const hkB = hcard(6, "19.1%", "57.4 kg", true);
+  const hkSame = document.createElement("div");
+  hkSame.className = "hsame";
+  hkSame.textContent = "=";
+  el.hkCards.appendChild(hkSame);
+  const hkKey = document.createElement("div");
+  hkKey.className = "hkey";
+  hkKey.innerHTML = `<span><i class="fat"></i>Fat-led segment</span><span><i class="lean"></i>Muscle-led segment</span>`;
+  el.hkCards.appendChild(hkKey);
+  {
+    const { x, y, w, gap } = F.hook.cards;
+    at(el.hkCards, [x, y]);
+    hkB.c.style.left = `${w + gap}px`;
+    hkA.c.style.left = "0px";
+    const numY = hkA.c.querySelector(".wnum b").offsetTop + 34; // the numbers' visual middle
+    at(hkSame, [w + gap / 2 - 32, numY]);
+    el.hkCards.style.width = `${2 * w + gap}px`;
+    el.hkCards.style.height = `${hkA.c.offsetHeight}px`;
+    Object.assign(hkKey.style, { top: `${hkA.c.offsetHeight + 26}px`, width: `${2 * w + gap}px` });
+  }
   at(el.brCopy, F.brand.copy);
   el.brCopy.style.width = `${F.brand.copyWidth}px`;
   el.brBody.style.marginTop = "30px";
@@ -257,12 +309,17 @@
 
   /* ---------------------------------------------------------------- scenes */
 
-  // Weekly readings for the hook: the weight barely moves, the composition does.
-  const WEEKS = [
-    [72.4, 19.1, 57.4], [72.55, 18.9, 57.5], [72.3, 18.7, 57.7],
-    [72.45, 18.6, 57.8], [72.35, 18.4, 58.0], [72.4, 18.2, 58.1],
-  ];
-  const WEEK0 = 1.05, WEEK_DT = 0.4;
+  // Segment colours: fat-led (orange) → muscle-led (green), from the app's palette (screens/app.css).
+  // (a little deeper than the app's fills, so the change reads at a glance)
+  const SEG_FAT = { fill: [244, 214, 180], stroke: [196, 135, 75] };
+  const SEG_LEAN = { fill: [196, 230, 207], stroke: [62, 149, 92] };
+  const mix = (a, b, k) => `rgb(${a.map((v, i) => Math.round(lerp(v, b[i], k))).join(",")})`;
+  function paintSeg(r, k, filled = 1) {
+    r.style.fill = mix([251, 250, 246], mix(SEG_FAT.fill, SEG_LEAN.fill, k).match(/\d+/g).map(Number), filled);
+    r.style.stroke = mix([217, 215, 207], mix(SEG_FAT.stroke, SEG_LEAN.stroke, k).match(/\d+/g).map(Number), filled);
+  }
+  // Week 6: four of five segments turn muscle-led as "Different story." lands (uneven, like real progress).
+  const FLIP_AT = [1.98, 2.17, 2.31, 2.52, null]; // trunk, left arm, right arm, left leg; right leg stays
   function sceneHook(t) {
     const on = t < 4.8;
     show(el.hook, on);
@@ -271,24 +328,44 @@
     el.hook.style.transform = `translateY(${(-120 * E.in(exit)).toFixed(2)}px)`;
     op(el.hook, 1 - E.in(exit) * 0.6);
 
-    // The card is on screen from the first frame (the feed shows frame 0); it settles as the copy arrives.
     enter(el.hkEye, t, 0.05, 0.6, 16);
     rise(el.hkL1, t, 0.4);
     rise(el.hkL2, t, 1.9);
-    const pc = E.glide(prog(t, -0.25, 0.7));
-    el.hkCard.style.transform = `translateY(${((1 - pc) * 50).toFixed(2)}px) scale(${lerp(0.97, 1, pc).toFixed(4)})`;
-    op(el.hkCard, lerp(0.7, 1, pc));
+    // Week 1 opens centred on the frame, then glides right to make room for the headline; a slow push
+    // on the pair of cards runs through the whole beat.
+    const { x: cx, w: cw } = F.hook.cards;
+    const centred = W / 2 - (cx + cw / 2);
+    const glide = E.dolly(prog(t, 0.15, 0.95));
+    el.hkCards.style.transform =
+      `translateX(${(centred * (1 - glide)).toFixed(2)}px) scale(${lerp(1, 1.035, E.sine(prog(t, 0, 4.2))).toFixed(5)})`;
 
-    // Week ticker: values ease from one weekly reading to the next.
-    const wk = clamp((t - WEEK0) / WEEK_DT, 0, WEEKS.length - 1);
-    const i = Math.min(WEEKS.length - 2, Math.floor(wk));
-    const f = E.inOut(clamp(wk - i));
-    const [w, fat, mus] = WEEKS[i].map((v, k) => lerp(v, WEEKS[i + 1][k], f));
-    el.hkWeek.textContent = `Week ${Math.min(6, Math.round(wk) + 1)}`;
-    el.hkWeight.textContent = w.toFixed(2);
-    el.hkFat.textContent = `${fat.toFixed(1)}%`;
-    el.hkMus.textContent = `${mus.toFixed(1)} kg`;
-    el.hkArrows.forEach((a) => op(a, prog(t, 1.6, 2.0)));
+    // Week 1 is on screen from the first frame (the feed shows frame 0); its body fills in at once.
+    const pa = E.glide(prog(t, -0.3, 0.6));
+    hkA.c.style.transform = `translateY(${((1 - pa) * 40).toFixed(2)}px)`;
+    op(hkA.c, lerp(0.75, 1, pa) * (1 - 0.25 * E.inOut(prog(t, 2.0, 2.6))));
+    hkA.segs.forEach((r, i) => paintSeg(r, 0, E.out(prog(t, -0.45 + i * 0.07, -0.1 + i * 0.07))));
+
+    // Week 6 slides in beside it: the same 72.4 kg.
+    const pb = E.glide(prog(t, 0.75, 1.45));
+    hkB.c.style.transform = `translateX(${((1 - pb) * 90).toFixed(2)}px)`;
+    op(hkB.c, pb);
+    const ps = E.pop(prog(t, 1.22, 1.52));
+    hkSame.style.transform = `scale(${ps.toFixed(4)})`;
+    op(hkSame, clamp(ps * 2) * (1 - 0.7 * E.inOut(prog(t, 2.0, 2.6))));
+
+    // …and underneath, it changes.
+    hkB.segs.forEach((r, i) => {
+      const k = FLIP_AT[i] === null ? 0 : E.inOut(prog(t, FLIP_AT[i], FLIP_AT[i] + 0.32));
+      paintSeg(r, k, 1);
+      const pop = FLIP_AT[i] === null ? 0 : Math.sin(Math.PI * prog(t, FLIP_AT[i], FLIP_AT[i] + 0.32));
+      r.style.transform = `scale(${(1 + 0.07 * pop).toFixed(4)})`;
+    });
+    const pv = E.inOut(prog(t, 1.98, 2.85));
+    hkB.vals[0].textContent = `${lerp(19.1, 18.2, pv).toFixed(1)}%`;
+    hkB.vals[1].textContent = `${lerp(57.4, 58.1, pv).toFixed(1)} kg`;
+    hkB.arrows.forEach((a) => op(a, prog(t, 2.55, 2.85)));
+    op(hkB.ring, 0.55 * E.inOut(prog(t, 2.0, 2.6)));
+    enter(hkKey, t, 2.6, 0.6, 10);
   }
 
   function sceneBrand(t) {
@@ -365,8 +442,8 @@
     const pin = E.glide(prog(t, 11.95, 12.75));
     const out = E.in(prog(t, 23.15, 23.65));
     placePhone(el.phMain, {
-      x: pose.x - out * 900,
-      y: pose.y + (1 - pin) * 260,
+      x: pose.x + out * (F.app.exit || [-900, 0])[0], // leaves for Goals + History (format: away from the pair)
+      y: pose.y + (1 - pin) * 260 + out * (F.app.exit || [-900, 0])[1],
       s: pose.s * lerp(0.94, 1, pin),
       o: E.out(prog(t, 11.95, 12.25)), // opaque early: a phone slides in, it doesn't ghost in
       r: lerp(-2.5, 0, pin) - out * 6,

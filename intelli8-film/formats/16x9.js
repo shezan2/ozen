@@ -6,8 +6,8 @@
   hook: {
     eyebrow: [150, 300],
     head: [150, 352],
-    headSize: 132,
-    card: [1130, 290],
+    headSize: 120,
+    cards: { x: 990, y: 128, w: 400, gap: 24 }, // Week 1 | Week 6; the "=" sits in the gap at the number
   },
   brand: {
     mark: [960, 455],
