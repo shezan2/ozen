@@ -118,7 +118,7 @@
       h.status() +
       `<div class="back">${CHEVRON}</div>
        <div class="head">Full Report</div>
-       <div class="when">Sep 24, 2026 · 6:12 PM</div>
+       <div class="when">Sep 24, 2026 · 6:08 PM</div>
        <div class="share">${SHARE}</div>
        <div class="view"><div class="content">
          ${card("bars", height.bars, barRows(BARS, 0))}

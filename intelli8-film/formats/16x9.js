@@ -22,6 +22,7 @@
     chip: [1470, 820],
   },
   app: {
+    exit: [0, -1900], // the report phone leaves upward, clear of the Goals + History phones rising below
     phone: { x: 1290, y: 560, s: 1 },
     copy: [150, 230],
     copyWidth: 820,

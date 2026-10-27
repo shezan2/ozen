@@ -54,6 +54,7 @@
 
     app: {
     exit: [0, -1900], // the report phone leaves upward, clear of the Goals + History phones rising below
+    exitT: [23.0, 23.4], // …and early: Goals rises in the same column from 23.35
       phone: { x: APP.x, y: APP.y, s: APP.s },
       copy: [L, TOP],
       copyWidth: 900,

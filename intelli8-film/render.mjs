@@ -140,6 +140,16 @@ async function renderChunk(browser, frames, file, onFrame) {
   await page.close();
 }
 
+// Frames in a file's first video stream (counted from packets: exact, and fast without decoding).
+function frameCount(file) {
+  return new Promise((res, rej) => {
+    const p = spawn("ffprobe", ["-v", "error", "-select_streams", "v:0", "-count_packets", "-show_entries", "stream=nb_read_packets", "-of", "csv=p=0", file]);
+    let out = "";
+    p.stdout.on("data", (d) => (out += d));
+    p.on("close", (c) => (c === 0 ? res(parseInt(out.trim(), 10)) : rej(new Error(`ffprobe exited ${c} on ${file}`))));
+  });
+}
+
 async function film() {
   const probe = await launch();
   await openPage(probe); // reads the film's size and duration
@@ -167,16 +177,31 @@ async function film() {
     }
   };
 
+  // Each chunk must hold exactly its frames: a short chunk once slipped 0.9 s out of sync with the sound,
+  // so a chunk that comes out short is rendered again, and a second failure stops the render.
   const browsers = await Promise.all(chunks.map(() => launch()));
-  await Promise.all(chunks.map((c, i) => renderChunk(browsers[i], c.frames, c.file, tick)));
+  await Promise.all(
+    chunks.map(async (c, i) => {
+      for (let attempt = 1; ; attempt++) {
+        await renderChunk(browsers[i], c.frames, c.file, attempt === 1 ? tick : () => {});
+        const n = await frameCount(c.file);
+        if (n === c.frames.length) return;
+        if (attempt >= 2) throw new Error(`chunk ${i}: ${n} frames, expected ${c.frames.length}`);
+        console.error(`\nchunk ${i}: ${n} frames, expected ${c.frames.length} — rendering it again`);
+      }
+    }),
+  );
   await Promise.all(browsers.map((b) => b.close()));
   process.stdout.write("\n");
 
   const list = join(tmp, "list.txt");
-  writeFileSync(list, chunks.map((c) => `file '${c.file}'`).join("\n"));
+  // Exact chunk durations, and timestamps rebuilt from the frame index (so the constant-rate output maps frames
+  // 1:1), so joining can't drop or repeat a frame.
+  writeFileSync(list, chunks.map((c) => `file '${c.file}'\nduration ${(c.frames.length / FPS).toFixed(6)}`).join("\n"));
   const enc = ffmpeg([
     "-f", "concat", "-safe", "0", "-i", list,
     "-vf", [
+      `setpts=N/(${FPS}*TB)`,
       "scale=out_color_matrix=bt709:out_range=tv",
       "format=yuv444p",
       ...(GRAIN > 0 ? [`noise=c0s=${GRAIN}:c0f=t+u`] : []),
@@ -189,8 +214,12 @@ async function film() {
   ]);
   enc.stdin.end();
   await enc.done;
+  const n = await frameCount(`${OUT}.video.mp4`);
+  if (n !== total) throw new Error(`encoded ${n} frames, expected ${total} — chunks kept in ${tmp}`);
   if (!args["keep-chunks"]) rmSync(tmp, { recursive: true, force: true });
   await mux(`${OUT}.video.mp4`, OUT);
+  const m = await frameCount(OUT);
+  if (m !== total) throw new Error(`${OUT}: ${m} frames after muxing, expected ${total}`);
   rmSync(`${OUT}.video.mp4`, { force: true });
   console.log(`${OUT} · ${((Date.now() - started) / 1000).toFixed(0)}s`);
 }

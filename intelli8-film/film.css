@@ -93,7 +93,8 @@ body {
   text-transform: uppercase;
   color: var(--green-2);
 }
-.eyebrow .lc { text-transform: none; }
+.eyebrow .lc,
+.mono .lc { text-transform: none; } /* the brand stays lowercase inside caps, as on the site */
 .dark .eyebrow { color: var(--mint); opacity: 0.8; }
 .mono {
   font-family: var(--mono);
@@ -182,7 +183,7 @@ body {
 
 /* ---------- 2 · Brand ---------- */
 
-.bigmark { position: absolute; }
+.bigmark { position: absolute; z-index: 20; } /* above the phones, below the wipe and the tap */
 .wordmark {
   position: absolute;
   font: 700 92px/1 var(--head);
@@ -370,6 +371,8 @@ body {
 
 /* ---------- Transitions ---------- */
 
+/* Measure leaves by sliding up over the app scene and the rising phone, so it sits above both. */
+#s-measure { z-index: 5; }
 #wipe { position: absolute; display: none; background: var(--dark); z-index: 30; }
 #tap {
   position: absolute;

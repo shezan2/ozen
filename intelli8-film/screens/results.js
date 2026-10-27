@@ -34,9 +34,9 @@
   ];
   const METRICS = [
     ["BMI", "22.8"],
-    ["Body Water", "54.3%"],
+    ["Body Water", "60.1%"], // the same reading as the Dashboard and the Report (the site's screenshots disagree)
     ["Visceral Fat", "7"],
-    ["Bone Mass", "3.1 kg"],
+    ["Bone Mass", "4.0 kg"], // = the Report's bone mass 5.5% of 72.40 kg
   ];
   let uid = 0; // unique SVG ids per instance (set once at build time, never read by seek)
 

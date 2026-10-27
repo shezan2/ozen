@@ -16,7 +16,7 @@ dashboard rebuilt in `iam/`). Render them with `node render.mjs --film scale` / 
 
 | Time | Beat |
 | --- | --- |
-| 0.0 – 4.6 | **Hook.** "Same weight. *Different story.*" Week 1 and Week 6 side by side, both 72.4 kg; Week 6's body, drawn like the app's Segmental Analysis, turns from fat-led (orange) to muscle-led (green) segment by segment while body fat falls (19.1 → 18.2%) and muscle rises (57.4 → 58.1 kg). |
+| 0.0 – 4.6 | **Hook.** "Same weight. *Different story.*" Week 1 and Week 6 side by side, both 68.0 kg; Week 6's body, drawn like the app's Segmental Analysis, turns from fat-led (orange) to muscle-led (green) segment by segment while body fat falls (24.8 → 23.2%) and muscle rises (48.2 → 49.3 kg). An illustrative person, not the app's demo user. |
 | 4.6 – 8.4 | **Brand.** The ribbon 8 draws itself and its heart pops in, then the mark flies into the app's welcome screen. "See what changed." Get started is tapped. |
 | 8.4 – 12.0 | **Measure.** The button opens into the dark section: "Stand steady. Hold the bar. *See more.*" The scale's eight contacts light, feet and then hands. |
 | 12.0 – 15.6 | **Results.** "Fat, muscle, *every segment.*" Your Results fills its body diagram part by part, with a callout for each segment. Save my results is tapped. |

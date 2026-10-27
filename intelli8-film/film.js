@@ -4,7 +4,7 @@
  * browser and renders frame-accurately (render.mjs drives window.film.seek).
  *
  * Beats
- *   0.0  Hook — "Same weight. Different story.": weight holds at 72.40 kg for six weeks while body
+ *   0.0  Hook — "Same weight. Different story.": weight holds at 68.0 kg for six weeks while body
  *        fat falls and muscle rises
  *   4.6  Brand — the 8 draws itself, then becomes the app's welcome screen; Get started
  *   8.4  Measure — "Stand steady. Hold the bar. See more.": the scale's eight contacts light up
@@ -104,7 +104,7 @@
     brEye: document.querySelector("#br-copy .eyebrow"),
     msCopy: $("ms-copy"), msL: [$("ms-l1"), $("ms-l2"), $("ms-l3")], msBody: $("ms-body"),
     msScale: $("ms-scale"), msContacts: $("ms-contacts"), msChip: $("ms-chip"),
-    apCopy: $("ap-copy"), apCount: $("ap-count"), apCountN: $("ap-countn"), apCallouts: $("ap-callouts"),
+    apCopy: $("ap-copy"), apCount: $("ap-count"), apCountN: $("ap-countn"), apCountLabel: document.querySelector("#ap-count span"), apCallouts: $("ap-callouts"),
     apCoach: $("ap-coach"), apPdf: $("ap-pdf"), apCap1: $("ap-cap1"), apCap2: $("ap-cap2"),
     enCopy: $("en-copy"), enL: [$("en-l1"), $("en-l2"), $("en-l3")], enLock: $("en-lock"), enStores: $("en-stores"),
     enPrice: $("en-price"), enScale: $("en-scale"), enFine: $("en-fine"),
@@ -126,6 +126,9 @@
     { x: 112.75, y: 370, w: 20.5, h: 83.5, rx: 9.5 }, // right leg
   ];
   const FIG_S = F.hook.cards.fig || 1.85; // figure scale (pt → px)
+  // An illustrative person, deliberately not the app's demo user (Alex, 72.40 kg, whose weight falls over these
+  // weeks in History): the same weight, about 1.1 kg of fat swapped for 1.1 kg of muscle.
+  const HOOK = { kg: "68.0", fat: [24.8, 23.2], mus: [48.2, 49.3] };
   const hcard = (week, fat, mus, arrows) => {
     const c = document.createElement("div");
     c.className = "hcard";
@@ -133,7 +136,7 @@
     c.innerHTML =
       `<i class="ring"></i>` +
       `<div class="wtop"><span class="mono">Week ${week}</span><span class="mono dim">Weight</span></div>` +
-      `<div class="wnum"><b>72.4</b><span>kg</span></div>` +
+      `<div class="wnum"><b>${HOOK.kg}</b><span>kg</span></div>` +
       `<svg class="hfig" width="${(117 * FIG_S).toFixed(1)}" height="${(210 * FIG_S).toFixed(1)}" viewBox="50 248 117 210">` +
       `<rect class="neutral" x="103.5" y="278" width="10" height="16" rx="2"/>` +
       `<rect class="neutral" x="84.5" y="345" width="48" height="25.5" rx="5"/>` +
@@ -150,8 +153,8 @@
       vals: Array.from(c.querySelectorAll(".wrow b")), arrows: Array.from(c.querySelectorAll(".wrow i")),
     };
   };
-  const hkA = hcard(1, "19.1%", "57.4 kg", false);
-  const hkB = hcard(6, "19.1%", "57.4 kg", true);
+  const hkA = hcard(1, `${HOOK.fat[0]}%`, `${HOOK.mus[0]} kg`, false);
+  const hkB = hcard(6, `${HOOK.fat[0]}%`, `${HOOK.mus[0]} kg`, true);
   const hkSame = document.createElement("div");
   hkSame.className = "hsame";
   hkSame.textContent = "=";
@@ -345,7 +348,7 @@
     op(hkA.c, lerp(0.75, 1, pa) * (1 - 0.25 * E.inOut(prog(t, 2.0, 2.6))));
     hkA.segs.forEach((r, i) => paintSeg(r, 0, E.out(prog(t, -0.45 + i * 0.07, -0.1 + i * 0.07))));
 
-    // Week 6 slides in beside it: the same 72.4 kg.
+    // Week 6 slides in beside it: the same weight.
     const pb = E.glide(prog(t, 0.75, 1.45));
     hkB.c.style.transform = `translateX(${((1 - pb) * 90).toFixed(2)}px)`;
     op(hkB.c, pb);
@@ -361,8 +364,8 @@
       r.style.transform = `scale(${(1 + 0.07 * pop).toFixed(4)})`;
     });
     const pv = E.inOut(prog(t, 1.98, 2.85));
-    hkB.vals[0].textContent = `${lerp(19.1, 18.2, pv).toFixed(1)}%`;
-    hkB.vals[1].textContent = `${lerp(57.4, 58.1, pv).toFixed(1)} kg`;
+    hkB.vals[0].textContent = `${lerp(HOOK.fat[0], HOOK.fat[1], pv).toFixed(1)}%`;
+    hkB.vals[1].textContent = `${lerp(HOOK.mus[0], HOOK.mus[1], pv).toFixed(1)} kg`;
     hkB.arrows.forEach((a) => op(a, prog(t, 2.55, 2.85)));
     op(hkB.ring, 0.55 * E.inOut(prog(t, 2.0, 2.6)));
     enter(hkKey, t, 2.6, 0.6, 10);
@@ -371,6 +374,7 @@
   function sceneBrand(t) {
     const on = t >= 4.15 && t < 8.7;
     show(el.brand, on);
+    show(el.brMark, t >= 4.15 && t < 6.8); // outside the brand section now, so hidden explicitly
     if (!on) return;
     // The sage sheet rises over the hook.
     el.brand.style.transform = `translateY(${lerp(H + 20, 0, E.sheet(prog(t, 4.15, 4.75))).toFixed(2)}px)`;
@@ -379,11 +383,10 @@
     I8.logo8Draw(bigSvg, E.inOut(prog(t, 4.75, 5.85)), prog(t, 5.6, 5.95));
     const pose = F.brand.phone;
     const fly = E.dolly(prog(t, 6.0, 6.75));
-    const [tx, ty] = onStage(pose, 195, 352); // the welcome screen's mark centre
+    const [tx, ty] = onStage(pose, 195, 350); // the welcome screen's mark centre (measured)
     const s = lerp(1, (96 * pose.s) / F.brand.markSize, fly);
     move(el.brMark, (tx - F.brand.mark[0]) * fly, (ty - F.brand.mark[1]) * fly, s);
     op(el.brMark, 1 - prog(t, 6.62, 6.78));
-    show(el.brMark, t < 6.8);
     const pw = E.glide(prog(t, 5.35, 5.95));
     el.brWord.style.transform = `translate(-50%, ${((1 - pw) * 26 - 40 * E.in(prog(t, 5.95, 6.3))).toFixed(2)}px)`;
     op(el.brWord, pw * (1 - prog(t, 5.95, 6.25)));
@@ -419,6 +422,10 @@
     enter(el.msChip, t, 10.75, 0.7, 20);
   }
 
+  const welcomeMark = main.welcome.root.querySelector(".mark");
+  // The big 8 flies into the phone, so it travels on its own layer above the phones (film.css #br-mark).
+  stage.appendChild(el.brMark);
+
   // Main phone: welcome (brand) → results → dashboard → report.
   function sceneMainPhone(t) {
     const S = main;
@@ -435,12 +442,16 @@
       show(S.welcome.root, true);
       S.welcome.root.style.transform = "none";
       S.welcome.api.seek(lerp(0.62, 1, prog(t, 6.2, 7.2)), { press: prog(t, 7.78, 8.02) });
+      // The screen's own 8 takes over exactly as the flying mark lands (sceneBrand fades it 6.62–6.78),
+      // so there is only ever one 8 on screen.
+      welcomeMark.style.opacity = prog(t, 6.62, 6.78).toFixed(4);
       return;
     }
     // App section.
     const pose = F.app.phone;
     const pin = E.glide(prog(t, 11.95, 12.75));
-    const out = E.in(prog(t, 23.15, 23.65));
+    const [x0, x1] = F.app.exitT || [23.15, 23.65]; // a format may leave a little earlier if the pair shares its column
+    const out = E.in(prog(t, x0, x1));
     placePhone(el.phMain, {
       x: pose.x + out * (F.app.exit || [-900, 0])[0], // leaves for Goals + History (format: away from the pair)
       y: pose.y + (1 - pin) * 260 + out * (F.app.exit || [-900, 0])[1],
@@ -510,7 +521,9 @@
     // Report: the measure counter, then the PDF goes to the coach.
     const pc = prog(t, 19.9, 22.0);
     enter(el.apCount, t, 19.75, 0.6, 20, 23.05, 0.35);
-    el.apCountN.textContent = String(Math.round(24 * E.sine(pc)));
+    const measures = Math.round(24 * E.sine(pc));
+    el.apCountN.textContent = String(measures);
+    el.apCountLabel.textContent = measures === 1 ? "measure" : "measures";
     const pf = prog(t, 22.4, 23.0);
     show(el.apPdf, pf > 0 && pf < 1);
     if (pf > 0 && pf < 1) {

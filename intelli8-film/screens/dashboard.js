@@ -78,7 +78,7 @@
          ([l, v]) => `<div class="row"><span>${l}</span><span class="v">${v}</span><span class="tag">Normal</span></div>`
        ).join("")}</div>
        <div class="btn primary report">View full report</div>
-       <div class="foot"><span>Last measured today at 6:06 PM</span>${INFO}</div>` +
+       <div class="foot"><span>Last measured today at 6:08 PM</span>${INFO}</div>` +
       h.tabs("dashboard") +
       h.home();
 
