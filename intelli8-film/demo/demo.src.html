@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- intelli8 Body Composition Scale — 60 s product demo. Source page: `python3 demo/build.py` inlines the
+     fonts, the app screens, the scale render and (if present) the preview sound into intelli8-demo.html.
+     Open that file to scrub it live; add ?render for the bare 1920 × 1080 stage the renderer films. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>intelli8 Scale Demo</title>
+    <style>
+/*@fonts*/
+/*@css screens/app.css*/
+/*@css screens/results.css*/
+/*@css screens/report.css*/
+/*@css screens/history.css*/
+/*@css demo/demo.css*/
+    </style>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <div id="controls">
+      <button id="play" type="button" aria-label="Play">▶</button>
+      <input id="scrub" type="range" min="0" max="6000" value="0" step="1" aria-label="Time" />
+      <output id="clock">0.00</output>
+    </div>
+    <audio id="snd" preload="auto"><!--@audio--></audio>
+    <script>
+/*@js screens/app.js*/
+/*@js assets/logo8.js*/
+/*@js screens/results.js*/
+/*@js screens/report.js*/
+/*@js screens/history.js*/
+const SCALE_PNG = "/*@png assets/scale-front.png*/";
+/*@js demo/demo.js*/
+    </script>
+  </body>
+</html>

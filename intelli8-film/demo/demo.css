@@ -1,0 +1,163 @@
+/* intelli8 Body Composition Scale — product demo. A calm, airy canvas in the site's cream; one line of text or one
+   product moment at a time, each on its own layer with its own camera. */
+
+:root {
+  --cream: #f5f4ee;
+  --paper: #fbfaf6;
+  --sage: #e0e7e1;
+  --ink: #1e2430;
+  --muted: #8a8f8c;
+  --body: #606666;
+  --green: #3c7260;
+  --green-2: #487e6c;
+  --mint: #aed2c0;
+  --hl: rgba(60, 114, 96, 0.17); /* the highlight box: brand green at ~17% */
+  --head: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --sans: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: #0c0d0d; }
+body { font-family: var(--sans); -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; color: var(--ink); }
+
+#stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--cream); transform-origin: 0 0; }
+.layer { position: absolute; inset: 0; display: none; }
+.cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+.nowrap, .tline, .word { white-space: nowrap; }
+
+/* ---------- Title lines: small type the camera makes big ---------- */
+.tline {
+  position: absolute;
+  left: 960px;
+  top: 540px;
+  transform: translate(-50%, -50%);
+  font: 600 32px/1.2 var(--head);
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+.tline .word { display: inline-block; position: relative; }
+.tline .hlbox { position: absolute; border-radius: 5px; background: var(--hl); transform-origin: 0 50%; }
+.tline .lbl { position: relative; }
+.intro { font: 500 30px/1 var(--sans); letter-spacing: -0.01em; color: var(--muted); }
+
+/* ---------- Brand moments: silk gradient ---------- */
+.silk { position: absolute; left: -340px; top: -210px; width: 2600px; height: 1500px; }
+.lockup { position: absolute; left: 960px; top: 500px; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; }
+.lockup .mark8 { display: block; }
+.lockup .name { margin-top: 26px; font: 700 64px/1 var(--head); letter-spacing: -0.045em; color: var(--ink); }
+.lockup .sub { margin-top: 18px; font: 500 16px/1 var(--mono); letter-spacing: 0.24em; text-transform: uppercase; color: var(--green-2); }
+
+/* ---------- Problem: a weight-only readout ---------- */
+.readout {
+  position: absolute;
+  left: 700px;
+  top: 300px;
+  width: 520px;
+  height: 300px;
+  border-radius: 30px;
+  background: #fff;
+  border: 1px solid rgba(30, 36, 48, 0.08);
+  box-shadow: 0 30px 60px -36px rgba(35, 44, 43, 0.35);
+  padding: 34px 40px;
+}
+.readout .cap { font: 500 15px/1 var(--mono); letter-spacing: 0.2em; color: var(--muted); }
+.readout .num { margin-top: 34px; display: flex; align-items: baseline; gap: 12px; font: 700 150px/0.8 var(--head); letter-spacing: -0.06em; color: var(--ink); }
+.readout .num span { font: 600 44px/1 var(--head); letter-spacing: -0.02em; color: var(--muted); }
+.qchip {
+  position: absolute;
+  top: 636px;
+  height: 70px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: 32px;
+  border: 2px dashed rgba(30, 36, 48, 0.22);
+  font: 500 27px/1 var(--sans);
+  color: var(--body);
+  white-space: nowrap;
+}
+.qchip b { font: 700 29px/1 var(--head); color: var(--muted); }
+
+/* ---------- Scale: the product render with its contacts ---------- */
+.scale { position: absolute; left: 0; top: 0; width: 783px; height: 980px; }
+.scale .render-img { position: absolute; left: 0; top: 0; width: 783px; height: 980px; }
+.scale .lit { position: absolute; width: 210px; height: 350px; } /* the display, lit (demo.js DISP) */
+.scale .shadow {
+  position: absolute;
+  left: 40px;
+  right: 10px;
+  bottom: -60px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(35, 44, 43, 0.34), rgba(35, 44, 43, 0));
+}
+.scale .tint { position: absolute; border-radius: 999px; background: rgba(150, 214, 184, 0.92); mix-blend-mode: multiply; }
+.scale .tint.pad { border-radius: 12px; }
+.scale .halo { position: absolute; border-radius: 999px; box-shadow: 0 0 0 2px rgba(120, 200, 165, 0.95), 0 0 34px 10px rgba(94, 224, 168, 0.45); }
+.scale .halo.pad { border-radius: 12px; }
+.chip {
+  position: absolute;
+  padding: 16px 22px 18px;
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: 0 24px 48px -26px rgba(35, 44, 43, 0.45), 0 0 0 1px rgba(30, 36, 48, 0.06);
+  white-space: nowrap;
+}
+.chip .k { display: block; font: 500 14px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: #7f8783; }
+.chip .k .lc { text-transform: none; }
+.chip b { display: block; margin-top: 12px; font: 600 27px/1 var(--sans); letter-spacing: -0.01em; color: var(--ink); }
+
+/* ---------- Phone: the app, filmed up close ---------- */
+.phone {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 418px;
+  height: 872px;
+  border-radius: 66px;
+  background: #121516;
+  padding: 14px;
+  box-shadow: 0 60px 110px -50px rgba(35, 44, 43, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+.phone .screen { position: relative; width: 390px; height: 844px; border-radius: 52px; overflow: hidden; background: #f3f2f7; isolation: isolate; }
+.tap { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: rgba(30, 36, 48, 0.16); box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85); }
+.ripple { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; border: 2px solid rgba(41, 89, 118, 0.6); }
+.scrim { position: absolute; left: 14px; top: 14px; width: 390px; height: 844px; border-radius: 52px; background: #f3f2f7; }
+.pchip {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px 14px 14px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 26px 50px -24px rgba(35, 44, 43, 0.45), 0 0 0 1px rgba(30, 36, 48, 0.06);
+  font: 400 14px/1.3 var(--sans);
+  color: var(--body);
+  white-space: nowrap;
+}
+.pchip i { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font: 700 11px/1 var(--mono); font-style: normal; letter-spacing: 0.06em; color: #fff; background: var(--green); }
+.pchip i.c { border-radius: 50%; font: 700 17px/1 var(--head); }
+.pchip b { display: block; font: 600 17px/1.2 var(--sans); color: var(--ink); }
+
+/* ---------- Closer and end card ---------- */
+.big { position: absolute; left: 960px; top: 540px; transform: translate(-50%, -50%); font: 700 66px/1.1 var(--head); letter-spacing: -0.045em; color: var(--ink); white-space: nowrap; }
+.big .rot { position: relative; display: inline-block; vertical-align: bottom; overflow: hidden; height: 1.22em; margin-bottom: -0.12em; }
+.big .rot .hlbox { position: absolute; left: -10px; top: 0.08em; height: 1.04em; border-radius: 10px; background: var(--hl); }
+.big .rot .opt { position: absolute; left: 0; top: 0; color: var(--green); white-space: nowrap; }
+.big .hlw { position: relative; display: inline-block; }
+.big .hlw .hlbox { position: absolute; left: -10px; right: -10px; top: 0.06em; bottom: -0.02em; border-radius: 10px; background: var(--hl); transform-origin: 0 50%; }
+.big .hlw .lbl { position: relative; }
+.end .lockup { top: 430px; }
+.end .cta { position: absolute; left: 960px; top: 660px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 16px; white-space: nowrap; }
+.end .cta .p { font: 500 26px/1 var(--sans); color: var(--body); }
+.end .cta .u { font: 500 20px/1 var(--mono); letter-spacing: 0.16em; color: var(--green); }
+.end .fine { position: absolute; left: 960px; top: 990px; transform: translateX(-50%); width: 1500px; text-align: center; font: 400 15px/1.5 var(--sans); color: rgba(30, 36, 48, 0.5); }
+
+/* ---------- Preview controls (hidden when rendering) ---------- */
+#controls { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); width: min(720px, calc(100% - 32px)); display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; background: rgba(20, 20, 22, 0.86); color: #eee; font: 500 13px/1 var(--sans); z-index: 100; }
+#controls button { all: unset; cursor: pointer; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; background: rgba(255, 255, 255, 0.1); }
+#controls input { flex: 1; accent-color: #3c7260; }
+#controls output { font-variant-numeric: tabular-nums; min-width: 60px; text-align: right; }
+.render #controls { display: none; }

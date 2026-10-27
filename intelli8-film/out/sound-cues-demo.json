@@ -1,0 +1,130 @@
+{
+  "file": "intelli8-demo-sound.wav",
+  "film": "demo",
+  "content": "sound design only \u2014 no music, no instruments, no tuned tones",
+  "sample_rate": 48000,
+  "duration": 60.0,
+  "integrated_lufs": -16.08,
+  "true_peak_dbtp": -1.6,
+  "stem_gain_db": {
+    "amb": -26.63,
+    "sig": 16.7,
+    "fx": 2.63,
+    "ui": -3.97,
+    "impact": 6.52
+  },
+  "events": [
+    {
+      "t": 0.3,
+      "event": "Introducing: a soft air swell"
+    },
+    {
+      "t": 2.1725,
+      "event": "silk wipes in: wide whoosh, left to right"
+    },
+    {
+      "t": 2.2,
+      "event": "the 8 draws: airy swirl"
+    },
+    {
+      "t": 3.12,
+      "event": "heart pop"
+    },
+    {
+      "t": 4.95,
+      "event": "title 1: words, push, highlight"
+    },
+    {
+      "t": 9.25,
+      "event": "two soft pops: Body fat ?, Muscle ?"
+    },
+    {
+      "t": 10.35,
+      "event": "title 2: words, push, highlight"
+    },
+    {
+      "t": 13.6,
+      "event": "four foot plates: uneven glints"
+    },
+    {
+      "t": 14.85,
+      "event": "glide up to the bar"
+    },
+    {
+      "t": 15.42,
+      "event": "hand pads: two brighter glints"
+    },
+    {
+      "t": 16.485,
+      "event": "pull back to the whole scale"
+    },
+    {
+      "t": 18.55,
+      "event": "display wakes: a short electric crackle, then a shimmer"
+    },
+    {
+      "t": 18.56,
+      "event": "push into the display"
+    },
+    {
+      "t": 19.75,
+      "event": "title 3: words, push, highlight"
+    },
+    {
+      "t": 23.3,
+      "event": "five segments fill: one airy texture with soft swells"
+    },
+    {
+      "t": 28.175,
+      "event": "pull back to the whole screen"
+    },
+    {
+      "t": 30.05,
+      "event": "tap: Save my results"
+    },
+    {
+      "t": 30.75,
+      "event": "title 4: words, push, highlight"
+    },
+    {
+      "t": 33.83,
+      "event": "bars grow: rising air"
+    },
+    {
+      "t": 36.3,
+      "event": "report scrolls: soft detents that follow its speed"
+    },
+    {
+      "t": 39.85,
+      "event": "tap: Save as PDF"
+    },
+    {
+      "t": 40.85,
+      "event": "shared with the coach: a soft glint"
+    },
+    {
+      "t": 41.45,
+      "event": "title 5: words, push, highlight"
+    },
+    {
+      "t": 44.6,
+      "event": "the line draws left to right: drawn air, tiny glints at the weigh-ins"
+    },
+    {
+      "t": 50.46,
+      "event": "silk again"
+    },
+    {
+      "t": 51.75,
+      "event": "the use word flicks over: muscle, progress"
+    },
+    {
+      "t": 54.0,
+      "event": "tagline: a soft low hit, then the brush"
+    },
+    {
+      "t": 56.4,
+      "event": "end card: soft hit"
+    }
+  ]
+}

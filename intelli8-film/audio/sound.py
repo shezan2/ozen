@@ -9,6 +9,7 @@ placed on a visual event, so the motion itself sets the rhythm.
     python3 -m venv .venv && .venv/bin/pip install -r ../launch-film/audio/requirements.txt
     .venv/bin/python audio/sound.py                 # App film → out/intelli8-app-sound.wav + out/sound-cues-app.json
     .venv/bin/python audio/sound.py --film scale    # Body Composition Scale film → out/intelli8-scale-sound.wav
+    .venv/bin/python audio/sound.py --film demo     # 60 s scale product demo (demo/) → out/intelli8-demo-sound.wav
     node render.mjs --film scale --mux              # attach it to the film
 
 Deterministic: each sound draws from its own seeded noise stream.
@@ -31,7 +32,7 @@ from scipy import signal
 from scipy.ndimage import minimum_filter1d, uniform_filter1d
 
 SR = 48_000
-FILMS = {"app": 30.0, "scale": 34.0, "iam": 30.0}  # film → duration (s)
+FILMS = {"app": 30.0, "scale": 34.0, "iam": 30.0, "demo": 60.0}  # film → duration (s)
 FILM = sys.argv[sys.argv.index("--film") + 1] if "--film" in sys.argv else "app"
 if FILM not in FILMS:
     sys.exit(f"--film must be one of {', '.join(FILMS)}")
@@ -1011,7 +1012,221 @@ def design_iam():
     return buses, rev, events
 
 
-DESIGNS = {"app": design_app, "scale": design_scale, "iam": design_iam}
+# Scale product demo picture events (seconds), from demo/demo.js (60 s, explainer-default style).
+DEMO = {
+    "intro": 0.3,  # "Introducing" fades up
+    "silk": (1.7, 2.65),  # the silk brand gradient wipes in
+    "draw": (2.2, 3.3),  # the ribbon 8 draws itself
+    "word": 3.0,  # wordmark settles
+    "heart": 3.12,  # heart pops in the top loop
+    # title lines: in, words, camera push, highlight sweep, dissolve out
+    "titles": [
+        (4.6, 4.95, (5.7, 7.0), (6.75, 7.25), 7.9),  # Your scale shows one number.
+        (10.15, 10.35, (11.0, 12.3), (12.0, 12.5), 13.1),  # Eight contacts. Hands and feet.
+        (19.6, 19.75, (20.4, 21.7), (21.4, 21.9), 22.5),  # Fat and muscle, in every segment.
+        (30.6, 30.75, (31.4, 32.7), (32.4, 32.9), 33.5),  # 24 measures. One clear report.
+        (41.3, 41.45, (42.1, 43.4), (43.1, 43.6), 44.2),  # Follow the change over time.
+    ],
+    "readout": 7.95,  # the weight-only readout rises in
+    "readout_pull": (9.0, 9.9),
+    "qchips": [9.25, 9.5],  # "Body fat ?", "Muscle ?"
+    "feet": [13.6, 13.78, 14.0, 14.12],  # the four foot plates light, unevenly
+    "to_bar": (14.3, 15.3),  # the camera glides up to the bar
+    "pads": [15.42, 15.6],  # the hand pads light
+    "scale_pull": (15.9, 17.1),
+    "scale_chip": 17.0,  # "8 contacts · 5 body segments"
+    "to_display": (17.9, 19.0),
+    "flicker": [18.55, 18.6, 18.66, 18.72, 18.8],  # the display wakes (demo.js FLICK)
+    "segments": [23.3, 24.14, 24.98, 25.82, 26.66],  # Your Results: the five segments fill
+    "results_pull": (27.5, 28.9),
+    "tap_save": 30.05,  # Save my results
+    "bars": (33.83, 35.82),  # the report's bars grow
+    "report_pull": (35.9, 36.6),
+    "scroll": (36.3, 39.0),  # the report scrolls
+    "to_pdf": (39.0, 39.6),
+    "tap_pdf": 39.85,  # Save as PDF
+    "pdf": 40.2,  # the PDF rises out of the button
+    "shared": 40.85,  # → Shared with your coach
+    "line": (44.6, 47.2),  # History: the body-fat line draws
+    "points": [44.6, 45.49, 45.73, 45.9, 46.06, 46.28, 47.2],  # the pen reaches each weigh-in
+    "history_pull": (47.2, 48.4),
+    "closer": 50.2,  # silk again
+    "use": 50.55,  # Track your [body fat / muscle / progress] at home.
+    "swaps": [51.75, 52.7],
+    "use_out": 53.6,
+    "tagline": 54.0,  # Know more than your weight.
+    "tag_hl": (54.6, 55.15),
+    "end": 56.4,  # end card: the lockup
+    "cta": 56.85,  # Body Composition Scale · S$98 · intelli8.ai
+}
+
+
+def design_demo():
+    """Small, calm effects for a bright product demo: soft air under the camera moves, a brush under
+    each highlight, uneven glints for the contacts, a crackle as the display wakes, real taps. No music:
+    nothing tuned, no beat, and every repeated event is uneven in time and character."""
+    buses = {k: Bus(k) for k in STEMS}
+    rev = {k: Bus("rev:" + k) for k in STEMS}
+    events = []
+    C = DEMO
+
+    def put(stem, x, t, pan=0.0, gain=1.0, send=0.0):
+        buses[stem].add(x, t, pan=pan, gain=gain)
+        if send:
+            rev[stem].add(x, t, pan=pan, gain=gain * send)
+
+    def ev(t, what):
+        events.append({"t": round(float(t), 4), "event": what})
+
+    def move(t0, t1, f0=220, f1=1600, pan0=-0.3, pan1=0.3, gain=0.5, peak=0.45, label=""):
+        d = t1 - t0 + 0.1
+        put("fx", whoosh(d, peak=peak, f0=f0, f1=f1, pan0=pan0, pan1=pan1, width_oct=1.6), t0, gain=gain, send=0.18)
+        if label:
+            ev(t0 + peak * d, label)
+
+    def brush(t0, t1, pan=-0.35, gain=0.2):
+        """A soft marker stroke for a highlight box sweeping left to right."""
+        d = t1 - t0 + 0.12
+        put("fx", whoosh(d, peak=0.55, f0=2400, f1=5200, pan0=pan, pan1=pan + 0.55, width_oct=0.9), t0, gain=gain, send=0.2)
+
+    def dissolve(t, gain=0.16, pan=0.0):
+        put("fx", whoosh(0.5, peak=0.4, f0=900, f1=2600, pan0=pan - 0.15, pan1=pan + 0.15, width_oct=1.3), t - 0.05, gain=gain, send=0.25)
+
+    # ---- room tone: a soft, airy bed under everything, a touch lifted on the silk
+    reseed("ambience")
+    put("amb", ambience(DUR, lambda u: np.clip(u / 0.03, 0, 1) * (1 - 0.7 * np.clip((u - 0.96) / 0.035, 0, 1))), 0.0)
+
+    # ---- open: Introducing, the silk, the 8
+    reseed("open")
+    put("fx", whoosh(1.1, peak=0.55, f0=500, f1=1800, pan0=-0.05, pan1=0.05, width_oct=1.5), C["intro"] - 0.2, gain=0.2, send=0.3)
+    ev(C["intro"], "Introducing: a soft air swell")
+    s0, s1 = C["silk"]
+    put("fx", riser(0.5, f0=600, f1=4000, curve=2.4), s0 - 0.45, gain=0.14)
+    move(s0, s1, f0=200, f1=2400, pan0=-0.7, pan1=0.7, gain=0.55, peak=0.45, label="silk wipes in: wide whoosh, left to right")
+    put("fx", pressure(s1 - s0 + 0.3, peak=0.4), s0, gain=0.3)
+    d0, d1 = C["draw"]
+    put("fx", swirl(d1 - d0, rate0=5.0, rate1=1.0, f0=2800, f1=900, width=0.35), d0, gain=0.2, send=0.3)
+    ev(d0, "the 8 draws: airy swirl")
+    put("sig", thock(0.45), C["word"] + 0.06, gain=0.3, send=0.35)
+    put("ui", pop(0.08), C["heart"], pan=0.05, gain=0.3, send=0.3)
+    ev(C["heart"], "heart pop")
+
+    # ---- the five title lines: words, push, highlight, dissolve (each a little different)
+    reseed("titles")
+    for i, (tin, tw, (p0, p1), (h0, h1), tout) in enumerate(C["titles"]):
+        pan = (-0.25, 0.2, -0.15, 0.25, -0.2)[i]
+        dissolve(tin, gain=0.12, pan=-pan)
+        put("fx", whoosh(0.55, peak=0.3, f0=1500, f1=3800, pan0=pan - 0.2, pan1=pan + 0.2, width_oct=1.1), tw, gain=0.12, send=0.2)
+        move(p0 - 0.05, p1, f0=170 + 20 * i, f1=1200 + 120 * i, pan0=0.0, pan1=0.0, gain=0.34, peak=0.62)
+        put("fx", pressure(p1 - p0, peak=0.6), p0, gain=0.22)
+        brush(h0, h1, pan=-0.35 + 0.05 * i, gain=0.2)
+        ev(tw, f"title {i + 1}: words, push, highlight")
+
+    # ---- one number: the readout, two empty chips
+    reseed("readout")
+    put("sig", thock(0.5), C["readout"] + 0.12, gain=0.3, send=0.3)
+    move(*C["readout_pull"], f0=1400, f1=420, pan0=0.1, pan1=-0.1, gain=0.26, peak=0.5)
+    for j, t in enumerate(C["qchips"]):
+        put("ui", pop(0.085 + 0.01 * j), t + (0.0, 0.03)[j], pan=(-0.2, 0.25)[j], gain=(0.26, 0.22)[j], send=0.25)
+    ev(C["qchips"][0], "two soft pops: Body fat ?, Muscle ?")
+    dissolve(C["titles"][1][0], gain=0.14)
+
+    # ---- the scale: feet, the bar, the hands, the whole scale, the display
+    reseed("contacts")
+    for i, t in enumerate(C["feet"]):
+        put("ui", filt(tick(0.9 + 0.07 * i), "highpass", 1800 + 260 * i), t, pan=(-0.35, 0.3, -0.25, 0.35)[i], gain=0.2 + 0.02 * i, send=0.4)
+        put("fx", glint(0.22 + 0.03 * (i % 2), pan0=(-0.4, 0.2, -0.3, 0.3)[i], pan1=(-0.2, 0.4, -0.1, 0.45)[i], density=120.0), t, gain=0.1, send=0.45)
+    ev(C["feet"][0], "four foot plates: uneven glints")
+    move(*C["to_bar"], f0=260, f1=1700, pan0=0.0, pan1=0.05, gain=0.36, peak=0.5, label="glide up to the bar")
+    for i, t in enumerate(C["pads"]):
+        put("ui", filt(tick(1.1 + 0.1 * i), "highpass", 2600 + 500 * i), t, pan=(-0.2, 0.2)[i], gain=0.24, send=0.45)
+        put("fx", glint(0.34, pan0=(-0.3, 0.1)[i], pan1=(-0.1, 0.35)[i], density=140.0), t, gain=0.13, send=0.45)
+    ev(C["pads"][0], "hand pads: two brighter glints")
+    move(*C["scale_pull"], f0=1500, f1=360, pan0=0.05, pan1=0.0, gain=0.32, peak=0.45, label="pull back to the whole scale")
+    put("ui", pop(0.09), C["scale_chip"] + 0.05, pan=0.3, gain=0.28, send=0.25)
+    move(*C["to_display"], f0=240, f1=1500, pan0=0.0, pan1=0.0, gain=0.32, peak=0.55, label="push into the display")
+    reseed("display")
+    for j, (t, gn) in enumerate(zip(C["flicker"], (0.16, 0.24, 0.1, 0.18, 0.08))):
+        put("fx", filt(glint(0.06 + 0.02 * (j % 2), pan0=-0.1, pan1=0.1, density=420.0), "highpass", 3200), t, gain=gn, send=0.3)
+    put("fx", filt(glint(0.7, pan0=-0.25, pan1=0.25, density=90.0), "bandpass", [2200, 9000]), C["flicker"][-1], gain=0.12, send=0.45)
+    ev(C["flicker"][0], "display wakes: a short electric crackle, then a shimmer")
+
+    # ---- Your Results: one continuous airy fill that swells softly with each segment (no ticks: no pulse)
+    reseed("results")
+    a0, a1 = C["segments"][0] - 0.1, C["segments"][-1] + 0.9
+    n = int((a1 - a0) * SR)
+    tt = np.arange(n) / SR + a0
+    swell = np.zeros(n)
+    for k, (t, w) in enumerate(zip(C["segments"], (0.38, 0.3, 0.45, 0.33, 0.4))):
+        tj = t + (0.0, 0.04, -0.03, 0.05, -0.02)[k]
+        swell += (0.55 + 0.1 * (k % 3)) * np.exp(-0.5 * ((tt - tj - w * 0.5) / (w * 0.6)) ** 2)
+    env = (0.35 + swell) * np.clip((tt - a0) / 0.4, 0, 1) * np.clip((a1 - tt) / 0.6, 0, 1)
+    fc = 1400 * (3200 / 1400) ** np.clip((tt - a0) / (a1 - a0), 0, 1)
+    air = np.vstack([norm(tv_filter(pink(n), "bandpass", fc * (1 + 0.04 * ch), width_oct=1.2)) * env for ch in range(2)])
+    put("fx", fade_edges(air, a=0.05, r=0.1), a0, gain=0.12, send=0.35)
+    for k, t in enumerate(C["segments"]):
+        put("fx", glint(0.18 + 0.04 * (k % 3), pan0=-0.3 + 0.13 * k, pan1=-0.15 + 0.13 * k, density=70.0), t + (0.08, 0.12, 0.05, 0.14, 0.09)[k], gain=0.06, send=0.45)
+    ev(C["segments"][0], "five segments fill: one airy texture with soft swells")
+    move(*C["results_pull"], f0=1500, f1=380, pan0=0.0, pan1=0.0, gain=0.3, peak=0.45, label="pull back to the whole screen")
+    put("ui", ui_click(0.9), C["tap_save"], pan=0.05, gain=0.55, send=0.12)
+    ev(C["tap_save"], "tap: Save my results")
+
+    # ---- Full Report: bars grow, it scrolls, Save as PDF, shared with the coach
+    reseed("report")
+    b0, b1 = C["bars"]
+    put("fx", whoosh(b1 - b0, peak=0.6, f0=900, f1=3400, pan0=-0.3, pan1=0.3, width_oct=1.0), b0, gain=0.14, send=0.25)
+    put("fx", filt(glint(b1 - b0, pan0=-0.3, pan1=0.3, density=40.0), "lowpass", 7000), b0 + 0.1, gain=0.08, send=0.35)
+    ev(b0, "bars grow: rising air")
+    move(*C["report_pull"], f0=1500, f1=400, pan0=0.0, pan1=0.0, gain=0.28, peak=0.45)
+    q0, q1 = C["scroll"]
+    put("fx", whoosh(q1 - q0, peak=0.5, f0=1300, f1=500, pan0=0.05, pan1=-0.05, width_oct=1.4), q0, gain=0.16)
+    for t in scroll_ticks(q0 + 0.1, q1 - 0.1, max_rate=11.0):
+        put("ui", filt(tick(0.7), "lowpass", 6000), t, pan=0.15, gain=0.1)
+    ev(q0, "report scrolls: soft detents that follow its speed")
+    move(*C["to_pdf"], f0=300, f1=1400, pan0=0.0, pan1=0.15, gain=0.26, peak=0.5)
+    put("ui", ui_click(1.0), C["tap_pdf"], pan=0.2, gain=0.55, send=0.12)
+    ev(C["tap_pdf"], "tap: Save as PDF")
+    put("fx", whoosh(0.45, peak=0.3, f0=700, f1=2600, pan0=0.2, pan1=0.0, width_oct=1.2), C["pdf"] - 0.05, gain=0.2, send=0.25)
+    put("ui", pop(0.1), C["pdf"] + 0.1, pan=0.05, gain=0.3, send=0.25)
+    put("fx", glint(0.45, pan0=-0.1, pan1=0.35, density=110.0), C["shared"], gain=0.12, send=0.45)
+    put("fx", whoosh(0.35, peak=0.35, f0=1800, f1=4200, pan0=-0.1, pan1=0.3, width_oct=1.0), C["shared"] - 0.03, gain=0.12, send=0.25)
+    ev(C["shared"], "shared with the coach: a soft glint")
+
+    # ---- History: the line draws, each weigh-in a tiny glint; pull back
+    reseed("history")
+    l0, l1 = C["line"]
+    put("fx", whoosh(l1 - l0 + 0.2, peak=0.5, f0=1100, f1=2800, pan0=-0.45, pan1=0.45, width_oct=0.9), l0, gain=0.13, send=0.25)
+    for k, t in enumerate(C["points"]):
+        put("fx", glint(0.12 + 0.03 * (k % 3), pan0=-0.45 + 0.15 * k, pan1=-0.4 + 0.15 * k, density=60.0), t + (0.0, 0.01, -0.012, 0.015, -0.01, 0.008, 0.0)[k], gain=0.05 + 0.012 * (k % 2), send=0.4)
+    ev(l0, "the line draws left to right: drawn air, tiny glints at the weigh-ins")
+    move(*C["history_pull"], f0=1500, f1=380, pan0=0.0, pan1=0.0, gain=0.3, peak=0.45)
+
+    # ---- closer on the silk, the tagline
+    reseed("closer")
+    move(C["closer"] - 0.1, C["closer"] + 0.7, f0=200, f1=2200, pan0=0.5, pan1=-0.5, gain=0.4, peak=0.4, label="silk again")
+    put("fx", whoosh(0.5, peak=0.3, f0=1400, f1=3600, pan0=-0.2, pan1=0.2, width_oct=1.1), C["use"], gain=0.13, send=0.25)
+    for j, t in enumerate(C["swaps"]):
+        put("fx", whoosh(0.3 + 0.04 * j, peak=0.35, f0=2200 + 300 * j, f1=5200, pan0=0.1 - 0.2 * j, pan1=0.25 - 0.2 * j, width_oct=0.9), t - 0.02, gain=0.13, send=0.25)
+    ev(C["swaps"][0], "the use word flicks over: muscle, progress")
+    dissolve(C["use_out"], gain=0.12)
+    put("fx", reverse_swell(0.4), C["tagline"] - 0.38, gain=0.14)
+    put("impact", impact(0.32), C["tagline"] + 0.02, gain=0.32, send=0.4)
+    put("fx", whoosh(0.5, peak=0.3, f0=1200, f1=3400, pan0=-0.25, pan1=0.15, width_oct=1.1), C["tagline"], gain=0.12, send=0.25)
+    brush(*C["tag_hl"], pan=-0.4, gain=0.2)
+    ev(C["tagline"], "tagline: a soft low hit, then the brush")
+
+    # ---- end card
+    reseed("end")
+    dissolve(C["end"] - 0.1, gain=0.12)
+    put("fx", reverse_swell(0.5), C["end"] - 0.3, gain=0.16)
+    put("impact", impact(0.5), C["end"] + 0.2, gain=0.45, send=0.4)
+    put("sig", thock(0.5), C["end"] + 0.22, gain=0.3, send=0.4)
+    put("fx", whoosh(0.5, peak=0.3, f0=1300, f1=3600, pan0=-0.2, pan1=0.2, width_oct=1.1), C["cta"], gain=0.1, send=0.25)
+    ev(C["end"], "end card: soft hit")
+    return buses, rev, events
+
+
+DESIGNS = {"app": design_app, "scale": design_scale, "iam": design_iam, "demo": design_demo}
 
 
 # Stem levelling: sparse effects are levelled by their loudest 400 ms; the room tone by gated
@@ -1021,7 +1236,7 @@ STEM_PEAK_DBFS = {"ui": -11.0}
 STEM_LUFS = {"amb": -38.0}
 REVERB_LUFS = -26.0
 
-TARGET_LUFS = -15.0
+TARGET_LUFS = -16.0 if FILM == "demo" else -15.0  # the demo has no narration: a calmer level
 VO_LUFS = -16.0  # narration level relative to the effects before normalisation
 VO_DUCK_DB = -8.0  # effects dip this much while the narrator speaks
 VOICEOVER = OUT / f"voiceover-{FILM}.wav"  # narration on the same timing, when there is one (audio/voice.py)
